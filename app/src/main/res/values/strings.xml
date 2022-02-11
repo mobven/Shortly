@@ -9,4 +9,6 @@
     <string name="btn_copy">COPY</string>
     <string name="btn_copied">COPIED!</string>
     <string name="title_error">Error</string>
+
+    <string name="short_link">Short a link</string>
 </resources>
