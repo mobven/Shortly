@@ -70,30 +70,38 @@
             android:id="@+id/view"
             android:layout_width="wrap_content"
             android:layout_height="180dp"
-            android:background="@color/purple_200"
+            android:background="@color/bottom_rectangle_violet"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView"
             app:layout_constraintVertical_bias="1.0" />
 
-        <Button
-            android:id="@+id/button"
-            style="@style/bottom_style"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/short_link"
-            app:layout_constraintBottom_toTopOf="@+id/button2"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/shorten_link_edt"
+            android:layout_width="279dp"
+            android:layout_height="49dp"
+            android:layout_marginTop="46dp"
+            android:background="@color/off_white"
+            android:text="@string/hint_link"
+            android:textAlignment="center"
+            android:textColor="@color/gray"
+            app:layout_constraintTop_toTopOf="@id/view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/button2"
-            style="@style/bottom_style"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/shorten_it_button"
+            android:layout_width="279dp"
+            android:layout_height="49dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/teal_200"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:text="@string/btn_shorten"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/shorten_link_edt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
