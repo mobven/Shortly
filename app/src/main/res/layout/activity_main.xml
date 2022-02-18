@@ -63,30 +63,33 @@
         <View
             android:id="@+id/view"
             android:layout_width="wrap_content"
-            android:layout_height="220dp"
+            android:layout_height="180dp"
             android:background="@color/purple_200"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:layout_constraintVertical_bias="1.0" />
 
         <Button
             android:id="@+id/button"
+            style="@style/bottom_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/bottom_style"
-            android:text="Button"
-            tools:layout_editor_absoluteX="161dp"
-            tools:layout_editor_absoluteY="558dp" />
+            android:text="@string/short_link"
+            app:layout_constraintBottom_toTopOf="@+id/button2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/button2"
+            style="@style/bottom_style"
+            android:text="@string/btn_shorten"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/bottom_style"
-            android:text="@string/androidx_startup"
-            tools:layout_editor_absoluteX="160dp"
-            tools:layout_editor_absoluteY="626dp" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
