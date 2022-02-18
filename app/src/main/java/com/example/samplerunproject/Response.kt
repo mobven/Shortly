@@ -1,6 +1,6 @@
 package com.example.samplerunproject
 
-data class response(
+data class Response(
     val ok: Boolean,
     val result: Result
 )
