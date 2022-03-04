@@ -3,11 +3,12 @@ package com.example.samplerunproject.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.samplerunproject.Result
 import com.example.samplerunproject.databinding.ItemShortLinkBinding
 
 class ShortLinkAdapter:RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
 
-    private val shortLinkList = mutableListOf<String>()
+    private val shortLinkList = mutableListOf<Result>()
     var itemClickListener: (String) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -22,7 +23,7 @@ class ShortLinkAdapter:RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int = shortLinkList.size
 
-    fun setData(list: MutableList<String>) {
+    fun setData(list: MutableList<Result>) {
         shortLinkList.clear()
         shortLinkList.addAll(list)
         notifyDataSetChanged()
@@ -31,8 +32,10 @@ class ShortLinkAdapter:RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemShortLinkBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: String) {
+        fun bind(item: Result) {
             binding.apply {
+                tvLongLink.text = item.full_share_link
+                tvShortLink.text = item.full_short_link
                 btnCopy.setOnClickListener {
                     itemClickListener(tvShortLink.text.toString())
                 }
