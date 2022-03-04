@@ -1,5 +1,6 @@
 package com.example.samplerunproject.api
 
+import com.example.samplerunproject.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -14,7 +15,7 @@ object ApiClient {
             .addInterceptor(logging)
             .build()
         val retrofitBuilder = Retrofit.Builder()
-            .baseUrl("https://api.shrtco.de/v2/")
+            .baseUrl(BuildConfig.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
