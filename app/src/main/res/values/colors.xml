@@ -16,4 +16,5 @@
     <color name="very_dark_violet">#232127</color>
     <color name="bottom_rectangle_violet">#3B3054</color>
     <color name="off_white">#F0F1F6</color>
+    <color name="background_color">#E5E5E5</color>
 </resources>

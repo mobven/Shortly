@@ -6,6 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/background_color"
         tools:context=".MainActivity">
 
         <ImageView
@@ -14,6 +15,19 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="48dp"
             android:src="@drawable/logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_history"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -39,16 +53,17 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_main"/>
+            app:layout_constraintTop_toBottomOf="@id/iv_main" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_links"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/view"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_marginTop="16dp"
             android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@id/iv_title"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/view"
+            app:layout_constraintTop_toBottomOf="@id/tv_history" />
 
         <TextView
             android:id="@+id/textView"
@@ -73,35 +88,53 @@
             app:layout_constraintTop_toBottomOf="@+id/textView"
             app:layout_constraintVertical_bias="1.0" />
 
+        <View
+            android:id="@+id/view_shape"
+            android:layout_width="237dp"
+            android:layout_height="130dp"
+            android:background="@drawable/shape"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_links" />
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/shorten_link_edt"
             android:layout_width="279dp"
             android:layout_height="49dp"
-            android:layout_marginTop="46dp"
-            android:background="@color/off_white"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/bg_edittext"
             android:hint="@string/hint_link"
             android:textAlignment="center"
             android:textColor="@color/gray"
-            app:layout_constraintTop_toTopOf="@id/view"
+            app:layout_constraintBottom_toTopOf="@+id/shorten_it_button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_links"
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/shorten_it_button"
             android:layout_width="279dp"
             android:layout_height="49dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="4dp"
             android:backgroundTint="@color/teal_200"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:text="@string/btn_shorten"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:layout_marginBottom="4dp"
+            app:cornerRadius="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/shorten_link_edt"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/shorten_link_edt" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:constraint_referenced_ids="iv_main, tv_main_title,iv_title, textView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

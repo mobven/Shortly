@@ -6,31 +6,33 @@
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_item"
         android:layout_marginHorizontal="24dp">
 
         <TextView
             android:id="@+id/tv_long_link"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
             android:layout_marginTop="24dp"
-            android:textColor="@color/black"
-            android:textSize="18sp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:layout_marginHorizontal="24dp"
+            android:textColor="@color/black"
+            android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@id/ic_trash"
             app:layout_constraintStart_toStartOf="parent"
-            tools:text="adsfasdfasdfasdfasdfsdafsdfsdfsdfasdfs"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="adsfasdfasdfasdfasdfsdafsdfsdfsdfasdfs" />
+
         <ImageView
             android:id="@+id/ic_trash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="26dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_long_link"
+            android:src="@drawable/ic_trash_bin"
             app:layout_constraintBottom_toBottomOf="@id/tv_long_link"
-            android:src="@drawable/ic_trash_bin"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_long_link" />
 
 
         <View
@@ -39,39 +41,39 @@
             android:layout_height="1dp"
             android:layout_marginTop="12dp"
             android:background="@color/light_gray"
-            app:layout_constraintTop_toBottomOf="@id/tv_long_link"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_long_link" />
 
         <TextView
             android:id="@+id/tv_short_link"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
             android:layout_marginTop="24dp"
             android:textColor="@color/cyan"
             android:textSize="18sp"
-            android:layout_marginHorizontal="24dp"
-            tools:text="adsfasdfasdfasdfasdf"
-            app:layout_constraintTop_toBottomOf="@id/line" />
+            app:layout_constraintTop_toBottomOf="@id/line"
+            tools:text="adsfasdfasdfasdfasdf" />
 
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_copy"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            app:layout_constraintTop_toBottomOf="@id/tv_short_link"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:backgroundTint="@color/cyan"
-            android:text="@string/btn_copy"
-            app:cornerRadius="2dp"
-            android:textSize="17sp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:insetLeft="0dp"
-            android:insetRight="0dp"
-            android:layout_marginBottom="24dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginHorizontal="24dp"
             android:layout_marginTop="24dp"
-            android:layout_marginHorizontal="24dp"/>
+            android:layout_marginBottom="24dp"
+            android:backgroundTint="@color/cyan"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/btn_copy"
+            android:textSize="17sp"
+            app:cornerRadius="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_short_link" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

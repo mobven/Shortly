@@ -4,6 +4,9 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.TextView
+import androidx.constraintlayout.widget.Group
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.samplerunproject.adapter.ShortLinkAdapter
@@ -21,12 +24,16 @@ import java.net.SocketTimeoutException
 class MainActivity : BaseActivity(R.layout.activity_main) {
 
     private val shortLinkAdapter = ShortLinkAdapter()
+    lateinit var groupMain: Group
+    lateinit var tvHistory: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val shortenItButton = findViewById<MaterialButton>(R.id.shorten_it_button)
         val linkText = findViewById<TextInputEditText>(R.id.shorten_link_edt)
         val rvLinks = findViewById<RecyclerView>(R.id.rv_links)
+        groupMain = findViewById(R.id.group_main)
+        tvHistory = findViewById(R.id.tv_history)
 
         shortenItButton.setOnClickListener {
             callShortLink(linkText.text.toString())
@@ -40,9 +47,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             Callback<Response> {
             override fun onResponse(call: Call<Response>, response: retrofit2.Response<Response>) {
                 //Log.d("deneme", "${response.body()}")
-                var result = response.body()?.result
+                val result = response.body()?.result
                 result?.let {
                     shortLinkAdapter.setData(mutableListOf(it))
+                    groupMain.visibility = View.GONE
+                    tvHistory.visibility = View.VISIBLE
                 }
 
             }
@@ -50,19 +59,17 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             override fun onFailure(call: Call<Response>, t: Throwable) {
                 when(t) {
                     is SocketTimeoutException -> {
-                        var alertDialog = AlertDialog.Builder(this@MainActivity)
+                        val alertDialog = AlertDialog.Builder(this@MainActivity)
                             .setTitle("ERROR")
                             .setMessage("An error occurred")
-                            .setPositiveButton("Retry", object: DialogInterface.OnClickListener{
-                                override fun onClick(dialog: DialogInterface?, which: Int) {
-                                    //retry
-                                }
-                            })
-                            .setNegativeButton("Cancel", object: DialogInterface.OnClickListener{
-                                override fun onClick(dialog: DialogInterface?, which: Int) {
-                                    //cancel
-                                }
-                            }).create()
+                            .setPositiveButton("Retry"
+                            ) { dialog, which ->
+                                //retry
+                            }
+                            .setNegativeButton("Cancel"
+                            ) { dialog, which ->
+                                //cancel
+                            }.create()
                         alertDialog.show()
                     }
                 }
