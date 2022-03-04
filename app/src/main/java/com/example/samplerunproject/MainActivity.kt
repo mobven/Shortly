@@ -36,12 +36,12 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         ApiClient.getApiService().getLinks(editLink).enqueue(object :
             Callback<Response> {
             override fun onResponse(call: Call<Response>, response: retrofit2.Response<Response>) {
-                Log.d("deneme", "${response.body()}")
-                shortLinkAdapter.setData(mutableListOf(response.body()?.result?.full_share_link ?: ""))
+                //Log.d("deneme", "${response.body()}")
+                //shortLinkAdapter.setData(mutableListOf(response.body()?.result?.full_share_link ?: ""))
             }
 
             override fun onFailure(call: Call<Response>, t: Throwable) {
-                Log.d("deneme", "${t.message}")
+                //Log.d("deneme", "${t.message}")
             }
         })
     }
