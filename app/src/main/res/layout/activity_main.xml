@@ -79,7 +79,7 @@
             android:layout_height="49dp"
             android:layout_marginTop="46dp"
             android:background="@color/off_white"
-            android:text="@string/hint_link"
+            android:hint="@string/hint_link"
             android:textAlignment="center"
             android:textColor="@color/gray"
             app:layout_constraintTop_toTopOf="@id/view"
