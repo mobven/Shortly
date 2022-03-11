@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.example.samplerunproject.adapter.ShortLinkAdapter
 import com.example.samplerunproject.api.ApiClient
 import com.example.samplerunproject.base.BaseActivity
@@ -30,6 +31,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private val shortLinkAdapter = ShortLinkAdapter()
     lateinit var groupMain: Group
     lateinit var tvHistory: TextView
+    private lateinit var linkDao: LinkDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +40,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         val rvLinks = findViewById<RecyclerView>(R.id.rv_links)
         groupMain = findViewById(R.id.group_main)
         tvHistory = findViewById(R.id.tv_history)
+
+        val db = Room.databaseBuilder(applicationContext, LinkListDatabase::class.java, "linkList").fallbackToDestructiveMigration().allowMainThreadQueries().build()
+        linkDao = db.listDAO()
+
 
         shortenItButton.setOnClickListener {
             if (linkText.text.toString().isBlank()) {
@@ -49,6 +55,12 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
 
         rvLinks.adapter = shortLinkAdapter
+
+        linkDao.getLinkList().observe(this, {
+            shortLinkAdapter.setData(it)
+            groupMain.visibility = View.GONE
+            tvHistory.visibility = View.VISIBLE
+        })
     }
 
     private fun checkEditLink(textInput: TextInputEditText, isValid: Boolean) {
@@ -73,9 +85,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 //Log.d("deneme", "${response.body()}")
                 val result = response.body()?.result
                 result?.let {
-                    shortLinkAdapter.setData(mutableListOf(it))
-                    groupMain.visibility = View.GONE
-                    tvHistory.visibility = View.VISIBLE
+                    linkDao.insertLink(it)
                 }?: run {
                     val gson = Gson()
                     val error = gson.fromJson(response.errorBody()?.string(), Error::class.java)

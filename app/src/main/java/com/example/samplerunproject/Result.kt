@@ -1,5 +1,9 @@
 package com.example.samplerunproject
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
 data class Result(
     val code: String,
     val full_share_link: String = "",
@@ -9,4 +13,6 @@ data class Result(
     val share_link: String,
     val short_link: String,
     val short_link2: String
-)
+){
+    @PrimaryKey(autoGenerate = true) var uid: Int = 0
+}

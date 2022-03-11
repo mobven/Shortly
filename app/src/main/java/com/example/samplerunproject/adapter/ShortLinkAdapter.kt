@@ -23,7 +23,7 @@ class ShortLinkAdapter:RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int = shortLinkList.size
 
-    fun setData(list: MutableList<Result>) {
+    fun setData(list: List<Result>) {
         shortLinkList.clear()
         shortLinkList.addAll(list)
         notifyDataSetChanged()
