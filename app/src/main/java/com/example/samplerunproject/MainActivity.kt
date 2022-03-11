@@ -1,15 +1,15 @@
 package com.example.samplerunproject
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.Group
 import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
@@ -17,7 +17,9 @@ import com.example.samplerunproject.adapter.ShortLinkAdapter
 import com.example.samplerunproject.api.ApiClient
 import com.example.samplerunproject.base.BaseActivity
 import com.example.samplerunproject.databinding.ActivityMainBinding
+import com.example.samplerunproject.room.LinkDao
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,6 +37,14 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val mainBinding = DataBindingUtil.setContentView<ActivityMainBinding>(this,R.layout.activity_main)
+
+        mainBinding.lifecycleOwner = this
+
+
+
+
         val shortenItButton = findViewById<MaterialButton>(R.id.shorten_it_button)
         val linkText = findViewById<TextInputEditText>(R.id.shorten_link_edt)
         val rvLinks = findViewById<RecyclerView>(R.id.rv_links)
@@ -50,17 +60,24 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 checkEditLink(linkText, true)
             } else {
                 checkEditLink(linkText, false)
-                callShortLink(linkText.text.toString())
+                callShortLink(linkText.text.toString(),mainBinding.progresBar)
             }
         }
 
         rvLinks.adapter = shortLinkAdapter
 
-        linkDao.getLinkList().observe(this, {
+        shortLinkAdapter.itemRemoveListener =  {
+            linkDao.deleteLink(it)
+        }
+
+        linkDao.getLinkList().observe(this) {
             shortLinkAdapter.setData(it)
+            //mainBinding.toolbar.visibility = View.VISIBLE
             groupMain.visibility = View.GONE
             tvHistory.visibility = View.VISIBLE
-        })
+        }
+
+
     }
 
     private fun checkEditLink(textInput: TextInputEditText, isValid: Boolean) {
@@ -77,11 +94,12 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
     }
 
-    private fun callShortLink(editLink:String) {
-
+    private fun callShortLink(editLink:String,pb: ProgressBar) {
+        pb.visibility = View.VISIBLE
         ApiClient.getApiService().getLinks(editLink).enqueue(object :
             Callback<Response> {
             override fun onResponse(call: Call<Response>, response: retrofit2.Response<Response>) {
+                pb.visibility = View.GONE
                 //Log.d("deneme", "${response.body()}")
                 val result = response.body()?.result
                 result?.let {
@@ -94,6 +112,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             }
 
             override fun onFailure(call: Call<Response>, t: Throwable) {
+                pb.visibility = View.GONE
                 when(t) {
                     is SocketTimeoutException -> {
                         val alertDialog = AlertDialog.Builder(this@MainActivity)
@@ -116,5 +135,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 Log.d("deneme", "${t.message}")
             }
         })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_search, menu)
+        return true
     }
 }

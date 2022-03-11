@@ -1,7 +1,8 @@
-package com.example.samplerunproject
+package com.example.samplerunproject.room
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.samplerunproject.Result
 
 //DataBase erişimini sağladık
 @Dao
@@ -15,7 +16,7 @@ interface LinkDao {
     @Query("Select * from result ")
     fun getLinkList() : LiveData<List<Result>>
 
-    @Query("DELETE FROM result WHERE uid = :uuid")
-    fun deleteLink(uuid: Int) : Int
+    @Query("DELETE FROM result WHERE code = :code")
+    fun deleteLink(code: String) : Int
 
 }

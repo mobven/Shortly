@@ -10,6 +10,7 @@ class ShortLinkAdapter:RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
 
     private val shortLinkList = mutableListOf<Result>()
     var itemClickListener: (String) -> Unit = {}
+    var itemRemoveListener: (String) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
@@ -38,6 +39,9 @@ class ShortLinkAdapter:RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
                 tvShortLink.text = item.full_short_link
                 btnCopy.setOnClickListener {
                     itemClickListener(tvShortLink.text.toString())
+                }
+                icTrash.setOnClickListener{
+                    itemRemoveListener(item.code)
                 }
             }
         }
