@@ -104,7 +104,6 @@
             android:background="@drawable/bg_edittext"
             android:hint="@string/hint_link"
             android:textAlignment="center"
-            android:textColor="@color/gray"
             app:layout_constraintBottom_toTopOf="@+id/shorten_it_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
