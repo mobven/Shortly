@@ -12,24 +12,27 @@ import androidx.constraintlayout.widget.Group
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import com.example.samplerunproject.adapter.ShortLinkAdapter
-import com.example.samplerunproject.api.ApiClient
+import com.example.samplerunproject.api.ApiService
 import com.example.samplerunproject.base.BaseActivity
 import com.example.samplerunproject.databinding.ActivityMainBinding
 import com.example.samplerunproject.room.LinkDao
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import java.net.SocketTimeoutException
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity(R.layout.activity_main) {
 
+    @Inject
+    lateinit var service: ApiService
     private val shortLinkAdapter = ShortLinkAdapter()
     lateinit var groupMain: Group
     lateinit var tvHistory: TextView
@@ -38,11 +41,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val mainBinding = DataBindingUtil.setContentView<ActivityMainBinding>(this,R.layout.activity_main)
+        val mainBinding =
+            DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
 
         mainBinding.lifecycleOwner = this
-
-
 
 
         val shortenItButton = findViewById<MaterialButton>(R.id.shorten_it_button)
@@ -51,8 +53,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         groupMain = findViewById(R.id.group_main)
         tvHistory = findViewById(R.id.tv_history)
 
-       // val db = Room.databaseBuilder(applicationContext, LinkListDatabase::class.java, "linkList").fallbackToDestructiveMigration().allowMainThreadQueries().build()
-       val db = LinkListDatabase.getDatabase(this@MainActivity)
+        // val db = Room.databaseBuilder(applicationContext, LinkListDatabase::class.java, "linkList").fallbackToDestructiveMigration().allowMainThreadQueries().build()
+        val db = LinkListDatabase.getDatabase(this@MainActivity)
         linkDao = db.listDAO()
 
 
@@ -61,14 +63,17 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 checkEditLink(linkText, true)
             } else {
                 checkEditLink(linkText, false)
-                callShortLink(linkText.text.toString(),mainBinding.progresBar)
+                callShortLink(linkText.text.toString(), mainBinding.progresBar)
             }
         }
 
         rvLinks.adapter = shortLinkAdapter
 
-        shortLinkAdapter.itemRemoveListener =  {
-            linkDao.deleteLink(it)
+        shortLinkAdapter.itemRemoveListener = {
+            //TODO: Inject edilip suspen'e çevirilecek
+            GlobalScope.launch {
+                linkDao.deleteLink(it)
+            }
         }
 
         linkDao.getLinkList().observe(this) {
@@ -95,17 +100,18 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
     }
 
-    private fun callShortLink(editLink:String,pb: ProgressBar) {
+    private fun callShortLink(editLink: String, pb: ProgressBar) {
         pb.visibility = View.VISIBLE
-        ApiClient.getApiService().getLinks(editLink).enqueue(object :
+        service.getLinks(editLink).enqueue(object :
             Callback<Response> {
             override fun onResponse(call: Call<Response>, response: retrofit2.Response<Response>) {
                 pb.visibility = View.GONE
-                //Log.d("deneme", "${response.body()}")
                 val result = response.body()?.result
                 result?.let {
-                    linkDao.insertLink(it)
-                }?: run {
+                    GlobalScope.launch {
+                        linkDao.insertLink(it)
+                    }
+                } ?: run {
                     val gson = Gson()
                     val error = gson.fromJson(response.errorBody()?.string(), Error::class.java)
                     Toast.makeText(this@MainActivity, error.error, Toast.LENGTH_SHORT).show()
@@ -114,16 +120,18 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
             override fun onFailure(call: Call<Response>, t: Throwable) {
                 pb.visibility = View.GONE
-                when(t) {
+                when (t) {
                     is SocketTimeoutException -> {
                         val alertDialog = AlertDialog.Builder(this@MainActivity)
                             .setTitle("ERROR")
                             .setMessage("An error occurred")
-                            .setPositiveButton("Retry"
+                            .setPositiveButton(
+                                "Retry"
                             ) { dialog, which ->
                                 //retry
                             }
-                            .setNegativeButton("Cancel"
+                            .setNegativeButton(
+                                "Cancel"
                             ) { dialog, which ->
                                 //cancel
                             }.create()

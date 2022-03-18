@@ -1,4 +1,4 @@
-package com.example.samplerunproject.base.di
+package com.example.samplerunproject
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
