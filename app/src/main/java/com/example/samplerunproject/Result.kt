@@ -9,10 +9,9 @@ data class Result(
     val full_share_link: String = "",
     val full_short_link: String,
     val full_short_link2: String,
+    @PrimaryKey
     val original_link: String,
     val share_link: String,
     val short_link: String,
     val short_link2: String
-){
-    @PrimaryKey(autoGenerate = true) var uid: Int = 0
-}
+)

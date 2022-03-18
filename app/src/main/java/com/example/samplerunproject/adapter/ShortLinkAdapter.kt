@@ -2,13 +2,15 @@ package com.example.samplerunproject.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.samplerunproject.Result
 import com.example.samplerunproject.databinding.ItemShortLinkBinding
 
-class ShortLinkAdapter:RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
+class ShortLinkAdapter:ListAdapter<Result, ShortLinkAdapter.ViewHolder>(DiffShortLink()) {
 
-    private val shortLinkList = mutableListOf<Result>()
+    /*private val shortLinkList = mutableListOf<Result>()*/
     var itemClickListener: (String) -> Unit = {}
     var itemRemoveListener: (String) -> Unit = {}
 
@@ -19,17 +21,18 @@ class ShortLinkAdapter:RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(shortLinkList[position])
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount(): Int = shortLinkList.size
+/*    override fun getItemCount(): Int = shortLinkList.size*/
 
-    fun setData(list: List<Result>) {
+   /* fun setData(list: List<Result>) {
         shortLinkList.clear()
         shortLinkList.addAll(list)
+        //not recommended
         notifyDataSetChanged()
     }
-
+*/
 
     inner class ViewHolder(private val binding: ItemShortLinkBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -45,5 +48,16 @@ class ShortLinkAdapter:RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
                 }
             }
         }
+    }
+
+    class DiffShortLink() : DiffUtil.ItemCallback<Result>(){
+        override fun areItemsTheSame(oldItem: Result, newItem: Result): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: Result, newItem: Result): Boolean {
+          return oldItem == newItem
+        }
+
     }
 }

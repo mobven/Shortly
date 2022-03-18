@@ -51,7 +51,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         groupMain = findViewById(R.id.group_main)
         tvHistory = findViewById(R.id.tv_history)
 
-        val db = Room.databaseBuilder(applicationContext, LinkListDatabase::class.java, "linkList").fallbackToDestructiveMigration().allowMainThreadQueries().build()
+       // val db = Room.databaseBuilder(applicationContext, LinkListDatabase::class.java, "linkList").fallbackToDestructiveMigration().allowMainThreadQueries().build()
+       val db = LinkListDatabase.getDatabase(this@MainActivity)
         linkDao = db.listDAO()
 
 
@@ -71,7 +72,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
 
         linkDao.getLinkList().observe(this) {
-            shortLinkAdapter.setData(it)
+            shortLinkAdapter.submitList(it)
             //mainBinding.toolbar.visibility = View.VISIBLE
             groupMain.visibility = View.GONE
             tvHistory.visibility = View.VISIBLE

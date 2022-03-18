@@ -10,7 +10,7 @@ interface LinkDao {
 
     //Select, insert, update, delete
 
-    @Insert    //INSERT INTO userInfo () values ()
+    @Insert(onConflict = OnConflictStrategy.IGNORE)    //INSERT INTO userInfo () values ()
     fun insertLink(vararg result: Result)
 
     @Query("Select * from result ")
