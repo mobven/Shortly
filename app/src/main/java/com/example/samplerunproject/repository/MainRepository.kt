@@ -8,10 +8,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MainRepository(apiService: ApiService, val linkDao: LinkDao) {
+class MainRepository @Inject constructor(apiService: ApiService, val linkDao: LinkDao) {
 
     suspend fun getLinkListForDB() : Flow<List<Result>>{
         return flow {

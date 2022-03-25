@@ -1,6 +1,7 @@
 package com.example.samplerunproject
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -28,6 +29,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import java.net.SocketTimeoutException
 import javax.inject.Inject
+import javax.net.ssl.SSLHandshakeException
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity(R.layout.activity_main) {
@@ -65,7 +67,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 checkEditLink(linkText, true)
             } else {
                 checkEditLink(linkText, false)
-                callShortLink(linkText.text.toString(), mainBinding.progresBar)
+                callShortLink(linkText.text.toString(), mainBinding.progresBar,linkText)
             }
         }
 
@@ -105,7 +107,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
     }
 
-    private fun callShortLink(editLink: String, pb: ProgressBar) {
+    private fun callShortLink(editLink: String, pb: ProgressBar,textInput: TextInputEditText) {
         pb.visibility = View.VISIBLE
         service.getLinks(editLink).enqueue(object :
             Callback<Response> {
@@ -127,20 +129,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 pb.visibility = View.GONE
                 when (t) {
                     is SocketTimeoutException -> {
-                        val alertDialog = AlertDialog.Builder(this@MainActivity)
-                            .setTitle("ERROR")
-                            .setMessage("An error occurred")
-                            .setPositiveButton(
-                                "Retry"
-                            ) { dialog, which ->
-                                //retry
-                            }
-                            .setNegativeButton(
-                                "Cancel"
-                            ) { dialog, which ->
-                                //cancel
-                            }.create()
-                        alertDialog.show()
+                        showAlertDialog(this@MainActivity,textInput, pb )
+                    }
+                    is SSLHandshakeException ->{
+                        showAlertDialog(this@MainActivity,textInput, pb )
                     }
                     else -> {
 
@@ -149,5 +141,21 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 Log.d("deneme", "${t.message}")
             }
         })
+    }
+    private fun showAlertDialog(ctx : Context,linkText:TextInputEditText,progressBar: ProgressBar){
+        val alertDialog = AlertDialog.Builder(this@MainActivity)
+            .setTitle("ERROR")
+            .setMessage("An error occurred")
+            .setPositiveButton(
+                "Retry"
+            ) { dialog, which ->
+                callShortLink(linkText.text.toString(), progressBar,linkText)
+            }
+            .setNegativeButton(
+                "Cancel"
+            ) { dialog, which ->
+                //cancel
+            }.create()
+        alertDialog.show()
     }
 }
