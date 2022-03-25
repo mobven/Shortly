@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.constraintlayout.widget.Group
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -37,6 +38,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     lateinit var groupMain: Group
     lateinit var tvHistory: TextView
     private lateinit var linkDao: LinkDao
+    private val viewModel : MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,14 +78,17 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             }
         }
 
-        linkDao.getLinkList().observe(this) {
+        viewModel.getShortLinkData()
+
+        observeShortData()
+    }
+
+    private fun observeShortData(){
+        viewModel.shortLiveData.observe(this){
             shortLinkAdapter.submitList(it)
-            //mainBinding.toolbar.visibility = View.VISIBLE
             groupMain.visibility = View.GONE
             tvHistory.visibility = View.VISIBLE
         }
-
-
     }
 
     private fun checkEditLink(textInput: TextInputEditText, isValid: Boolean) {
@@ -144,10 +149,5 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 Log.d("deneme", "${t.message}")
             }
         })
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_search, menu)
-        return true
     }
 }
