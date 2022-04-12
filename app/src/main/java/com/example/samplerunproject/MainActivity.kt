@@ -88,8 +88,13 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private fun observeShortData(){
         viewModel.shortLiveData.observe(this){
             shortLinkAdapter.submitList(it)
-            groupMain.visibility = View.GONE
-            tvHistory.visibility = View.VISIBLE
+            if(it.isEmpty()) {
+                groupMain.visibility = View.VISIBLE
+                tvHistory.visibility = View.GONE
+            } else {
+                groupMain.visibility = View.GONE
+                tvHistory.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -117,6 +122,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 result?.let {
                     GlobalScope.launch {
                         linkDao.insertLink(it)
+                        viewModel.getShortLinkData()
                     }
                 } ?: run {
                     val gson = Gson()
