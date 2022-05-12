@@ -3,10 +3,7 @@ package com.example.samplerunproject
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import android.view.Menu
 import android.view.View
-import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -15,38 +12,30 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.samplerunproject.adapter.ShortLinkAdapter
-import com.example.samplerunproject.api.ApiService
 import com.example.samplerunproject.base.BaseActivity
 import com.example.samplerunproject.databinding.ActivityMainBinding
 import com.example.samplerunproject.room.LinkDao
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
-import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import java.net.SocketTimeoutException
-import javax.inject.Inject
-import javax.net.ssl.SSLHandshakeException
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity(R.layout.activity_main) {
 
-    @Inject
-    lateinit var service: ApiService
     private val shortLinkAdapter = ShortLinkAdapter()
     lateinit var groupMain: Group
     lateinit var tvHistory: TextView
     private lateinit var linkDao: LinkDao
+    private lateinit var mainBinding: ActivityMainBinding
+    private lateinit var textInput: TextInputEditText
     private val viewModel : MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val mainBinding =
-            DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+        mainBinding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
 
         mainBinding.lifecycleOwner = this
 
@@ -67,7 +56,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 checkEditLink(linkText, true)
             } else {
                 checkEditLink(linkText, false)
-                callShortLink(linkText.text.toString(), mainBinding.progresBar,linkText)
+                callShortLink(linkText.text.toString(),linkText)
             }
         }
 
@@ -83,6 +72,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         viewModel.getShortLinkData()
 
         observeShortData()
+        observeResponse()
     }
 
     private fun observeShortData(){
@@ -90,6 +80,25 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
             shortLinkAdapter.submitList(it)
             groupMain.visibility = View.GONE
             tvHistory.visibility = View.VISIBLE
+        }
+    }
+
+    private fun observeResponse(){
+        viewModel.result.observe(this){
+            mainBinding.progresBar.visibility = View.GONE
+            GlobalScope.launch {
+                linkDao.insertLink(it)
+            }
+        }
+
+        viewModel.error.observe(this){
+            mainBinding.progresBar.visibility = View.GONE
+            showAlertDialog(this@MainActivity, textInput)
+        }
+
+        viewModel.toast.observe(this){
+            mainBinding.progresBar.visibility = View.GONE
+            Toast.makeText(this@MainActivity, it, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -107,49 +116,19 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
     }
 
-    private fun callShortLink(editLink: String, pb: ProgressBar,textInput: TextInputEditText) {
-        pb.visibility = View.VISIBLE
-        service.getLinks(editLink).enqueue(object :
-            Callback<Response> {
-            override fun onResponse(call: Call<Response>, response: retrofit2.Response<Response>) {
-                pb.visibility = View.GONE
-                val result = response.body()?.result
-                result?.let {
-                    GlobalScope.launch {
-                        linkDao.insertLink(it)
-                    }
-                } ?: run {
-                    val gson = Gson()
-                    val error = gson.fromJson(response.errorBody()?.string(), Error::class.java)
-                    Toast.makeText(this@MainActivity, error.error, Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onFailure(call: Call<Response>, t: Throwable) {
-                pb.visibility = View.GONE
-                when (t) {
-                    is SocketTimeoutException -> {
-                        showAlertDialog(this@MainActivity,textInput, pb )
-                    }
-                    is SSLHandshakeException ->{
-                        showAlertDialog(this@MainActivity,textInput, pb )
-                    }
-                    else -> {
-
-                    }
-                }
-                Log.d("deneme", "${t.message}")
-            }
-        })
+    private fun callShortLink(editLink: String, textInput: TextInputEditText) {
+        mainBinding.progresBar.visibility = View.VISIBLE
+        this.textInput = textInput
+        viewModel.callResponse(editLink)
     }
-    private fun showAlertDialog(ctx : Context,linkText:TextInputEditText,progressBar: ProgressBar){
+    private fun showAlertDialog(ctx : Context,linkText:TextInputEditText){
         val alertDialog = AlertDialog.Builder(this@MainActivity)
             .setTitle("ERROR")
             .setMessage("An error occurred")
             .setPositiveButton(
                 "Retry"
             ) { dialog, which ->
-                callShortLink(linkText.text.toString(), progressBar,linkText)
+                callShortLink(linkText.text.toString(),linkText)
             }
             .setNegativeButton(
                 "Cancel"
