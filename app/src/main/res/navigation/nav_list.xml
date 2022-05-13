@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_list"
+    app:startDestination="@id/myLinksFragment">
+    <fragment
+        android:id="@+id/myLinksFragment"
+        android:name="com.mobven.shortly.ui.list.MyLinksFragment"
+        android:label="fragment_mylist"
+        tools:layout="@layout/fragment_mylist" />
+</navigation>

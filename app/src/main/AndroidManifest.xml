@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.samplerunproject">
+    package="com.mobven.shortly">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:name=".MyApplication"
+        android:name="com.mobven.shortly.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SampleRunProject">
         <activity
-            android:name=".MainActivity"
+            android:name="com.mobven.shortly.ui.main.MainActivity"
             android:windowSoftInputMode="adjustPan"
             android:exported="true">
             <intent-filter>

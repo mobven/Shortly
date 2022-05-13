@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background_color"
-        tools:context=".MainActivity">
+        tools:context=".ui.main.MainActivity">
 
         <ProgressBar
             android:id="@+id/progres_bar"
@@ -21,135 +21,73 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragment_nav_host"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:defaultNavHost="true"
+            app:layout_constraintBottom_toTopOf="@+id/view_bottom"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <View
+            android:id="@+id/view_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_204sdp"
+            android:background="@color/bottom_rectangle_violet"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
-            <ImageView
-                android:id="@+id/iv_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
-                android:src="@drawable/logo"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <View
+            android:id="@+id/view_shape"
+            android:layout_width="@dimen/_236sdp"
+            android:layout_height="@dimen/_130sdp"
+            android:background="@drawable/shape"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/view_bottom" />
 
-            <TextView
-                android:id="@+id/tv_history"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/text_history"
-                android:textColor="@color/black"
-                android:textSize="17sp"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/shorten_link_edt"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_48sdp"
+            android:layout_marginStart="@dimen/_48sdp"
+            android:layout_marginEnd="@dimen/_48sdp"
+            android:layout_marginBottom="@dimen/_4sdp"
+            android:background="@drawable/bg_edittext"
+            android:hint="@string/hint_link"
+            android:textAlignment="center"
+            android:textSize="@dimen/_17ssp"
+            app:layout_constraintBottom_toTopOf="@+id/shorten_it_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/view_bottom"
+            app:layout_constraintVertical_chainStyle="packed" />
 
-            <ImageView
-                android:id="@+id/iv_main"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:src="@drawable/illustration"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_title" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/shorten_it_button"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_48sdp"
+            android:layout_marginStart="@dimen/_48sdp"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:layout_marginEnd="@dimen/_48sdp"
+            android:backgroundTint="@color/teal_200"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/btn_shorten"
+            android:textSize="@dimen/_20ssp"
+            android:textStyle="bold"
+            app:cornerRadius="@dimen/_4sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/shorten_link_edt" />
 
-            <TextView
-                android:id="@+id/tv_main_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/title_main"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_main" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_links"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="16dp"
-                android:orientation="vertical"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toTopOf="@id/view"
-                app:layout_constraintTop_toBottomOf="@id/tv_history" />
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/text_description"
-                android:textColor="@color/black"
-                android:textSize="17sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_main_title" />
-
-            <View
-                android:id="@+id/view"
-                android:layout_width="wrap_content"
-                android:layout_height="180dp"
-                android:background="@color/bottom_rectangle_violet"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView"
-                app:layout_constraintVertical_bias="1.0" />
-
-            <View
-                android:id="@+id/view_shape"
-                android:layout_width="237dp"
-                android:layout_height="130dp"
-                android:background="@drawable/shape"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rv_links" />
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/shorten_link_edt"
-                android:layout_width="279dp"
-                android:layout_height="49dp"
-                android:layout_marginBottom="4dp"
-                android:background="@drawable/bg_edittext"
-                android:hint="@string/hint_link"
-                android:textAlignment="center"
-                app:layout_constraintBottom_toTopOf="@+id/shorten_it_button"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rv_links"
-                app:layout_constraintVertical_chainStyle="packed" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/shorten_it_button"
-                android:layout_width="279dp"
-                android:layout_height="49dp"
-                android:layout_marginTop="4dp"
-                android:backgroundTint="@color/teal_200"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="@string/btn_shorten"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:cornerRadius="4dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/shorten_link_edt" />
-
-            <androidx.constraintlayout.widget.Group
-                android:id="@+id/group_main"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:constraint_referenced_ids="iv_main, tv_main_title,iv_title, textView" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

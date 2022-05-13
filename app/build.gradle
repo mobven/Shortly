@@ -37,6 +37,11 @@ android {
     buildFeatures {
         dataBinding true
     }
+    kapt {
+        arguments {
+            arg("room.schemaLocation", "$projectDir/schemas".toString())
+        }
+    }
 }
 
 dependencies {
@@ -46,18 +51,24 @@ dependencies {
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
-    implementation"com.squareup.okhttp3:logging-interceptor:4.9.3"
-    implementation 'androidx.room:room-ktx:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation"com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.6"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.0-beta01'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.0-beta01'
+
     //Hilt
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
-    implementation "com.google.dagger:hilt-android:2.40.5"
-    kapt "com.google.dagger:hilt-compiler:2.40.5"
+    implementation "com.google.dagger:hilt-android:2.41"
+    kapt "com.google.dagger:hilt-compiler:2.41"
+
+    //Room
+    implementation 'androidx.room:room-ktx:2.4.2'
+    kapt 'androidx.room:room-compiler:2.4.2'
 
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
@@ -68,4 +79,108 @@ dependencies {
     //Room
     implementation("androidx.room:room-runtime:2.4.2")
     kapt "androidx.room:room-compiler:2.4.2"
+}
+
+class SDPFactory extends DefaultTask {
+
+    @Input
+    String unit = "dp"
+    @Input
+    double positiveMax = 600
+    @Input
+    double negativeMax = 60
+
+    @TaskAction
+    def create() {
+        String resFolder =  project.getProjectDir().getPath() + "/src/main/res/";
+        for(double dimen = 375; dimen <= 1200 ; dimen = dimen + 30){
+            String folder = resFolder + "values-sw" + (int)dimen + "dp";
+            String fileName = folder + "/positive_sdps.xml";
+            new File(folder).mkdir();
+            new File(fileName).createNewFile();
+            PrintWriter printWriter = new PrintWriter(fileName);
+            printWriter.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+            printWriter.println("<resources>");
+            for(int i=1; i<=positiveMax; i++){
+                double ratio = i/375d;
+                double sdp = ratio*dimen;
+                printWriter.printf("\t<dimen name=\"_%dsdp\">%.2f" + unit + "</dimen>\r\n",i,sdp);
+            }
+            printWriter.println("</resources>");
+            printWriter.close();
+        }
+        for(double dimen = 375; dimen <= 1200; dimen = dimen + 30){
+            String folder = resFolder + "values-sw" + (int)dimen + "dp";
+            String fileName = folder + "/negative_sdps.xml";
+            new File(folder).mkdir();
+            new File(fileName).createNewFile();
+            PrintWriter printWriter = new PrintWriter(fileName);
+            printWriter.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+            printWriter.println("<resources>");
+            for(int i=1;i<=negativeMax;i++){
+                double ratio = i/375d;
+                double sdp = ratio*dimen;
+                printWriter.printf("\t<dimen name=\"_minus%dsdp\">%.2f" + unit + "</dimen>\r\n",i,-sdp);
+            }
+            printWriter.println("</resources>");
+            printWriter.close();
+        }
+    }
+}
+
+task createSDP(type: SDPFactory) {
+}
+
+//uncomment next line to edit values
+//preBuild.dependsOn createSDP
+
+public class SSPFactory extends DefaultTask {
+
+    @Input
+    String unit = "sp"
+    @Input
+    double positiveMax = 100
+
+    @TaskAction
+    def create() {
+        String resFolder =  project.getProjectDir().getPath() + "/src/main/res/";
+        for(double dimen = 375; dimen <= 1200 ; dimen = dimen + 30){
+            createPositive(resFolder, dimen)
+        }
+        createPositive(resFolder, 1080)
+    }
+
+    private void createPositive(String resFolder, double dimen) {
+        String folder = resFolder + "values-sw" + (int) dimen + "dp";
+        String fileName = folder + "/positive_ssps.xml";
+        new File(folder).mkdir();
+        new File(fileName).createNewFile();
+        PrintWriter printWriter = new PrintWriter(fileName);
+        printWriter.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+        printWriter.println("<resources>");
+        for (int i = 1; i <= positiveMax; i++) {
+            double ratio = i / 375d;
+            double ssp = ratio * dimen;
+            printWriter.printf("\t<dimen name=\"_%dssp\">%.2f" + unit + "</dimen>\r\n", i, ssp);
+        }
+        printWriter.println("</resources>");
+        printWriter.close();
+    }
+}
+
+task createSSP(type: SSPFactory) {
+}
+
+//uncomment next line to edit values
+//preBuild.dependsOn createSSP
+
+createSSP{
+    unit = "sp"
+    positiveMax = 100//change to 600 or any other value if needed
+}
+
+createSDP{
+    unit = "dp"//change to "sp" if needed
+    positiveMax = 600//change to 600 or any other value if needed
+    negativeMax = 60//change to 600 or any other value if needed
 }
