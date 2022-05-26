@@ -7,10 +7,12 @@ import javax.inject.Inject
 
 interface ShortlyLocalDataSource {
     fun getLinks(): Flow<List<ShortenData>>
+    suspend fun insertLink(shortenData: ShortenData)
 }
 
 class ShortlyLocalDataSourceImpl @Inject constructor(
     private val linkDao: LinkDao
 ) : ShortlyLocalDataSource {
     override fun getLinks(): Flow<List<ShortenData>> = linkDao.getLinkList()
+    override suspend fun insertLink(shortenData: ShortenData) = linkDao.insertLink(shortenData)
 }
