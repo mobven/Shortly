@@ -1,13 +1,8 @@
 package com.mobven.shortly.ui.main
 
-import android.R.attr.label
 import android.app.AlertDialog
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -15,12 +10,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.mobven.shortly.R
 import com.mobven.shortly.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -32,10 +28,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         mainBinding =
-            DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+            DataBindingUtil.setContentView(this, R.layout.activity_main)
         mainBinding.lifecycleOwner = this
-
-        viewModel.getShortLinkData()
 
         mainBinding.apply {
             shortenItButton.setOnClickListener {
@@ -50,47 +44,36 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        val navController = (supportFragmentManager.findFragmentById(R.id.fragment_nav_host) as NavHostFragment).navController
+        val graphInflater = navController.navInflater
+        val navListGraph = graphInflater.inflate(R.navigation.nav_list)
+        val navMainGraph = graphInflater.inflate(R.navigation.nav_main)
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect {
-                    val navController = findNavController(mainBinding.fragmentNavHost.id)
-                    val graphInflater = navController.navInflater
-                    val navListGraph = graphInflater.inflate(R.navigation.nav_list)
-                    val navMainGraph = graphInflater.inflate(R.navigation.nav_main)
-                    if (it.isNotEmpty()) {
-                        navController.graph = navListGraph
-                    } else {
-                        navController.graph = navMainGraph
+                    when(it) {
+                        is ShortlyUiState.Loading -> {
+                            mainBinding.progresBar.visibility = View.VISIBLE
+                        }
+                        is ShortlyUiState.Empty -> {
+                            navController.graph = navMainGraph
+                        }
+                        is ShortlyUiState.Success -> {
+                            navController.graph = navListGraph
+                            mainBinding.progresBar.visibility = View.GONE
+                        }
+                        is ShortlyUiState.Error -> {
+                            mainBinding.progresBar.visibility = View.GONE
+                            showAlertDialog()
+                        }
+                        is ShortlyUiState.LinkShorten -> {
+                            viewModel.insertLink(it.data)
+                            mainBinding.progresBar.visibility = View.GONE
+                        }
                     }
                 }
             }
-        }
-        observeLocalList()
-        observeResponse()
-        observeError()
-    }
-
-    private fun observeLocalList() {
-        viewModel.linkListLiveData.observe(this){
-        }
-    }
-
-    private fun observeError() {
-        viewModel.shortenLinkErrorLiveData.observe(this) {
-            mainBinding.progresBar.visibility = View.GONE
-            showAlertDialog()
-        }
-    }
-
-    private fun observeResponse() {
-        viewModel.shortenLinkLiveData.observe(this){
-            mainBinding.progresBar.visibility = View.GONE
-            viewModel.insertLink(it.result)
-            val clipboard: ClipboardManager =
-                getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText("Copied", it.result.short_link)
-            clipboard.setPrimaryClip(clip)
-            Toast.makeText(this, "Copied - ${it.result.short_link}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -110,7 +93,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun callShortLink(editLink: String) {
         mainBinding.progresBar.visibility = View.VISIBLE
-        viewModel.shortenLink(mainBinding.shortenLinkEdt.text.toString())
+        viewModel.shortenLink(editLink)
     }
 
     private fun showAlertDialog(

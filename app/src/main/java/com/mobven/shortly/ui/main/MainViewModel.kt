@@ -1,11 +1,8 @@
 package com.mobven.shortly.ui.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mobven.shortly.BaseResponse
-import com.mobven.shortly.Error
 import com.mobven.shortly.Response
 import com.mobven.shortly.ShortenData
 import com.mobven.shortly.domain.usecase.GetLinksUseCase
@@ -15,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,45 +23,27 @@ class MainViewModel @Inject constructor(
     private val insertLinkUseCase: InsertLinkUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<List<ShortenData>>(emptyList())
-    val uiState: StateFlow<List<ShortenData>> = _uiState
+    private val _uiState = MutableStateFlow<ShortlyUiState>(ShortlyUiState.Empty(Unit))
+    val uiState: StateFlow<ShortlyUiState> = _uiState
 
     init {
         viewModelScope.launch {
             getLinksUseCase.invoke()
+                .distinctUntilChanged()
                 .collect {
-                    _uiState.value = it
+                    _uiState.value = ShortlyUiState.Success(it)
                 }
-        }
-    }
-
-    private val _linkListLiveData = MutableLiveData<List<ShortenData>>()
-    val linkListLiveData: MutableLiveData<List<ShortenData>> = _linkListLiveData
-
-    private val _shortenLinkLiveData = MutableLiveData<Response>()
-    val shortenLinkLiveData: LiveData<Response> get() = _shortenLinkLiveData
-
-    private val _shortenLinkErrorLiveData = MutableLiveData<Error>()
-    val shortenLinkErrorLiveData get() = _shortenLinkErrorLiveData
-
-    fun getShortLinkData() {
-        viewModelScope.launch {
-            getLinksUseCase.invoke().catch {
-                print("Error")
-            }.collect{
-                _linkListLiveData.value = it
-            }
         }
     }
 
     fun shortenLink(originalLink: String) {
         viewModelScope.launch {
             shortenLinkUseCase.invoke(originalLink).catch {
-                _shortenLinkErrorLiveData.value = com.mobven.shortly.Error(it.message?:"")
+                _uiState.value = ShortlyUiState.Error(it.message.orEmpty())
             }.collect{
                 if (it.data?.ok == true)
                     BaseResponse.success(it.data).data?.let {
-                    _shortenLinkLiveData.value = it
+                        _uiState.value = ShortlyUiState.LinkShorten(it.result)
                 }
             }
         }
@@ -74,4 +54,12 @@ class MainViewModel @Inject constructor(
             insertLinkUseCase.invokeInsert(shortenData)
         }
     }
+}
+
+sealed class ShortlyUiState {
+    data class Empty(val unit: Unit) : ShortlyUiState()
+    data class Error(val message: String) : ShortlyUiState()
+    data class Success(val dataList: List<ShortenData>) : ShortlyUiState()
+    data class Loading(val unit: Unit) : ShortlyUiState()
+    data class LinkShorten(val data: ShortenData): ShortlyUiState()
 }
