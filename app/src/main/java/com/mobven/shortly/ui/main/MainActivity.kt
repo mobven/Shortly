@@ -1,10 +1,13 @@
 package com.mobven.shortly.ui.main
 
+import android.R.attr.label
 import android.app.AlertDialog
-import android.content.Context
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -13,34 +16,35 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
-import com.google.android.material.textfield.TextInputEditText
 import com.mobven.shortly.R
 import com.mobven.shortly.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels()
+    private lateinit var mainBinding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val mainBinding =
+        mainBinding =
             DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
         mainBinding.lifecycleOwner = this
+
+        viewModel.getShortLinkData()
 
         mainBinding.apply {
             shortenItButton.setOnClickListener {
                 if (shortenLinkEdt.text.toString().isBlank()) {
-                    checkEditLink(shortenLinkEdt, true)
+                    checkEditLink( true)
                 } else {
-                    checkEditLink(shortenLinkEdt, false)
+                    checkEditLink( false)
                     callShortLink(
-                        shortenLinkEdt.text.toString(),
-                        mainBinding.progresBar,
-                        shortenLinkEdt
+                        shortenLinkEdt.text.toString()
                     )
                 }
             }
@@ -61,10 +65,37 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        observeLocalList()
+        observeResponse()
+        observeError()
     }
 
-    private fun checkEditLink(textInput: TextInputEditText, isValid: Boolean) {
-        with(textInput) {
+    private fun observeLocalList() {
+        viewModel.linkListLiveData.observe(this){
+        }
+    }
+
+    private fun observeError() {
+        viewModel.shortenLinkErrorLiveData.observe(this) {
+            mainBinding.progresBar.visibility = View.GONE
+            showAlertDialog()
+        }
+    }
+
+    private fun observeResponse() {
+        viewModel.shortenLinkLiveData.observe(this){
+            mainBinding.progresBar.visibility = View.GONE
+            viewModel.insertLink(it.result)
+            val clipboard: ClipboardManager =
+                getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText("Copied", it.result.short_link)
+            clipboard.setPrimaryClip(clip)
+            Toast.makeText(this, "Copied - ${it.result.short_link}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun checkEditLink(isValid: Boolean) {
+        with(mainBinding.shortenLinkEdt) {
             if (isValid) {
                 setHintTextColor(ContextCompat.getColor(this@MainActivity, R.color.red))
                 hint = getString(R.string.error_link)
@@ -77,14 +108,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun callShortLink(editLink: String, pb: ProgressBar, textInput: TextInputEditText) {
-        pb.visibility = View.VISIBLE
+    private fun callShortLink(editLink: String) {
+        mainBinding.progresBar.visibility = View.VISIBLE
+        viewModel.shortenLink(mainBinding.shortenLinkEdt.text.toString())
     }
 
     private fun showAlertDialog(
-        ctx: Context,
-        linkText: TextInputEditText,
-        progressBar: ProgressBar
     ) {
         val alertDialog = AlertDialog.Builder(this@MainActivity)
             .setTitle("ERROR")
@@ -92,7 +121,7 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton(
                 "Retry"
             ) { dialog, which ->
-                callShortLink(linkText.text.toString(), progressBar, linkText)
+                callShortLink(mainBinding.shortenLinkEdt.toString())
             }
             .setNegativeButton(
                 "Cancel"
