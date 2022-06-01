@@ -43,7 +43,6 @@ class MainViewModel @Inject constructor(
                     if (it.isNotEmpty()){
                         _uiState.value = ShortlyUiState.Success(it)
                         _linkList.value = it
-                        Log.d("TAG", ": girdi getLocalShortenLink")
                     }
                     else
                         _uiState.value = ShortlyUiState.Empty(Unit)
@@ -66,7 +65,6 @@ class MainViewModel @Inject constructor(
     fun insertLink(shortenData: ShortenData) {
         viewModelScope.launch {
             insertLinkUseCase.invokeInsert(shortenData)
-            Log.d("TAG", "insertLink: girdi isterlink")
         }
     }
 }
