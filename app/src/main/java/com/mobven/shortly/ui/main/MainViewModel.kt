@@ -1,16 +1,11 @@
 package com.mobven.shortly.ui.main
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context.CLIPBOARD_SERVICE
 import android.util.Log
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mobven.shortly.BaseResponse
-import com.mobven.shortly.Response
 import com.mobven.shortly.ShortenData
 import com.mobven.shortly.domain.usecase.GetLinksUseCase
 import com.mobven.shortly.domain.usecase.InsertLinkUseCase

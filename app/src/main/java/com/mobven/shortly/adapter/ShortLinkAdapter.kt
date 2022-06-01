@@ -1,6 +1,5 @@
 package com.mobven.shortly.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -9,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobven.shortly.R
 import com.mobven.shortly.ShortenData
 import com.mobven.shortly.databinding.ItemShortLinkBinding
-import javax.inject.Inject
 
 class ShortLinkAdapter: RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
     var itemClickListener: (ShortenData) -> Unit = {}
