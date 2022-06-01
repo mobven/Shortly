@@ -1,5 +1,6 @@
 package com.mobven.shortly.di
 
+import com.mobven.shortly.adapter.ShortLinkAdapter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,6 +20,13 @@ object ApplicationModule {
     fun provideApplicationScope(): CoroutineScope {
         return CoroutineScope(SupervisorJob())
     }
+
+    @Provides
+    @Singleton
+    fun provideAdapter(): ShortLinkAdapter {
+        return ShortLinkAdapter()
+    }
+
 }
 
 @Retention(AnnotationRetention.RUNTIME)

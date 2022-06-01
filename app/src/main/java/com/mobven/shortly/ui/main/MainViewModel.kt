@@ -1,5 +1,12 @@
 package com.mobven.shortly.ui.main
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context.CLIPBOARD_SERVICE
+import android.util.Log
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mobven.shortly.BaseResponse
@@ -26,16 +33,28 @@ class MainViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<ShortlyUiState>(ShortlyUiState.Empty(Unit))
     val uiState: StateFlow<ShortlyUiState> = _uiState
 
+    private var _linkList = MutableLiveData<List<ShortenData>>()
+    val linkList:LiveData<List<ShortenData>> get() = _linkList
+
     init {
+        getLocalShortenLink()
+    }
+
+    private fun getLocalShortenLink(){
         viewModelScope.launch {
             getLinksUseCase.invoke()
                 .distinctUntilChanged()
                 .collect {
-                    _uiState.value = ShortlyUiState.Success(it)
+                    if (it.isNotEmpty()){
+                        _uiState.value = ShortlyUiState.Success(it)
+                        _linkList.value = it
+                        Log.d("TAG", ": girdi getLocalShortenLink")
+                    }
+                    else
+                        _uiState.value = ShortlyUiState.Empty(Unit)
                 }
         }
     }
-
     fun shortenLink(originalLink: String) {
         viewModelScope.launch {
             shortenLinkUseCase.invoke(originalLink).catch {
@@ -52,6 +71,7 @@ class MainViewModel @Inject constructor(
     fun insertLink(shortenData: ShortenData) {
         viewModelScope.launch {
             insertLinkUseCase.invokeInsert(shortenData)
+            Log.d("TAG", "insertLink: girdi isterlink")
         }
     }
 }
