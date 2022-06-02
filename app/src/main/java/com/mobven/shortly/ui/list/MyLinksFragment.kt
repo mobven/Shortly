@@ -41,7 +41,7 @@ class MyLinksFragment: Fragment() {
         }
         viewModel.apply {
             linkList.observe(viewLifecycleOwner){
-                setData(it)
+                shortLinkAdapter.setData(it)
             }
         }
         shortLinkAdapter.itemClickListener = {
@@ -55,11 +55,4 @@ class MyLinksFragment: Fragment() {
         }
     }
 
-    fun setData(list: List<ShortenData>){
-        shortLinkAdapter.setData(list)
-    }
-    companion object {
-        @JvmStatic
-        fun newInstance() = MyLinksFragment()
-    }
 }

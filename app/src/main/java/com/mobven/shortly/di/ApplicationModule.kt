@@ -20,13 +20,6 @@ object ApplicationModule {
     fun provideApplicationScope(): CoroutineScope {
         return CoroutineScope(SupervisorJob())
     }
-
-    @Provides
-    @Singleton
-    fun provideAdapter(): ShortLinkAdapter {
-        return ShortLinkAdapter()
-    }
-
 }
 
 @Retention(AnnotationRetention.RUNTIME)
