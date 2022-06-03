@@ -45,6 +45,7 @@ class MyLinksFragment: Fragment() {
             }
         }
         shortLinkAdapter.itemClickListener = {
+            viewModel.selectedShortenData(true, it.code)
             shortLinkAdapter.copiedItem = it.code
             val clipboard: ClipboardManager = activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("Copied", it.short_link)

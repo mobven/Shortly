@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobven.shortly.R
 import com.mobven.shortly.ShortenData
 import com.mobven.shortly.databinding.ItemShortLinkBinding
+import dagger.hilt.android.scopes.FragmentScoped
 
+@FragmentScoped
 class ShortLinkAdapter: RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
     var itemClickListener: (ShortenData) -> Unit = {}
     var itemRemoveListener: (String) -> Unit = {}
@@ -44,9 +46,13 @@ class ShortLinkAdapter: RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
                 icTrash.setOnClickListener {
                     itemRemoveListener(item.code)
                 }
-                if (copiedItem != null && copiedItem == item.code){
+                if (item.isSelected){
                     btnCopy.setBackgroundColor(ContextCompat.getColor(root.context, R.color.dark_violet))
                     btnCopy.text = root.context.getString(R.string.btn_copied)
+                }
+                else{
+                    btnCopy.setBackgroundColor(ContextCompat.getColor(root.context, R.color.cyan))
+                    btnCopy.text = root.context.getString(R.string.btn_copy)
                 }
             }
         }

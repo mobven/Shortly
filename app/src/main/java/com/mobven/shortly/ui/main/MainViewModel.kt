@@ -1,15 +1,12 @@
 package com.mobven.shortly.ui.main
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mobven.shortly.BaseResponse
 import com.mobven.shortly.ShortenData
-import com.mobven.shortly.domain.usecase.GetLinksUseCase
-import com.mobven.shortly.domain.usecase.InsertLinkUseCase
-import com.mobven.shortly.domain.usecase.ShortenLinkUseCase
+import com.mobven.shortly.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +19,9 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val shortenLinkUseCase: ShortenLinkUseCase,
     private val getLinksUseCase: GetLinksUseCase,
-    private val insertLinkUseCase: InsertLinkUseCase
+    private val insertLinkUseCase: InsertLinkUseCase,
+    private val updateShortenDataUseCase: UpdateShortenDataUseCase,
+    private val getSelectedOldUseCase: GetSelectedOldUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<ShortlyUiState>(ShortlyUiState.Empty(Unit))
@@ -65,6 +64,15 @@ class MainViewModel @Inject constructor(
     fun insertLink(shortenData: ShortenData) {
         viewModelScope.launch {
             insertLinkUseCase.invokeInsert(shortenData)
+        }
+    }
+
+    fun selectedShortenData(isSelected: Boolean, code: String){
+        viewModelScope.launch{
+            getSelectedOldUseCase.getSelectedOld()?.let {
+                updateShortenDataUseCase.updateSelected(false,it)
+            }
+            updateShortenDataUseCase.updateSelected(isSelected, code)
         }
     }
 }

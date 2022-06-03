@@ -4,14 +4,13 @@ import com.mobven.shortly.adapter.ShortLinkAdapter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import dagger.hilt.android.components.FragmentComponent
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(FragmentComponent::class)
 object FragmentModule {
+
     @Provides
-    @Singleton
     fun provideAdapter(): ShortLinkAdapter {
         return ShortLinkAdapter()
     }
