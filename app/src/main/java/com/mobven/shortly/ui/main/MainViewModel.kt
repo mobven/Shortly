@@ -29,35 +29,38 @@ class MainViewModel @Inject constructor(
     val uiState: StateFlow<ShortlyUiState> = _uiState
 
     private var _linkList = MutableLiveData<List<ShortenData>>()
-    val linkList:LiveData<List<ShortenData>> get() = _linkList
+    val linkList: LiveData<List<ShortenData>> get() = _linkList
+
+    private var _deleteError = MutableLiveData<Boolean>()
+    val deleteError: LiveData<Boolean> get() = _deleteError
 
     init {
         getLocalShortenLink()
     }
 
-    private fun getLocalShortenLink(){
+    private fun getLocalShortenLink() {
         viewModelScope.launch {
             getLinksUseCase.invoke()
                 .distinctUntilChanged()
                 .collect {
-                    if (it.isNotEmpty()){
+                    if (it.isNotEmpty()) {
                         _uiState.value = ShortlyUiState.Success(it)
                         _linkList.value = it
-                    }
-                    else
+                    } else
                         _uiState.value = ShortlyUiState.Empty(Unit)
                 }
         }
     }
+
     fun shortenLink(originalLink: String) {
         viewModelScope.launch {
             shortenLinkUseCase.invoke(originalLink).catch {
                 _uiState.value = ShortlyUiState.Error(it.message.orEmpty())
-            }.collect{
+            }.collect {
                 if (it.data?.ok == true)
                     BaseResponse.success(it.data).data?.let {
                         _uiState.value = ShortlyUiState.LinkShorten(it.result)
-                }
+                    }
             }
         }
     }
@@ -68,18 +71,20 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun selectedShortenData(isSelected: Boolean, code: String){
-        viewModelScope.launch{
+    fun selectedShortenData(isSelected: Boolean, code: String) {
+        viewModelScope.launch {
             getSelectedOldUseCase.getSelectedOld()?.let {
-                updateShortenDataUseCase.updateSelected(false,it)
+                updateShortenDataUseCase.updateSelected(false, it)
             }
             updateShortenDataUseCase.updateSelected(isSelected, code)
         }
     }
 
-    fun deleteLink(code: String){
+    fun deleteLink(code: String) {
         viewModelScope.launch {
-            deleteLinkUseCase.deleteLink(code)
+            var result = deleteLinkUseCase.deleteLink(code)
+            if (result == 0)
+                _deleteError.value = true
         }
     }
 }
@@ -89,5 +94,5 @@ sealed class ShortlyUiState {
     data class Error(val message: String) : ShortlyUiState()
     data class Success(val dataList: List<ShortenData>) : ShortlyUiState()
     data class Loading(val unit: Unit) : ShortlyUiState()
-    data class LinkShorten(val data: ShortenData): ShortlyUiState()
+    data class LinkShorten(val data: ShortenData) : ShortlyUiState()
 }

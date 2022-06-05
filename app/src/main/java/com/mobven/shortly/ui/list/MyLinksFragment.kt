@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,6 +23,7 @@ class MyLinksFragment : Fragment() {
     private lateinit var binding: FragmentMylistBinding
     private val viewModel: MainViewModel by viewModels()
     private lateinit var clipBoardManager: ClipboardManager
+    private var toast: Toast? = null
 
     @Inject
     lateinit var shortLinkAdapter: ShortLinkAdapter
@@ -62,6 +64,12 @@ class MyLinksFragment : Fragment() {
                         clipBoardManager.clearPrimaryClip()
                     }
                 deleteLink(code)
+            }
+            deleteError.observe(viewLifecycleOwner){
+                toast?.cancel()
+                toast = Toast.makeText(context,"Silerken Bir Hata Oluştu!",Toast.LENGTH_SHORT)
+                toast?.show()
+
             }
         }
     }
