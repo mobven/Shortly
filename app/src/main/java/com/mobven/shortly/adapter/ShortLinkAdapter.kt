@@ -11,9 +11,9 @@ import com.mobven.shortly.databinding.ItemShortLinkBinding
 import dagger.hilt.android.scopes.FragmentScoped
 
 @FragmentScoped
-class ShortLinkAdapter: RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
+class ShortLinkAdapter : RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
     var itemClickListener: (ShortenData) -> Unit = {}
-    var itemRemoveListener: (String) -> Unit = {}
+    var itemRemoveListener: ((String), (String)) -> Unit = { code, shortLink -> }
     private var shortLinkList = mutableListOf<ShortenData>()
     var copiedItem: String? = null
 
@@ -44,13 +44,17 @@ class ShortLinkAdapter: RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
                     itemClickListener(item)
                 }
                 icTrash.setOnClickListener {
-                    itemRemoveListener(item.code)
+                    itemRemoveListener(item.code, item.short_link)
                 }
-                if (item.isSelected){
-                    btnCopy.setBackgroundColor(ContextCompat.getColor(root.context, R.color.dark_violet))
+                if (item.isSelected) {
+                    btnCopy.setBackgroundColor(
+                        ContextCompat.getColor(
+                            root.context,
+                            R.color.dark_violet
+                        )
+                    )
                     btnCopy.text = root.context.getString(R.string.btn_copied)
-                }
-                else{
+                } else {
                     btnCopy.setBackgroundColor(ContextCompat.getColor(root.context, R.color.cyan))
                     btnCopy.text = root.context.getString(R.string.btn_copy)
                 }

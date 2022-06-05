@@ -21,7 +21,8 @@ class MainViewModel @Inject constructor(
     private val getLinksUseCase: GetLinksUseCase,
     private val insertLinkUseCase: InsertLinkUseCase,
     private val updateShortenDataUseCase: UpdateShortenDataUseCase,
-    private val getSelectedOldUseCase: GetSelectedOldUseCase
+    private val getSelectedOldUseCase: GetSelectedOldUseCase,
+    private val deleteLinkUseCase: DeleteLinkUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<ShortlyUiState>(ShortlyUiState.Empty(Unit))
@@ -73,6 +74,12 @@ class MainViewModel @Inject constructor(
                 updateShortenDataUseCase.updateSelected(false,it)
             }
             updateShortenDataUseCase.updateSelected(isSelected, code)
+        }
+    }
+
+    fun deleteLink(code: String){
+        viewModelScope.launch {
+            deleteLinkUseCase.deleteLink(code)
         }
     }
 }

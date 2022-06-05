@@ -15,6 +15,7 @@ interface MainRepository {
     suspend fun insertLink(shortenData: ShortenData)
     suspend fun updateSelected(isSelected: Boolean, code: String)
     suspend fun getOldSelected():String?
+    suspend fun deleteLink(code: String): Int
 }
 
 @Singleton
@@ -27,4 +28,5 @@ class MainRepositoryImpl @Inject constructor(
     override suspend fun insertLink(shortenData: ShortenData) = localDataSource.insertLink(shortenData)
     override suspend fun updateSelected(isSelected: Boolean, code: String) = localDataSource.updateSelected(isSelected, code)
     override suspend fun getOldSelected(): String? = localDataSource.getOldSelected()
+    override suspend fun deleteLink(code: String): Int = localDataSource.deleteLink(code)
 }
