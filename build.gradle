@@ -1,30 +1,31 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-/*plugins {
-    id 'com.android.application' version '7.0.0' apply false
-    id 'com.android.library' version '7.0.0' apply false
-    id 'org.jetbrains.kotlin.android' version '1.6.10' apply false
-    id 'com.google.dagger:hilt-android-gradle-plugin' version '2.40.5' apply false
-}*/
+plugins {
+    alias libs.plugins.hilt.plugin apply false
+    alias libs.plugins.android.application apply false
+    alias libs.plugins.android.library apply false
+    alias libs.plugins.kotlin.android apply false
+    alias libs.plugins.kotlin.kapt apply false
+}
 
-buildscript {
+
+
+subprojects {
     repositories {
         google()
         mavenCentral()
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.3'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21'
-        classpath "com.google.dagger:hilt-android-gradle-plugin:2.40.5"
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        kotlinOptions {
+            freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+            freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+            freeCompilerArgs += "-Xopt-in=androidx.paging.ExperimentalPagingApi"
+
+            jvmTarget = JavaVersion.VERSION_11
+        }
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
-}
-
-ext {
-
 }
