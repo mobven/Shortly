@@ -2,7 +2,6 @@ package com.mobven.shortly.ui.list
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,8 +21,10 @@ import javax.inject.Inject
 class MyLinksFragment : Fragment() {
     private lateinit var binding: FragmentMylistBinding
     private val viewModel: MainViewModel by viewModels()
-    private lateinit var clipBoardManager: ClipboardManager
     private var toast: Toast? = null
+
+    @Inject
+    lateinit var clipBoardManager: ClipboardManager
 
     @Inject
     lateinit var shortLinkAdapter: ShortLinkAdapter
@@ -49,8 +50,6 @@ class MyLinksFragment : Fragment() {
                 shortLinkAdapter.setData(it)
             }
 
-            clipBoardManager =
-                activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             shortLinkAdapter.itemClickListener = {
                 selectedShortenData(true, it.code)
                 shortLinkAdapter.copiedItem = it.code
