@@ -29,6 +29,9 @@ class MyLinksFragment : Fragment() {
     @Inject
     lateinit var shortLinkAdapter: ShortLinkAdapter
 
+    @Inject
+    lateinit var linearLayoutManager: LinearLayoutManager
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,8 +43,8 @@ class MyLinksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
-            rvLinks.layoutManager =
-                LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            rvLinks.layoutManager = linearLayoutManager
+
             rvLinks.adapter = shortLinkAdapter
         }
 
@@ -64,9 +67,9 @@ class MyLinksFragment : Fragment() {
                     }
                 deleteLink(code)
             }
-            deleteError.observe(viewLifecycleOwner){
+            deleteError.observe(viewLifecycleOwner) {
                 toast?.cancel()
-                toast = Toast.makeText(context,"Silerken Bir Hata Oluştu!",Toast.LENGTH_SHORT)
+                toast = Toast.makeText(context, "Silerken Bir Hata Oluştu!", Toast.LENGTH_SHORT)
                 toast?.show()
 
             }

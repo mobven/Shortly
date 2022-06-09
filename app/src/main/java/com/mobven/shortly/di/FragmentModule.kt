@@ -2,6 +2,7 @@ package com.mobven.shortly.di
 
 import android.content.ClipboardManager
 import android.content.Context
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobven.shortly.adapter.ShortLinkAdapter
 import dagger.Module
 import dagger.Provides
@@ -16,7 +17,13 @@ object FragmentModule {
    @Provides
     fun provideClipboardManager(@ApplicationContext context: Context): ClipboardManager{
         return context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    }
 
+    @Provides
+    fun provideLinearLayoutManager(@ApplicationContext context: Context): LinearLayoutManager{
+        val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
+        linearLayoutManager.stackFromEnd = true
+        return linearLayoutManager
     }
 
     @Provides

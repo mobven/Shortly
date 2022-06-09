@@ -59,6 +59,8 @@
             android:layout_marginBottom="@dimen/_4sdp"
             android:background="@drawable/bg_edittext"
             android:hint="@string/hint_link"
+            android:maxLines="1"
+            android:inputType="text"
             android:textAlignment="center"
             android:textSize="@dimen/_17ssp"
             app:layout_constraintBottom_toTopOf="@+id/shorten_it_button"

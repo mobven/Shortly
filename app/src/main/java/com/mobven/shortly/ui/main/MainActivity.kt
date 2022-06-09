@@ -2,7 +2,10 @@ package com.mobven.shortly.ui.main
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -17,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
 
     private val viewModel: MainViewModel by viewModels()
     private lateinit var mainBinding: ActivityMainBinding
@@ -31,15 +34,9 @@ class MainActivity : AppCompatActivity() {
 
         mainBinding.apply {
             shortenItButton.setOnClickListener {
-                if (shortenLinkEdt.text.toString().isBlank()) {
-                    checkEditLink( true)
-                } else {
-                    checkEditLink( false)
-                    callShortLink(
-                        shortenLinkEdt.text.toString()
-                    )
-                }
+               buttonClicked()
             }
+            shortenLinkEdt.setOnEditorActionListener(this@MainActivity)
         }
 
         val navController = (supportFragmentManager.findFragmentById(R.id.fragment_nav_host) as NavHostFragment).navController
@@ -74,7 +71,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
+    private fun buttonClicked(){
+        if (mainBinding.shortenLinkEdt.text.toString().isBlank()) {
+            checkEditLink( true)
+        } else {
+            checkEditLink( false)
+            callShortLink(
+                mainBinding.shortenLinkEdt.text.toString()
+            )
+        }
+    }
     private fun checkEditLink(isValid: Boolean) {
         with(mainBinding.shortenLinkEdt) {
             if (isValid) {
@@ -110,5 +116,12 @@ class MainActivity : AppCompatActivity() {
                 //cancel
             }.create()
         alertDialog.show()
+    }
+
+    override fun onEditorAction(p0: TextView?, p1: Int, p2: KeyEvent?): Boolean {
+        if (p1 == EditorInfo.IME_ACTION_DONE) {
+            buttonClicked()
+        }
+        return false
     }
 }
