@@ -13,5 +13,6 @@ data class ShortenData(
     val original_link: String,
     val share_link: String,
     val short_link: String,
-    val short_link2: String
+    val short_link2: String,
+    val isSelected: Boolean = false
 )
