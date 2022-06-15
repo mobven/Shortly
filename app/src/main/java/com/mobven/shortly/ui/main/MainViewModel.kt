@@ -34,6 +34,9 @@ class MainViewModel @Inject constructor(
     private var _deleteError = MutableLiveData<Boolean>()
     val deleteError: LiveData<Boolean> get() = _deleteError
 
+    private var _isBlank = MutableLiveData<Boolean>()
+    val isBlank: LiveData<Boolean> get() = _isBlank
+
     init {
         getLocalShortenLink()
     }
@@ -50,6 +53,10 @@ class MainViewModel @Inject constructor(
                         _uiState.value = ShortlyUiState.Empty(Unit)
                 }
         }
+    }
+
+    fun buttonClicked(isBlank: Boolean) {
+        _isBlank.value = isBlank
     }
 
     fun shortenLink(originalLink: String) {

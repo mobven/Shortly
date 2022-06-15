@@ -2,6 +2,7 @@ package com.mobven.shortly.ui.main
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -34,7 +35,7 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
 
         mainBinding.apply {
             shortenItButton.setOnClickListener {
-               buttonClicked()
+                viewModel.buttonClicked(mainBinding.shortenLinkEdt.text.toString().isBlank())
             }
             shortenLinkEdt.setOnEditorActionListener(this@MainActivity)
         }
@@ -70,29 +71,23 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
                 }
             }
         }
-    }
-    private fun buttonClicked(){
-        if (mainBinding.shortenLinkEdt.text.toString().isBlank()) {
-            checkEditLink( true)
-        } else {
-            checkEditLink( false)
-            callShortLink(
-                mainBinding.shortenLinkEdt.text.toString()
-            )
-        }
-    }
-    private fun checkEditLink(isValid: Boolean) {
-        with(mainBinding.shortenLinkEdt) {
-            if (isValid) {
-                setHintTextColor(ContextCompat.getColor(this@MainActivity, R.color.red))
-                hint = getString(R.string.error_link)
-                setBackgroundResource(R.drawable.bg_edittext_error)
-            } else {
-                setHintTextColor(ContextCompat.getColor(this@MainActivity, R.color.gray))
-                hint = getString(R.string.hint_link)
-                setBackgroundResource(R.drawable.bg_edittext)
+        viewModel.isBlank.observe(this){
+            with(mainBinding.shortenLinkEdt) {
+                if (it) {
+                    setHintTextColor(ContextCompat.getColor(this@MainActivity, R.color.red))
+                    hint = getString(R.string.error_link)
+                    setBackgroundResource(R.drawable.bg_edittext_error)
+                } else {
+                    setHintTextColor(ContextCompat.getColor(this@MainActivity, R.color.gray))
+                    hint = getString(R.string.hint_link)
+                    setBackgroundResource(R.drawable.bg_edittext)
+                    callShortLink(
+                        mainBinding.shortenLinkEdt.text.toString()
+                    )
+                }
             }
         }
+
     }
 
     private fun callShortLink(editLink: String) {
@@ -108,7 +103,7 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
             .setPositiveButton(
                 "Retry"
             ) { dialog, which ->
-                callShortLink(mainBinding.shortenLinkEdt.toString())
+                callShortLink(mainBinding.shortenLinkEdt.text.toString())
             }
             .setNegativeButton(
                 "Cancel"
@@ -118,9 +113,9 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
         alertDialog.show()
     }
 
-    override fun onEditorAction(p0: TextView?, p1: Int, p2: KeyEvent?): Boolean {
-        if (p1 == EditorInfo.IME_ACTION_DONE) {
-            buttonClicked()
+    override fun onEditorAction(p0: TextView?, imeType: Int, p2: KeyEvent?): Boolean {
+        if (imeType == EditorInfo.IME_ACTION_DONE) {
+            viewModel.buttonClicked(mainBinding.shortenLinkEdt.text.toString().isBlank())
         }
         return false
     }
