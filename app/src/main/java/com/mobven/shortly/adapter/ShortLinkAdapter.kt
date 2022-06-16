@@ -38,7 +38,7 @@ class ShortLinkAdapter : RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ShortenData) {
             binding.apply {
-                tvLongLink.text = item.full_share_link
+                tvLongLink.text = item.original_link
                 tvShortLink.text = item.full_short_link
                 btnCopy.setOnClickListener {
                     itemClickListener(item)
