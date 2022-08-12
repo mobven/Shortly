@@ -8,12 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobven.shortly.R
 import com.mobven.shortly.ShortenData
 import com.mobven.shortly.databinding.ItemShortLinkBinding
+import com.mobven.shortly.utils.underLineText
 import dagger.hilt.android.scopes.FragmentScoped
 
 @FragmentScoped
 class ShortLinkAdapter : RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
     var itemClickListener: (ShortenData) -> Unit = {}
     var itemRemoveListener: ((String), (String)) -> Unit = { code, shortLink -> }
+    var openUrl: (String) -> Unit = {}
     private var shortLinkList = mutableListOf<ShortenData>()
     var copiedItem: String? = null
 
@@ -38,9 +40,18 @@ class ShortLinkAdapter : RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ShortenData) {
             binding.apply {
-                tvLongLink.text = item.original_link
-                tvShortLink.text = item.full_short_link
-                btnCopy.setOnClickListener {
+                tvLongLink.underLineText(item.original_link)
+                tvShortLink.underLineText(item.full_short_link)
+
+                tvLongLink.setOnClickListener {
+                    openUrl(item.original_link)
+                }
+
+                tvShortLink.setOnClickListener {
+                    openUrl(item.original_link)
+                }
+
+                btnCopy.setOnClickListener() {
                     itemClickListener(item)
                 }
                 icTrash.setOnClickListener {
