@@ -65,6 +65,7 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
                         }
                         is ShortlyUiState.LinkShorten -> {
                             viewModel.insertLink(it.data)
+                            mainBinding.shortenLinkEdt.text?.clear()
                             mainBinding.progresBar.visibility = View.GONE
                         }
                     }
