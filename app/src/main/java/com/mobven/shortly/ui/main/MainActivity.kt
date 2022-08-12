@@ -2,11 +2,13 @@ package com.mobven.shortly.ui.main
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
+import android.util.Patterns
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.webkit.URLUtil
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -19,6 +21,7 @@ import com.mobven.shortly.R
 import com.mobven.shortly.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
@@ -35,7 +38,16 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
 
         mainBinding.apply {
             shortenItButton.setOnClickListener {
-                viewModel.buttonClicked(mainBinding.shortenLinkEdt.text.toString().isBlank())
+
+                mainBinding.shortenLinkEdt.text.apply {
+                    val isValid = URLUtil.isValidUrl(this.toString()) && Patterns.WEB_URL.matcher(this.toString()).matches()
+                    if(isValid){
+                        viewModel.buttonClicked(mainBinding.shortenLinkEdt.text.toString().isBlank())
+                    }else{
+                        Toast.makeText(this@MainActivity,"Lütfen geçerli link gir",Toast.LENGTH_LONG).show()
+
+                    }
+                }
             }
             shortenLinkEdt.setOnEditorActionListener(this@MainActivity)
         }
