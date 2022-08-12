@@ -2,17 +2,20 @@ package com.mobven.shortly.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.mobven.shortly.R
 import com.mobven.shortly.ShortenData
 import com.mobven.shortly.databinding.ItemShortLinkBinding
+import dagger.hilt.android.scopes.FragmentScoped
 
-class ShortLinkAdapter:ListAdapter<ShortenData, ShortLinkAdapter.ViewHolder>(DiffShortLink()) {
-
-    /*private val shortLinkList = mutableListOf<Result>()*/
-    var itemClickListener: (String) -> Unit = {}
-    var itemRemoveListener: (String) -> Unit = {}
+@FragmentScoped
+class ShortLinkAdapter : RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
+    var itemClickListener: (ShortenData) -> Unit = {}
+    var itemRemoveListener: ((String), (String)) -> Unit = { code, shortLink -> }
+    private var shortLinkList = mutableListOf<ShortenData>()
+    var copiedItem: String? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
@@ -21,43 +24,44 @@ class ShortLinkAdapter:ListAdapter<ShortenData, ShortLinkAdapter.ViewHolder>(Dif
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(shortLinkList[position])
     }
 
-/*    override fun getItemCount(): Int = shortLinkList.size*/
-
-   /* fun setData(list: List<Result>) {
-        shortLinkList.clear()
-        shortLinkList.addAll(list)
-        //not recommended
-        notifyDataSetChanged()
+    fun setData(newList: List<ShortenData>) {
+        val diffUtil = ShortLinkDiffUtil(shortLinkList, newList)
+        val result = DiffUtil.calculateDiff(diffUtil)
+        shortLinkList = newList as MutableList<ShortenData>
+        result.dispatchUpdatesTo(this)
     }
-*/
 
     inner class ViewHolder(private val binding: ItemShortLinkBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ShortenData) {
             binding.apply {
-                tvLongLink.text = item.full_share_link
+                tvLongLink.text = item.original_link
                 tvShortLink.text = item.full_short_link
                 btnCopy.setOnClickListener {
-                    itemClickListener(tvShortLink.text.toString())
+                    itemClickListener(item)
                 }
-                icTrash.setOnClickListener{
-                    itemRemoveListener(item.code)
+                icTrash.setOnClickListener {
+                    itemRemoveListener(item.code, item.short_link)
+                }
+                if (item.isSelected) {
+                    btnCopy.setBackgroundColor(
+                        ContextCompat.getColor(
+                            root.context,
+                            R.color.dark_violet
+                        )
+                    )
+                    btnCopy.text = root.context.getString(R.string.btn_copied)
+                } else {
+                    btnCopy.setBackgroundColor(ContextCompat.getColor(root.context, R.color.cyan))
+                    btnCopy.text = root.context.getString(R.string.btn_copy)
                 }
             }
         }
     }
 
-    class DiffShortLink() : DiffUtil.ItemCallback<ShortenData>(){
-        override fun areItemsTheSame(oldItem: ShortenData, newItem: ShortenData): Boolean {
-            return oldItem == newItem
-        }
+    override fun getItemCount(): Int = shortLinkList.size
 
-        override fun areContentsTheSame(oldItem: ShortenData, newItem: ShortenData): Boolean {
-          return oldItem == newItem
-        }
-
-    }
 }

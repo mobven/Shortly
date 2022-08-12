@@ -19,4 +19,10 @@ interface LinkDao {
     @Query("DELETE FROM links WHERE code = :code")
     suspend fun deleteLink(code: String): Int
 
+    @Query("UPDATE links SET isSelected = :isSelected WHERE code = :code")
+    suspend fun updateSelected(isSelected: Boolean, code: String)
+
+    @Query("Select code FROM links WHERE isSelected = 1")
+    suspend fun getOldSelected():String?
+
 }
