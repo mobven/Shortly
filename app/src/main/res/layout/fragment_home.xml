@@ -21,7 +21,7 @@
         android:id="@+id/iv_main"
         android:layout_width="0dp"
         android:layout_height="@dimen/_324sdp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="@dimen/_14sdp"
         android:src="@drawable/illustration"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
