@@ -1,5 +1,6 @@
 package com.mobven.shortly.adapter
 
+import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -66,7 +67,12 @@ class ShortLinkAdapter : RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
                     )
                     btnCopy.text = root.context.getString(R.string.btn_copied)
                 } else {
-                    btnCopy.setBackgroundColor(ContextCompat.getColor(root.context, R.color.cyan))
+                    if (binding.root.context.resources.getConfiguration().uiMode and
+                        Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
+                        btnCopy.setBackgroundColor(ContextCompat.getColor(root.context,R.color.teal_dark))
+                    else
+                        btnCopy.setBackgroundColor(ContextCompat.getColor(root.context,R.color.teal_200))
+
                     btnCopy.text = root.context.getString(R.string.btn_copy)
                 }
             }
