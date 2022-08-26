@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_color"
     tools:context=".ui.home.HomeFragment">
 
     <ImageView
@@ -33,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_12sdp"
         android:text="@string/title_main"
-        android:textColor="@color/black"
+        android:textColor="?colorOnPrimary"
         android:textSize="@dimen/_20ssp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_12sdp"
         android:text="@string/text_description"
-        android:textColor="@color/black"
+        android:textColor="?colorOnPrimary"
         android:textSize="@dimen/_17ssp"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
