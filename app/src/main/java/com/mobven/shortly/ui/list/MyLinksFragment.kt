@@ -64,11 +64,11 @@ class MyLinksFragment : Fragment() {
             }
 
             shortLinkAdapter.itemRemoveListener = { code, shortLink ->
-                if (clipBoardManager.primaryClip?.getItemAt(0)?.text?.toString().equals(shortLink))
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        clipBoardManager.clearPrimaryClip()
-                    }
-                deleteLink(code)
+                if (clipBoardManager.primaryClip?.getItemAt(0)?.text?.toString()
+                        .equals(shortLink) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                ) {
+                    deleteLink(code)
+                }
             }
 
             shortLinkAdapter.openUrl = {

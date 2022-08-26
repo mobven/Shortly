@@ -15,7 +15,7 @@ import dagger.hilt.android.scopes.FragmentScoped
 @FragmentScoped
 class ShortLinkAdapter : RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
     var itemClickListener: (ShortenData) -> Unit = {}
-    var itemRemoveListener: ((String), (String)) -> Unit = { code, shortLink -> }
+    var itemRemoveListener: ((String), (String)) -> Unit = { _, _ -> }
     var openUrl: (String) -> Unit = {}
     private var shortLinkList = mutableListOf<ShortenData>()
     var copiedItem: String? = null

@@ -48,12 +48,14 @@ dependencies {
     implementation libs.kotlin.coroutines.android
     implementation libs.android.coreKtx
     implementation libs.android.appCompat
-    implementation libs.android.material
+    implementation "com.google.android.material:material:1.6.1"
 
     implementation libs.kotlin.coroutines.android
     implementation libs.bundles.networking
 
     implementation libs.bundles.room
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.1'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.1'
     kapt libs.room.compiler
 
     implementation libs.android.hilt
@@ -61,6 +63,12 @@ dependencies {
     kapt libs.android.hilt.compiler
 
     implementation libs.bundles.lifecycle
+
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "io.mockk:mockk:1.10.2"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2"
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation 'app.cash.turbine:turbine:0.9.0'
 
     androidTestImplementation libs.android.test.junit4
     androidTestImplementation libs.android.test.espresso

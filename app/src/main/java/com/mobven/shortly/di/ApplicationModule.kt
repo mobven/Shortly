@@ -1,6 +1,5 @@
 package com.mobven.shortly.di
 
-import com.mobven.shortly.adapter.ShortLinkAdapter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

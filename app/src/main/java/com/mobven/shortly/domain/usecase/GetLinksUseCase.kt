@@ -6,7 +6,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class GetLinksUseCase @Inject constructor(
     private val mainRepository: MainRepository,
 ) {

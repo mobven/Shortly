@@ -2,7 +2,6 @@ package com.mobven.shortly.ui.main
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -103,12 +102,12 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
             .setMessage("An error occurred")
             .setPositiveButton(
                 "Retry"
-            ) { dialog, which ->
+            ) { _, _ ->
                 callShortLink(mainBinding.shortenLinkEdt.text.toString())
             }
             .setNegativeButton(
                 "Cancel"
-            ) { dialog, which ->
+            ) { _, _ ->
                 //cancel
             }.create()
         alertDialog.show()
