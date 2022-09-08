@@ -6,14 +6,19 @@ import com.mobven.shortly.ui.main.MainViewModel
 import com.mobven.shortly.ui.main.ShortlyUiState
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.flow.toCollection
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.*
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -25,7 +30,7 @@ class MainViewModelTest {
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
 
-    @MockK(relaxed = true)
+    @MockK
     lateinit var getLinksUseCase: GetLinksUseCase
 
     @MockK
@@ -82,8 +87,64 @@ class MainViewModelTest {
         }
     }
 
-    @Test
+   @Test
     fun initTest() = runTest {
         assertEquals(mainViewModel.uiState.value, ShortlyUiState.Success(givenData))
+        assertEquals(mainViewModel.linkList.value, givenData)
+    }
+
+    @Test
+    fun buttonClickTest() {
+        //Given
+        val isBlank = true
+
+        //When
+        mainViewModel.buttonClicked(isBlank)
+
+        //Then
+        assertTrue(mainViewModel.isBlank.value!!)
+    }
+
+    @Test
+    fun shortenLinkTest() = runTest {
+        try {
+            val testDispatcher = StandardTestDispatcher(testScheduler)
+            Dispatchers.setMain(testDispatcher)
+
+            //Given
+            val originalLink = "www.google.com"
+            val fakeResponse: BaseResponse<Response> = BaseResponse(
+                data = Response(
+                    true, ShortenData(
+                        "sdf",
+                        "sdf",
+                        "dfg",
+                        "dfgdf",
+                        "sdgfd",
+                        "rter",
+                        "gd",
+                        "gdfgdf",
+                        false
+                    )
+                ), status = Status.SUCCESS, errorMessage = null
+            )
+
+            coEvery { shortenLinkUseCase.invoke(originalLink) } returns flowOf(fakeResponse)
+
+
+            //When
+            mainViewModel.shortenLink(originalLink)
+
+            delay(1000)
+
+            //Then
+            assertEquals(
+                mainViewModel.uiState.value,
+                ShortlyUiState.LinkShorten(fakeResponse.data?.result!!)
+            )
+
+        } finally {
+            Dispatchers.resetMain()
+        }
     }
 }
