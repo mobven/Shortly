@@ -1,27 +1,25 @@
 package com.mobven.shortly
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import app.cash.turbine.test
 import com.mobven.shortly.domain.usecase.*
 import com.mobven.shortly.ui.main.MainViewModel
 import com.mobven.shortly.ui.main.ShortlyUiState
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
-import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.toCollection
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.*
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 
 class MainViewModelTest {
 
@@ -131,13 +129,15 @@ class MainViewModelTest {
 
             coEvery { shortenLinkUseCase.invoke(originalLink) } returns flowOf(fakeResponse)
 
+            mainViewModel.uiState.test {
 
-            //When
-            mainViewModel.shortenLink(originalLink)
+                //When
+                mainViewModel.shortenLink(originalLink)
 
-            delay(1000)
+                //Then
+                cancelAndConsumeRemainingEvents()
+            }
 
-            //Then
             assertEquals(
                 mainViewModel.uiState.value,
                 ShortlyUiState.LinkShorten(fakeResponse.data?.result!!)
