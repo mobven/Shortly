@@ -5,25 +5,20 @@ import app.cash.turbine.test
 import com.mobven.shortly.domain.usecase.*
 import com.mobven.shortly.ui.main.MainViewModel
 import com.mobven.shortly.ui.main.ShortlyUiState
-import io.mockk.MockKAnnotations
-import io.mockk.coEvery
+import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.*
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
+
 
 class MainViewModelTest {
 
-    private lateinit var mainViewModel: MainViewModel
 
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
@@ -46,6 +41,11 @@ class MainViewModelTest {
     @MockK
     lateinit var deleteLinkUseCase: DeleteLinkUseCase
 
+    @MockK
+    private lateinit var mainViewModel: MainViewModel
+
+    private lateinit var testDispatcher:TestDispatcher
+
     private val givenData = listOf(
         ShortenData(
             "sdf",
@@ -67,8 +67,10 @@ class MainViewModelTest {
     @Before
     fun setup() = runTest {
         try {
-            val testDispatcher = StandardTestDispatcher(testScheduler)
+            testDispatcher = StandardTestDispatcher(testScheduler)
             Dispatchers.setMain(testDispatcher)
+
+            // coEvery { mainViewModel.viewModelScope } returns CoroutineScope(testDispatcher)
 
             mainViewModel = MainViewModel(
                 shortenLinkUseCase,
@@ -78,14 +80,13 @@ class MainViewModelTest {
                 getSelectedOldUseCase,
                 deleteLinkUseCase
             )
-
             coEvery { getLinksUseCase.invoke() } returns flowOf(givenData)
         } finally {
             Dispatchers.resetMain()
         }
     }
 
-   @Test
+    @Test
     fun initTest() = runTest {
         assertEquals(mainViewModel.uiState.value, ShortlyUiState.Success(givenData))
         assertEquals(mainViewModel.linkList.value, givenData)
@@ -106,7 +107,7 @@ class MainViewModelTest {
     @Test
     fun shortenLinkTest() = runTest {
         try {
-            val testDispatcher = StandardTestDispatcher(testScheduler)
+            testDispatcher = StandardTestDispatcher(testScheduler)
             Dispatchers.setMain(testDispatcher)
 
             //Given
@@ -137,7 +138,7 @@ class MainViewModelTest {
                 //Then
                 cancelAndConsumeRemainingEvents()
             }
-
+            // turbine yerine bunu da kullanabiliriz advanceUntilIdle()
             assertEquals(
                 mainViewModel.uiState.value,
                 ShortlyUiState.LinkShorten(fakeResponse.data?.result!!)
@@ -147,4 +148,28 @@ class MainViewModelTest {
             Dispatchers.resetMain()
         }
     }
+
+    @Test
+    fun deleteLinkTest() = runTest {
+        try {
+            testDispatcher = StandardTestDispatcher(testScheduler)
+            Dispatchers.setMain(testDispatcher)
+            //Given
+            val code = "google.com"
+            coEvery { deleteLinkUseCase.deleteLink(code) } returns 0
+
+            //When
+            mainViewModel.deleteLink(code)
+
+            //Then
+            advanceUntilIdle()
+            assertEquals(mainViewModel.deleteError.value,true)
+
+        }
+        finally {
+            Dispatchers.resetMain()
+        }
+
+    }
+
 }
