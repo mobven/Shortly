@@ -20,9 +20,9 @@ jobs:
         cache: gradle
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+    - name: Unit Test
+      run: ./gradlew testDebugUnitTest
     - name: Android Test Report Action
-      # You may pin to the exact commit or the version.
-      # uses: asadmansr/android-test-report-action@384cd31388782f4106dc4a1b37eea2ff02e0aad7
       uses: asadmansr/android-test-report-action@v1.2.0
     - name: Build with Gradle
       run: ./gradlew build
