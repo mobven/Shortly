@@ -18,6 +18,7 @@ sonarqube {
         property "sonar.projectKey", "mobven_Shortly"
         property "sonar.organization", "mobven"
         property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.coverage.jacoco.xmlReportPaths", "$project.buildDir/reports/jacoco/jacocoTestReport"
     }
 }
 
