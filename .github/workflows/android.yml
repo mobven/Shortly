@@ -21,6 +21,8 @@ jobs:
       run: ./gradlew testDebugUnitTest
     - name: Android Test Report Action
       uses: asadmansr/android-test-report-action@v1.2.0
+    - name: SonarQube Quality Gate Check
+      uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
     - name: Build Release Bundle
       run: ./gradlew bundle
     - uses: r0adkll/sign-android-release@v1
