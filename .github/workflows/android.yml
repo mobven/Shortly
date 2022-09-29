@@ -3,9 +3,6 @@ name: Android CI
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,5 +21,18 @@ jobs:
       run: ./gradlew testDebugUnitTest
     - name: Android Test Report Action
       uses: asadmansr/android-test-report-action@v1.2.0
-    - name: Build with Gradle
-      run: ./gradlew build
+    - name: Build Release Bundle
+      run: ./gradlew bundle
+    - uses: r0adkll/sign-android-release@v1
+      name: Sign Bundle
+      id: sign_app
+      with:
+          releaseDirectory: app/build/outputs/bundle/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+    - name: Upload Bundle
+      uses: actions/upload-artifact@v2
+      with:
+          name: release.aab
+          path: ${{steps.sign_app.outputs.signedReleaseFile}}
