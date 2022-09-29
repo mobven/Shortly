@@ -6,7 +6,7 @@ plugins {
     alias libs.plugins.hilt.plugin
     alias libs.plugins.kotlin.kapt
     id "jacoco"
-    id 'org.sonarqube' version '3.0'
+    id "org.sonarqube" version "3.4.0.2513"
 }
 
 jacoco {
@@ -15,9 +15,9 @@ jacoco {
 
 sonarqube {
     properties {
-        property 'sonar.host.url', 'https://sonarcloud.io'
-        property 'sonar.organization', 'mobven'
-        property 'sonar.projectKey', 'mobven_Shortly'
+        property "sonar.projectKey", "mobven_Shortly"
+        property "sonar.organization", "mobven"
+        property "sonar.host.url", "https://sonarcloud.io"
     }
 }
 
