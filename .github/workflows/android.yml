@@ -19,7 +19,7 @@ jobs:
       run: chmod +x gradlew
     - name: SonarQube Quality Gate Check
       uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
-      with:
+      env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     - name: Unit Test
       run: ./gradlew testDebugUnitTest
