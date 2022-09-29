@@ -17,6 +17,8 @@ jobs:
         cache: gradle
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+    - name: Unit Test
+      run: ./gradlew jacocoUnitTestReport
     - name: Cache SonarCloud packages
       uses: actions/cache@v1
       with:
@@ -33,8 +35,6 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: ./gradlew build sonarqube --info
-    - name: Unit Test
-      run: ./gradlew testDebugUnitTest
     - name: Android Test Report Action
       uses: asadmansr/android-test-report-action@v1.2.0
     - name: Build Release Bundle
