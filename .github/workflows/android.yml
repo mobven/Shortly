@@ -17,6 +17,8 @@ jobs:
         cache: gradle
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@v1.6
     - name: SonarQube Quality Gate Check
       uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
       env:
