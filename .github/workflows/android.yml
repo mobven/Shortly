@@ -17,12 +17,14 @@ jobs:
         cache: gradle
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+    - name: SonarQube Quality Gate Check
+      uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
+      with:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     - name: Unit Test
       run: ./gradlew testDebugUnitTest
     - name: Android Test Report Action
       uses: asadmansr/android-test-report-action@v1.2.0
-    - name: SonarQube Quality Gate Check
-      uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
     - name: Build Release Bundle
       run: ./gradlew bundle
     - uses: r0adkll/sign-android-release@v1
