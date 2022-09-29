@@ -21,6 +21,8 @@ jobs:
       uses: SonarSource/sonarcloud-github-action@v1.6
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        projectBaseDir: app/src/main/java/com/mobven/shortly
     - name: SonarQube Quality Gate Check
       uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
       env:
