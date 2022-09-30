@@ -229,8 +229,8 @@ dependencies {
     implementation libs.bundles.networking
 
     implementation libs.bundles.room
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.1'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.5.1'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.2'
     kapt libs.room.compiler
 
     implementation libs.android.hilt
