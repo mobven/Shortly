@@ -1,194 +1,27 @@
-import groovy.transform.Memoized
-
 plugins {
-    alias libs.plugins.android.application
-    alias libs.plugins.kotlin.android
-    alias libs.plugins.hilt.plugin
-    alias libs.plugins.kotlin.kapt
-    id "jacoco"
-    id "org.sonarqube" version "3.4.0.2513"
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'kotlin-parcelize'
 }
 
-jacoco {
-    toolVersion = "0.8.8"
-}
-
-sonarqube {
-    properties {
-        property "sonar.projectKey", "mobven_Shortly"
-        property "sonar.organization", "mobven"
-        property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.coverage.jacoco.xmlReportPaths", "$project.buildDir/reports/jacoco/jacocoUnitTestReport/jacocoUnitTestReport.xml"
-    }
-}
-
-
-@Memoized
-Properties getLocalProperties() {
-    final propertiesFile = project.rootProject.file("local.properties")
-
-    final properties = new Properties()
-
-    if (propertiesFile.exists()) {
-        properties.load(propertiesFile.newDataInputStream())
-    }
-
-    return properties
-}
-
-def openReport(htmlOutDir) {
-    final reportPath = "$htmlOutDir/index.html"
-
-    println "HTML Report: $reportPath"
-
-    if (!project.hasProperty("open-report")) {
-        println "to open the report automatically in your default browser add '-Popen-report' cli argument"
-        return
-    }
-
-    def os = org.gradle.internal.os.OperatingSystem.current()
-    if (os.isWindows()) {
-        exec { commandLine 'cmd', '/c', "start $reportPath" }
-    } else if (os.isMacOsX()) {
-        exec { commandLine 'open', "$reportPath" }
-    } else if (os.isLinux()) {
-        try {
-            exec { commandLine 'xdg-open', "$reportPath" }
-        } catch (Exception ignored) {
-            if (localProperties.containsKey("linux-html-cmd")) {
-                exec { commandLine properties.get("linux-html-cmd"), "$reportPath" }
-            } else {
-                println "'linux-html-cmd' property could not be found in 'local.properties'"
-            }
-        }
-    }
-}
-
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
-    jacoco.excludes = ['jdk.internal.*']
-}
-
-def fileFilter = [
-        // android
-        '**/R.class',
-        '**/R$*.class',
-        '**/BuildConfig.*',
-        '**/Manifest*.*',
-        '**/*Test*.*',
-        'android/**/*.*',
-        // kotlin
-        '**/*MapperImpl*.*',
-        '**/*$ViewInjector*.*',
-        '**/*$ViewBinder*.*',
-        '**/BuildConfig.*',
-        '**/*Component*.*',
-        '**/*BR*.*',
-        '**/Manifest*.*',
-        '**/*$Lambda$*.*',
-        '**/*Companion*.*',
-        '**/*Module*.*',
-        '**/*Dagger*.*',
-        '**/*Hilt*.*',
-        '**/*MembersInjector*.*',
-        '**/*_MembersInjector.class',
-        '**/*_Factory*.*',
-        '**/*_Provide*Factory*.*',
-        '**/*Extensions*.*',
-        // sealed and data classes
-        '**/*$Result.*',
-        '**/*$Result$*.*'
-]
-
-// Our merge report task
-task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'connectedDebugAndroidTest']) {
-    def htmlOutDir = layout.buildDirectory.dir("reports/jacoco/$name/html").get().asFile
-
-    doLast {
-        openReport htmlOutDir
-    }
-
-    reports {
-        xml.required = true
-        html.destination htmlOutDir
-    }
-
-    def kotlinClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
-    def mainSrc = "$project.projectDir/src/main/java"
-
-    sourceDirectories.from = files([mainSrc])
-    classDirectories.from = files([kotlinClasses])
-    executionData.from = fileTree(dir: project.buildDir, includes: [
-            '**/*.exec',
-            '**/*.ec'
-    ])
-}
-
-// A unit-test only report task
-task jacocoUnitTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
-    def htmlOutDir = layout.buildDirectory.dir("reports/jacoco/$name/html").get().asFile
-
-    doLast {
-        openReport htmlOutDir
-    }
-
-    reports {
-        xml.required = true
-        html.destination htmlOutDir
-    }
-
-    def kotlinClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
-    def mainSrc = "$project.projectDir/src/main/java"
-
-    sourceDirectories.from = files([mainSrc])
-    classDirectories.from = files([kotlinClasses])
-    executionData.from = fileTree(dir: project.buildDir, includes: [
-            '**/*.exec'
-
-    ])
-}
-
-// A connected android tests only report task
-task jacocoAndroidTestReport(type: JacocoReport, dependsOn: ['connectedDebugAndroidTest']) {
-    def htmlOutDir = layout.buildDirectory.dir("reports/jacoco/$name/html").get().asFile
-
-    doLast {
-        openReport htmlOutDir
-    }
-
-    reports {
-        xml.required = true
-        html.destination htmlOutDir
-    }
-
-    def kotlinClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
-    def mainSrc = "$project.projectDir/src/main/java"
-
-    sourceDirectories.from = files([mainSrc])
-    classDirectories.from = files([kotlinClasses])
-    executionData.from = fileTree(dir: project.buildDir, includes: [
-            '**/*.ec'
-    ])
-}
-
+apply from: "../jacoco.gradle"
+apply from: "../sonarqube.gradle"
+apply from: "../sdpssp.gradle"
 
 android {
-    jacoco {
-        version = "0.8.8"
-    }
 
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.samplerunproject"
         minSdk 23
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "BASE_URL", "\"https://api.shrtco.de/v2/\""
-
     }
 
     buildTypes {
@@ -220,141 +53,35 @@ android {
 }
 
 dependencies {
-    implementation libs.kotlin.coroutines.android
-    implementation libs.android.coreKtx
-    implementation libs.android.appCompat
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+    implementation "androidx.core:core-ktx:1.9.0"
+    implementation "androidx.appcompat:appcompat:1.5.1"
     implementation "com.google.android.material:material:1.6.1"
 
-    implementation libs.kotlin.coroutines.android
-    implementation libs.bundles.networking
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.7'
 
-    implementation libs.bundles.room
+    implementation "androidx.room:room-ktx:2.4.3"
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.2'
-    kapt libs.room.compiler
+    kapt "androidx.room:room-compiler:2.4.3"
 
-    implementation libs.android.hilt
-    implementation libs.bundles.navigation
-    kapt libs.android.hilt.compiler
+    implementation 'com.google.dagger:hilt-android:2.43.2'
+    implementation 'androidx.hilt:hilt-navigation-fragment:1.0.0'
+    kapt 'com.google.dagger:hilt-compiler:2.43.2'
 
-    implementation libs.bundles.lifecycle
+    implementation 'androidx.test.espresso:espresso-idling-resource:3.4.0'
 
     testImplementation "junit:junit:4.13.2"
     testImplementation "io.mockk:mockk:1.10.2"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
     testImplementation "androidx.arch.core:core-testing:2.1.0"
     testImplementation 'app.cash.turbine:turbine:0.9.0'
 
-    androidTestImplementation libs.android.test.junit4
-    androidTestImplementation libs.android.test.espresso
-
-    // For instrumented tests.
-    androidTestImplementation libs.kotlin.coroutines.test
-    androidTestImplementation libs.android.hilt.testing
-    kaptAndroidTest libs.android.hilt.compiler
-    androidTestImplementation libs.room.ktx
-}
-
-class SDPFactory extends DefaultTask {
-
-    @Input
-    String unit = "dp"
-    @Input
-    double positiveMax = 600
-    @Input
-    double negativeMax = 60
-
-    @TaskAction
-    def create() {
-        String resFolder =  project.getProjectDir().getPath() + "/src/main/res/";
-        for(double dimen = 375; dimen <= 1200 ; dimen = dimen + 30){
-            String folder = resFolder + "values-sw" + (int)dimen + "dp";
-            String fileName = folder + "/positive_sdps.xml";
-            new File(folder).mkdir();
-            new File(fileName).createNewFile();
-            PrintWriter printWriter = new PrintWriter(fileName);
-            printWriter.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-            printWriter.println("<resources>");
-            for(int i=1; i<=positiveMax; i++){
-                double ratio = i/375d;
-                double sdp = ratio*dimen;
-                printWriter.printf("\t<dimen name=\"_%dsdp\">%.2f" + unit + "</dimen>\r\n",i,sdp);
-            }
-            printWriter.println("</resources>");
-            printWriter.close();
-        }
-        for(double dimen = 375; dimen <= 1200; dimen = dimen + 30){
-            String folder = resFolder + "values-sw" + (int)dimen + "dp";
-            String fileName = folder + "/negative_sdps.xml";
-            new File(folder).mkdir();
-            new File(fileName).createNewFile();
-            PrintWriter printWriter = new PrintWriter(fileName);
-            printWriter.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-            printWriter.println("<resources>");
-            for(int i=1;i<=negativeMax;i++){
-                double ratio = i/375d;
-                double sdp = ratio*dimen;
-                printWriter.printf("\t<dimen name=\"_minus%dsdp\">%.2f" + unit + "</dimen>\r\n",i,-sdp);
-            }
-            printWriter.println("</resources>");
-            printWriter.close();
-        }
-    }
-}
-
-task createSDP(type: SDPFactory) {
-}
-
-//uncomment next line to edit values
-//preBuild.dependsOn createSDP
-
-public class SSPFactory extends DefaultTask {
-
-    @Input
-    String unit = "sp"
-    @Input
-    double positiveMax = 100
-
-    @TaskAction
-    def create() {
-        String resFolder =  project.getProjectDir().getPath() + "/src/main/res/";
-        for(double dimen = 375; dimen <= 1200 ; dimen = dimen + 30){
-            createPositive(resFolder, dimen)
-        }
-        createPositive(resFolder, 1080)
-    }
-
-    private void createPositive(String resFolder, double dimen) {
-        String folder = resFolder + "values-sw" + (int) dimen + "dp";
-        String fileName = folder + "/positive_ssps.xml";
-        new File(folder).mkdir();
-        new File(fileName).createNewFile();
-        PrintWriter printWriter = new PrintWriter(fileName);
-        printWriter.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-        printWriter.println("<resources>");
-        for (int i = 1; i <= positiveMax; i++) {
-            double ratio = i / 375d;
-            double ssp = ratio * dimen;
-            printWriter.printf("\t<dimen name=\"_%dssp\">%.2f" + unit + "</dimen>\r\n", i, ssp);
-        }
-        printWriter.println("</resources>");
-        printWriter.close();
-    }
-}
-
-task createSSP(type: SSPFactory) {
-}
-
-//uncomment next line to edit values
-//preBuild.dependsOn createSSP
-
-createSSP{
-    unit = "sp"
-    positiveMax = 100//change to 600 or any other value if needed
-}
-
-createSDP{
-    unit = "dp"//change to "sp" if needed
-    positiveMax = 600//change to 600 or any other value if needed
-    negativeMax = 60//change to 600 or any other value if needed
+    androidTestImplementation "androidx.test:runner:1.4.0"
+    androidTestImplementation "androidx.test:rules:1.4.0"
+    androidTestImplementation "androidx.test.ext:junit:1.1.3"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.4.0"
 }

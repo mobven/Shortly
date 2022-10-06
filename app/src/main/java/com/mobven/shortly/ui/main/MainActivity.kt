@@ -7,6 +7,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -14,16 +15,21 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
+import androidx.test.espresso.IdlingResource
 import com.mobven.shortly.R
+import com.mobven.shortly.SimpleIdlingResource
 import com.mobven.shortly.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
 
     private val viewModel: MainViewModel by viewModels()
     private lateinit var mainBinding: ActivityMainBinding
+
+    private var mIdlingResource: SimpleIdlingResource? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +66,9 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
                         }
                         is ShortlyUiState.Error -> {
                             mainBinding.progresBar.visibility = View.GONE
+                            mIdlingResource?.let {
+                                it.setIdleState(true)
+                            }
                             showAlertDialog()
                         }
                         is ShortlyUiState.LinkShorten -> {
@@ -81,6 +90,9 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
                     setHintTextColor(ContextCompat.getColor(this@MainActivity, R.color.gray))
                     hint = getString(R.string.hint_link)
                     setBackgroundResource(R.drawable.bg_edittext)
+                    mIdlingResource?.let {
+                        it.setIdleState(false)
+                    }
                     callShortLink(
                         mainBinding.shortenLinkEdt.text.toString()
                     )
@@ -118,5 +130,16 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
             viewModel.buttonClicked(mainBinding.shortenLinkEdt.text.toString().isBlank())
         }
         return false
+    }
+
+    /**
+     * Only called from test, creates and returns a new [SimpleIdlingResource].
+     */
+    @VisibleForTesting
+    fun getIdlingResource(): IdlingResource {
+        if (mIdlingResource == null) {
+            mIdlingResource = SimpleIdlingResource()
+        }
+        return mIdlingResource as SimpleIdlingResource
     }
 }

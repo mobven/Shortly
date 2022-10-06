@@ -67,8 +67,9 @@ class MyLinksFragment : Fragment() {
                 if (clipBoardManager.primaryClip?.getItemAt(0)?.text?.toString()
                         .equals(shortLink) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
                 ) {
-                    deleteLink(code)
+                    clipBoardManager.clearPrimaryClip()
                 }
+                deleteLink(code)
             }
 
             shortLinkAdapter.openUrl = {

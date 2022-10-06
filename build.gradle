@@ -2,32 +2,15 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:7.3.0'
         classpath "org.jacoco:org.jacoco.core:0.8.8"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:2.43.2"
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.4.0.2513"
     }
 }
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
 plugins {
-    alias libs.plugins.hilt.plugin apply false
-    alias libs.plugins.android.application apply false
-    alias libs.plugins.android.library apply false
-    alias libs.plugins.kotlin.android apply false
-    alias libs.plugins.kotlin.kapt apply false
-}
-
-subprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-        kotlinOptions {
-            freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
-            freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
-            freeCompilerArgs += "-Xopt-in=androidx.paging.ExperimentalPagingApi"
-
-            jvmTarget = JavaVersion.VERSION_11
-        }
-    }
+    id 'com.android.application' version '7.3.0' apply false
+    id 'com.android.library' version '7.3.0' apply false
+    id 'org.jetbrains.kotlin.android' version '1.7.0' apply false
 }
 
 task clean(type: Delete) {
