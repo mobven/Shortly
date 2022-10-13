@@ -53,7 +53,7 @@ class HomeFragmentTest {
         onView(isRoot()).perform(closeSoftKeyboard())
         onView(withId(R.id.shorten_it_button)).perform(click())
         onView(isRoot()).inRoot(isDialog()).check(matches(isDisplayed()))
-        onView(withText("An error occurred")).inRoot(RootMatchers.isDialog())
+        onView(withText("An error occurred")).inRoot(isDialog())
             .check(matches(isDisplayed()))
     }
 
