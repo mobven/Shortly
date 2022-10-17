@@ -22,7 +22,6 @@ import com.mobven.shortly.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
 
@@ -55,26 +54,24 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
                 viewModel.uiState.collect {
                     when(it) {
                         is ShortlyUiState.Loading -> {
-                            mainBinding.progresBar.visibility = View.VISIBLE
+                            mainBinding.progressBar.visibility = View.VISIBLE
                         }
                         is ShortlyUiState.Empty -> {
                             navController.graph = navMainGraph
                         }
                         is ShortlyUiState.Success -> {
                             navController.graph = navListGraph
-                            mainBinding.progresBar.visibility = View.GONE
+                            mainBinding.progressBar.visibility = View.GONE
                         }
                         is ShortlyUiState.Error -> {
-                            mainBinding.progresBar.visibility = View.GONE
-                            mIdlingResource?.let {
-                                it.setIdleState(true)
-                            }
+                            mainBinding.progressBar.visibility = View.GONE
+                            mIdlingResource?.setIdleState(true)
                             showAlertDialog()
                         }
                         is ShortlyUiState.LinkShorten -> {
                             viewModel.insertLink(it.data)
                             mainBinding.shortenLinkEdt.text?.clear()
-                            mainBinding.progresBar.visibility = View.GONE
+                            mainBinding.progressBar.visibility = View.GONE
                         }
                     }
                 }
@@ -90,9 +87,7 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
                     setHintTextColor(ContextCompat.getColor(this@MainActivity, R.color.gray))
                     hint = getString(R.string.hint_link)
                     setBackgroundResource(R.drawable.bg_edittext)
-                    mIdlingResource?.let {
-                        it.setIdleState(false)
-                    }
+                    mIdlingResource?.setIdleState(false)
                     callShortLink(
                         mainBinding.shortenLinkEdt.text.toString()
                     )
@@ -103,7 +98,7 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
     }
 
     private fun callShortLink(editLink: String) {
-        mainBinding.progresBar.visibility = View.VISIBLE
+        mainBinding.progressBar.visibility = View.VISIBLE
         viewModel.shortenLink(editLink)
     }
 

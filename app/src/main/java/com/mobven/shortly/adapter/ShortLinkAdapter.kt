@@ -1,9 +1,7 @@
 package com.mobven.shortly.adapter
 
-import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.mobven.shortly.R
@@ -33,8 +31,8 @@ class ShortLinkAdapter : RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
     fun setData(newList: List<ShortenData>) {
         val diffUtil = ShortLinkDiffUtil(shortLinkList, newList)
         val result = DiffUtil.calculateDiff(diffUtil)
-        shortLinkList = newList as MutableList<ShortenData>
         result.dispatchUpdatesTo(this)
+        shortLinkList = newList as MutableList<ShortenData>
     }
 
     inner class ViewHolder(private val binding: ItemShortLinkBinding) :
@@ -59,20 +57,10 @@ class ShortLinkAdapter : RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
                     itemRemoveListener(item.code, item.short_link)
                 }
                 if (item.isSelected) {
-                    btnCopy.setBackgroundColor(
-                        ContextCompat.getColor(
-                            root.context,
-                            R.color.dark_violet
-                        )
-                    )
+                    btnCopy.alpha = 0.5f
                     btnCopy.text = root.context.getString(R.string.btn_copied)
                 } else {
-                    if (binding.root.context.resources.getConfiguration().uiMode and
-                        Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
-                        btnCopy.setBackgroundColor(ContextCompat.getColor(root.context,R.color.teal_dark))
-                    else
-                        btnCopy.setBackgroundColor(ContextCompat.getColor(root.context,R.color.teal_200))
-
+                    btnCopy.alpha = 1.0f
                     btnCopy.text = root.context.getString(R.string.btn_copy)
                 }
             }

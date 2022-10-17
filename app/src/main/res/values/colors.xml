@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="teal_dark">#035149</color>
-    <color name="black">#FF000000</color>
-
     <color name="cyan">#2ACFCF</color>
     <color name="dark_violet">#3B3054</color>
     <color name="red">#F46262</color>
@@ -21,4 +13,13 @@
 
     <color name="background_color">#03FFFFFF</color>
     <color name="american_blue">#4B3F6B</color>
+    <color name="maximum_blue_green">#2BD0D0</color>
+    <color name="violets_are_blue_80">#80906DF3</color>
+    <color name="violets_are_blue">#906DF3</color>
+    <color name="han_purple">#5F2EEA</color>
+    <color name="han_purple_40">#405F2EEA</color>
+    <color name="han_purple_80">#805F2EEA</color>
+    <color name="cultured">#F5F5F5</color>
+    <color name="dark_purple">#211838</color>
+    <color name="sonic_silver">#757575</color>
 </resources>

@@ -50,6 +50,7 @@ android {
             arg("room.schemaLocation", "$projectDir/schemas".toString())
         }
     }
+    namespace 'com.mobven.shortly'
 }
 
 dependencies {

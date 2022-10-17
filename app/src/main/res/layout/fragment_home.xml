@@ -10,45 +10,51 @@
         tools:context=".ui.home.HomeFragment">
 
         <ImageView
-            android:id="@+id/iv_title"
-            android:layout_width="@dimen/_120sdp"
-            android:layout_height="@dimen/_32sdp"
-            android:src="@drawable/shortly_logo"
-            app:layout_constraintBottom_toTopOf="@+id/iv_main"
+            android:id="@+id/iv_shapes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toTopOf="@id/tv_main_title"
+            android:src="@drawable/shapes"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/iv_main"
-            android:layout_width="308dp"
-            android:layout_height="@dimen/_120sdp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_48sdp"
             android:src="@drawable/illustration"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/tv_main_title"
-            app:layout_constraintTop_toBottomOf="@+id/iv_title" />
+            app:layout_constraintTop_toTopOf="@id/iv_shapes"
+            app:layout_constraintBottom_toBottomOf="@id/iv_shapes"
+            app:layout_constraintStart_toStartOf="@id/iv_shapes"
+            app:layout_constraintEnd_toEndOf="@id/iv_shapes"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/tv_main_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/open_sans_bold"
             android:text="@string/title_main"
             android:textSize="@dimen/_20ssp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:includeFontPadding="false"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_main" />
 
         <TextView
             android:id="@+id/tv_main_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
             android:text="@string/text_description"
             android:textAlignment="center"
-            android:textSize="@dimen/_17ssp"
+            android:textSize="@dimen/_16ssp"
+            android:includeFontPadding="false"
+            android:fontFamily="@font/open_sans_semibold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_main_title" />

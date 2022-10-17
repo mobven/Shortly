@@ -1,13 +1,14 @@
 <resources>
-    <string name="app_name">ShortyApp</string>
+    <string name="app_name">Shortly</string>
     <string name="title_main">Let\'s get started!</string>
-    <string name="text_description">Paste your first link into\nthe field to shorten it</string>
+    <string name="text_description">Paste your first link into the field to\nshorten it</string>
     <string name="text_history">Your Link History</string>
-    <string name="hint_link">Shorten a link here…</string>
+    <string name="hint_link">Paste your link here</string>
     <string name="error_link">Please add a link here</string>
-    <string name="btn_shorten">SHORTEN IT!</string>
-    <string name="btn_copy">COPY</string>
-    <string name="btn_copied">COPIED!</string>
+    <string name="btn_shorten">Shorten it!</string>
+    <string name="btn_copy">Copy</string>
+    <string name="btn_share">Share</string>
+    <string name="btn_copied">Copied!</string>
     <string name="title_error">Error</string>
 
     <string name="short_link">Short a link</string>

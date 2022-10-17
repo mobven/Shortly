@@ -13,9 +13,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mobven.shortly.R
 import com.mobven.shortly.adapter.ShortLinkAdapter
 import com.mobven.shortly.databinding.FragmentMylistBinding
 import com.mobven.shortly.ui.main.MainViewModel
+import com.mobven.shortly.utils.SpaceItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -45,10 +47,14 @@ class MyLinksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        with(binding) {
-            rvLinks.layoutManager = linearLayoutManager
-
-            rvLinks.adapter = shortLinkAdapter
+        binding.rvLinks.apply {
+            adapter = shortLinkAdapter
+            addItemDecoration(
+                SpaceItemDecoration(
+                    resources.getDimensionPixelSize(R.dimen._12sdp),
+                    false
+                )
+            )
         }
 
         viewModel.apply {

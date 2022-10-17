@@ -3,7 +3,7 @@ package com.mobven.shortly.adapter
 import androidx.recyclerview.widget.DiffUtil
 import com.mobven.shortly.ShortenData
 
-class ShortLinkDiffUtil(val oldList: List<ShortenData>, val newList: List<ShortenData>) :
+class ShortLinkDiffUtil(private val oldList: List<ShortenData>, private val newList: List<ShortenData>) :
     DiffUtil.Callback() {
     override fun getOldListSize(): Int = oldList.size
 

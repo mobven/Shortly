@@ -44,7 +44,6 @@ class MainViewModel @Inject constructor(
     private fun getLocalShortenLink() {
         viewModelScope.launch {
             getLinksUseCase.invoke()
-                .distinctUntilChanged()
                 .collect {
                     if (it.isNotEmpty()) {
                         _uiState.value = ShortlyUiState.Success(it)
@@ -89,7 +88,7 @@ class MainViewModel @Inject constructor(
 
     fun deleteLink(code: String) {
         viewModelScope.launch {
-            var result = deleteLinkUseCase.deleteLink(code)
+            val result = deleteLinkUseCase.deleteLink(code)
             if (result == 0)
                 _deleteError.value = true
         }
