@@ -8,5 +8,5 @@ import javax.inject.Inject
 class GetLinksUseCase @Inject constructor(
     private val mainRepository: MainRepository,
 ) {
-    fun invoke(): Flow<List<ShortenData>> = mainRepository.getLinks()
+    suspend fun invoke(): List<ShortenData> = mainRepository.getLinks()
 }

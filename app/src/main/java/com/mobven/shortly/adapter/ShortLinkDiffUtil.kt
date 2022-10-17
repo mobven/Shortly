@@ -10,8 +10,8 @@ class ShortLinkDiffUtil(private val oldList: List<ShortenData>, private val newL
     override fun getNewListSize(): Int = newList.size
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-        oldList[oldItemPosition] === newList[newItemPosition]
+        oldList[oldItemPosition] == newList[newItemPosition]
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-        oldList[oldItemPosition] == newList[newItemPosition]
+        oldList[oldItemPosition].code == newList[newItemPosition].code
 }

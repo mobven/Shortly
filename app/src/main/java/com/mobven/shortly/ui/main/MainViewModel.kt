@@ -8,10 +8,7 @@ import com.mobven.shortly.BaseResponse
 import com.mobven.shortly.ShortenData
 import com.mobven.shortly.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -43,14 +40,13 @@ class MainViewModel @Inject constructor(
 
     private fun getLocalShortenLink() {
         viewModelScope.launch {
-            getLinksUseCase.invoke()
-                .collect {
-                    if (it.isNotEmpty()) {
-                        _uiState.value = ShortlyUiState.Success(it)
-                        _linkList.value = it
-                    } else
-                        _uiState.value = ShortlyUiState.Empty(Unit)
-                }
+            getLinksUseCase.invoke().apply {
+                if (isNotEmpty()) {
+                    _uiState.value = ShortlyUiState.Success(this)
+                    _linkList.value = this
+                } else
+                    _uiState.value = ShortlyUiState.Empty(Unit)
+            }
         }
     }
 
@@ -83,6 +79,7 @@ class MainViewModel @Inject constructor(
                 updateShortenDataUseCase.updateSelected(false, it)
             }
             updateShortenDataUseCase.updateSelected(isSelected, code)
+            getLocalShortenLink()
         }
     }
 
