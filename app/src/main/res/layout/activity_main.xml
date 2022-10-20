@@ -65,7 +65,7 @@
             android:hint="@string/hint_link"
             android:fontFamily="@font/open_sans_semibold"
             android:paddingHorizontal="@dimen/_16sdp"
-            android:textColorHint="@color/violets_are_blue"
+            android:textColorHint="@color/violets_are_blue_80"
             android:maxLines="1"
             android:inputType="text"
             android:textSize="@dimen/_12ssp"

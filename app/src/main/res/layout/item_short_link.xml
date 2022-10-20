@@ -37,6 +37,7 @@
             android:src="@drawable/ic_trash_bin"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="@dimen/_16sdp"
+            style="@style/trans_bin_style"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ContentDescription" />
 
@@ -50,7 +51,7 @@
             android:fontFamily="@font/open_sans_bold"
             android:padding="@dimen/_16sdp"
             android:textAlignment="center"
-            android:textColor="@color/han_purple"
+            style="@style/short_link_style"
             android:textSize="@dimen/_14ssp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -70,6 +71,7 @@
             android:insetBottom="0dp"
             android:backgroundTint="@color/violets_are_blue"
             android:fontFamily="@font/open_sans_bold"
+            android:textColor="@android:color/white"
             android:text="@string/btn_share"
             android:textSize="@dimen/_14ssp"
             app:cornerRadius="@dimen/_6sdp"
@@ -91,6 +93,7 @@
             android:insetTop="0dp"
             android:insetRight="0dp"
             android:insetBottom="0dp"
+            android:textColor="@android:color/white"
             android:text="@string/btn_copy"
             android:textSize="@dimen/_14ssp"
             app:cornerRadius="@dimen/_6sdp"

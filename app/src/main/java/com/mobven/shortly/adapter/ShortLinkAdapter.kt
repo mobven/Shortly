@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.mobven.extension.click
 import com.mobven.shortly.R
 import com.mobven.shortly.ShortenData
 import com.mobven.shortly.databinding.ItemShortLinkBinding
@@ -13,6 +14,7 @@ import dagger.hilt.android.scopes.FragmentScoped
 @FragmentScoped
 class ShortLinkAdapter(var shortLinkList: List<ShortenData>) : RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
     var itemClickListener: (ShortenData) -> Unit = {}
+    var itemShareListener: (ShortenData) -> Unit = {}
     var itemRemoveListener: ((String), (String)) -> Unit = { _, _ -> }
     var openUrl: (String) -> Unit = {}
     var copiedItem: String? = null
@@ -52,6 +54,11 @@ class ShortLinkAdapter(var shortLinkList: List<ShortenData>) : RecyclerView.Adap
                 btnCopy.setOnClickListener() {
                     itemClickListener(item)
                 }
+
+                btnShare.click {
+                    itemShareListener(item)
+                }
+
                 icTrash.setOnClickListener {
                     itemRemoveListener(item.code, item.short_link)
                 }

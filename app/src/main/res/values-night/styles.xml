@@ -7,11 +7,11 @@
     </style>
 
     <style name="trans_bin_style">
-        <item name="tint">@color/han_purple</item>
+        <item name="tint">@android:color/white</item>
     </style>
 
     <style name="short_link_style">
-        <item name="android:textColor">@color/han_purple</item>
+        <item name="android:textColor">@color/maximum_blue_green</item>
     </style>
 
 </resources>

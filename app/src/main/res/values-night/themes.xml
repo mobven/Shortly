@@ -4,5 +4,6 @@
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:windowBackground">@color/dark_purple</item>
+        <item name="android:statusBarColor">@color/dark_purple</item>
     </style>
 </resources>

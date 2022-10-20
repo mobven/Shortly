@@ -73,6 +73,8 @@ dependencies {
     implementation 'androidx.hilt:hilt-navigation-fragment:1.0.0'
     kapt 'com.google.dagger:hilt-compiler:2.43.2'
 
+    implementation 'com.github.mobven:extensify:1.0.0'
+
     implementation 'androidx.test.espresso:espresso-idling-resource:3.4.0'
 
     testImplementation "junit:junit:4.13.2"
