@@ -32,8 +32,7 @@ class MyLinksFragment : Fragment() {
     @Inject
     lateinit var clipBoardManager: ClipboardManager
 
-    @Inject
-    lateinit var shortLinkAdapter: ShortLinkAdapter
+    private var shortLinkAdapter = ShortLinkAdapter(emptyList())
 
     @Inject
     lateinit var linearLayoutManager: LinearLayoutManager
@@ -50,6 +49,7 @@ class MyLinksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.rvLinks.apply {
             adapter = shortLinkAdapter
+            setHasFixedSize(true)
             addItemDecoration(
                 SpaceItemDecoration(
                     resources.getDimensionPixelSize(R.dimen._12sdp),

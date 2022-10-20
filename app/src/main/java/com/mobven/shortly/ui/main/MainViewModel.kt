@@ -71,6 +71,7 @@ class MainViewModel @Inject constructor(
     fun insertLink(shortenData: ShortenData) {
         viewModelScope.launch {
             insertLinkUseCase.invokeInsert(shortenData)
+            getLocalShortenLink()
         }
     }
 
@@ -89,6 +90,7 @@ class MainViewModel @Inject constructor(
             val result = deleteLinkUseCase.deleteLink(code)
             if (result == 0)
                 _deleteError.value = true
+            getLocalShortenLink()
         }
     }
 }

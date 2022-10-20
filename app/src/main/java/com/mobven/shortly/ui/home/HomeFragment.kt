@@ -1,13 +1,10 @@
 package com.mobven.shortly.ui.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.navGraphViewModels
-import com.mobven.shortly.ui.main.MainViewModel
-import com.mobven.shortly.R
+import androidx.fragment.app.Fragment
 import com.mobven.shortly.databinding.FragmentHomeBinding
 
 /**
@@ -19,7 +16,6 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val mainViewModel by navGraphViewModels<MainViewModel>(R.navigation.nav_main)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

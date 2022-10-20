@@ -25,9 +25,4 @@ object FragmentModule {
         linearLayoutManager.stackFromEnd = true
         return linearLayoutManager
     }
-
-    @Provides
-    fun provideAdapter(): ShortLinkAdapter {
-        return ShortLinkAdapter()
-    }
 }

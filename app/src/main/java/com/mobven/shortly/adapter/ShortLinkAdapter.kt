@@ -11,11 +11,10 @@ import com.mobven.shortly.utils.underLineText
 import dagger.hilt.android.scopes.FragmentScoped
 
 @FragmentScoped
-class ShortLinkAdapter : RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
+class ShortLinkAdapter(var shortLinkList: List<ShortenData>) : RecyclerView.Adapter<ShortLinkAdapter.ViewHolder>() {
     var itemClickListener: (ShortenData) -> Unit = {}
     var itemRemoveListener: ((String), (String)) -> Unit = { _, _ -> }
     var openUrl: (String) -> Unit = {}
-    private var shortLinkList = mutableListOf<ShortenData>()
     var copiedItem: String? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
