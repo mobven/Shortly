@@ -40,10 +40,11 @@ class MainViewModel @Inject constructor(
 
     private fun getLocalShortenLink() {
         viewModelScope.launch {
-            getLinksUseCase.invoke().apply {
-                if (isNotEmpty()) {
-                    _uiState.value = ShortlyUiState.Success(this)
-                    _linkList.value = this
+            getLinksUseCase.invoke().distinctUntilChanged()
+                .collect {
+                if (it.isNotEmpty()) {
+                    _uiState.value = ShortlyUiState.Success(it)
+                    _linkList.value = it
                 } else
                     _uiState.value = ShortlyUiState.Empty(Unit)
             }
