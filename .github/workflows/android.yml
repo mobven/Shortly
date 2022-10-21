@@ -18,7 +18,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Android Emulator (faruktoptas)
-      uses: faruktoptas/android-github-actions-emulator@1.1.0
+      uses: reactivecircus/android-emulator-runner@v2
     - name: Unit Test
       run: ./gradlew jacocoTestReport
     - name: Cache SonarCloud packages
