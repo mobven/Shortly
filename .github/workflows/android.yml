@@ -6,6 +6,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        api-level: [23, 25, 27, 29, 31, 33]
+        target: [default, google_apis]
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -17,8 +21,14 @@ jobs:
         cache: gradle
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Android Emulator (faruktoptas)
-      uses: reactivecircus/android-emulator-runner@v2
+    - name: Android Emulator
+      uses: ReactiveCircus/android-emulator-runner@v2.26.0
+      with:
+          api-level: ${{ matrix.api-level }}
+          target: ${{ matrix.target }}
+          arch: x86_64
+          profile: Nexus 6
+          script: ./gradlew connectedCheck
     - name: Unit Test
       run: ./gradlew jacocoTestReport
     - name: Cache SonarCloud packages
