@@ -1,10 +1,7 @@
 package com.mobven.shortly.ui.main
 
-import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import androidx.paging.map
 import com.mobven.shortly.BaseResponse
 import com.mobven.shortly.ShortenData
 import com.mobven.shortly.domain.usecase.*
@@ -12,7 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.log
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -43,14 +39,15 @@ class MainViewModel @Inject constructor(
     private fun getLocalShortenLink() {
         viewModelScope.launch {
             getLinksUseCase.invoke()
-                .collectLatest {
-                if (true) {
+                .collectLatest  {
                     _uiState.value = ShortlyUiState.Success(it)
                     _linkList.value = it
-                } else
-                    _uiState.value = ShortlyUiState.Empty(Unit)
             }
         }
+    }
+
+    fun setEmptyState() {
+        _uiState.value = ShortlyUiState.Empty(Unit)
     }
 
     fun buttonClicked(isBlank: Boolean) {

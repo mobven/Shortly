@@ -6,27 +6,20 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobven.shortly.R
-import com.mobven.shortly.adapter.ShortLinkAdapter
 import com.mobven.shortly.adapter.ShortLinkPagingAdapter
 import com.mobven.shortly.databinding.FragmentMylistBinding
 import com.mobven.shortly.ui.main.MainViewModel
 import com.mobven.shortly.utils.SpaceItemDecoration
 import com.mobven.shortly.utils.share
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -38,8 +31,6 @@ class MyLinksFragment : Fragment() {
 
     @Inject
     lateinit var clipBoardManager: ClipboardManager
-
-    //private var shortLinkAdapter = ShortLinkAdapter(emptyList())
 
     @Inject
     lateinit var shortLinkPagingAdapter: ShortLinkPagingAdapter
@@ -69,8 +60,11 @@ class MyLinksFragment : Fragment() {
         }
         viewModel.apply {
             linkList.observe(viewLifecycleOwner) {
-                shortLinkPagingAdapter.submitData(lifecycle,it)
-                //shortLinkAdapter.setData(it)
+                shortLinkPagingAdapter.submitData(lifecycle, it)
+                shortLinkPagingAdapter.addOnPagesUpdatedListener {
+                    if (shortLinkPagingAdapter.snapshot().isEmpty())
+                        setEmptyState()
+                }
             }
 
             shortLinkPagingAdapter.itemClickListener = {

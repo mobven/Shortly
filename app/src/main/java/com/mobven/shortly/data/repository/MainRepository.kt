@@ -6,6 +6,7 @@ import com.mobven.shortly.Response
 import com.mobven.shortly.ShortenData
 import com.mobven.shortly.data.ShortlyLocalDataSource
 import com.mobven.shortly.data.ShortlyRemoteDataSource
+import com.mobven.shortly.domain.ShortLinkPagingRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,11 +24,10 @@ interface MainRepository {
 class MainRepositoryImpl @Inject constructor(
     private val remoteDataSource: ShortlyRemoteDataSource,
     private val localDataSource: ShortlyLocalDataSource,
-    // todo burayı daha iyi bir şekilde handle edebiliriz ileride bence
-    private val shortLinkPagingRepositoryImpl: ShortLinkPagingRepositoryImpl
+    private val shortLinkPagingRepository: ShortLinkPagingRepository
 ) : MainRepository {
     override fun shortenLink(editLink: String) = remoteDataSource.shortenLink(editLink)
-    override suspend fun getLinks() = shortLinkPagingRepositoryImpl.getShortLinkList()
+    override suspend fun getLinks() = shortLinkPagingRepository.getShortLinkList()
     override suspend fun insertLink(shortenData: ShortenData) = localDataSource.insertLink(shortenData)
     override suspend fun updateSelected(isSelected: Boolean, code: String) = localDataSource.updateSelected(isSelected, code)
     override suspend fun getOldSelected(): String? = localDataSource.getOldSelected()
