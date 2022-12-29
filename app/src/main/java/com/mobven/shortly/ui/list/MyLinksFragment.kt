@@ -61,10 +61,6 @@ class MyLinksFragment : Fragment() {
         viewModel.apply {
             linkList.observe(viewLifecycleOwner) {
                 shortLinkPagingAdapter.submitData(lifecycle, it)
-                shortLinkPagingAdapter.addOnPagesUpdatedListener {
-                    if (shortLinkPagingAdapter.snapshot().isEmpty())
-                        setEmptyState()
-                }
             }
 
             shortLinkPagingAdapter.itemClickListener = {
@@ -91,6 +87,12 @@ class MyLinksFragment : Fragment() {
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
                 startActivity(browserIntent)
             }
+
+            shortLinkPagingAdapter.addOnPagesUpdatedListener {
+                if (shortLinkPagingAdapter.snapshot().isEmpty())
+                    setEmptyState()
+            }
+
             deleteError.observe(viewLifecycleOwner) {
                 toast?.cancel()
                 toast = Toast.makeText(context, "Silerken Bir Hata Oluştu!", Toast.LENGTH_SHORT)
