@@ -54,37 +54,37 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
-    implementation "androidx.core:core-ktx:1.9.0"
-    implementation "androidx.appcompat:appcompat:1.5.1"
-    implementation "com.google.android.material:material:1.6.1"
+    implementation KotlinX.coroutines.android
+    implementation AndroidX.core.ktx
+    implementation AndroidX.appCompat
+    implementation Google.android.material
 
-    implementation "com.squareup.retrofit2:retrofit:2.9.0"
-    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
-    implementation 'com.google.code.gson:gson:2.9.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.7'
+    implementation Square.retrofit2
+    implementation Square.retrofit2.converter.gson
+    implementation 'com.google.code.gson:gson:_'
+    implementation Square.okHttp3.loggingInterceptor
 
-    implementation "androidx.room:room-ktx:2.4.3"
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.2'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.5.2'
-    kapt "androidx.room:room-compiler:2.4.3"
+    implementation AndroidX.room.ktx
+    implementation AndroidX.navigation.fragmentKtx
+    implementation AndroidX.navigation.uiKtx
+    kapt AndroidX.room.compiler
 
-    implementation 'com.google.dagger:hilt-android:2.43.2'
-    implementation 'androidx.hilt:hilt-navigation-fragment:1.0.0'
-    kapt 'com.google.dagger:hilt-compiler:2.43.2'
+    implementation Google.dagger.hilt.android
+    implementation AndroidX.hilt.navigationFragment
+    kapt Google.dagger.hilt.compiler
 
-    implementation 'com.github.mobven:extensify:1.0.0'
+    implementation 'com.github.mobven:extensify:_'
 
-    implementation 'androidx.test.espresso:espresso-idling-resource:3.4.0'
+    implementation AndroidX.test.espresso.idlingResource
 
-    testImplementation "junit:junit:4.13.2"
-    testImplementation "io.mockk:mockk:1.10.2"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
-    testImplementation "androidx.arch.core:core-testing:2.1.0"
-    testImplementation 'app.cash.turbine:turbine:0.9.0'
+    testImplementation Testing.junit4
+    testImplementation Testing.mockK
+    testImplementation KotlinX.coroutines.test
+    testImplementation AndroidX.archCore.testing
+    testImplementation CashApp.turbine
 
-    androidTestImplementation "androidx.test:runner:1.4.0"
-    androidTestImplementation "androidx.test:rules:1.4.0"
-    androidTestImplementation "androidx.test.ext:junit:1.1.3"
-    androidTestImplementation "androidx.test.espresso:espresso-core:3.4.0"
+    androidTestImplementation AndroidX.test.runner
+    androidTestImplementation AndroidX.test.rules
+    androidTestImplementation AndroidX.test.ext.junit
+    androidTestImplementation AndroidX.test.espresso.core
 }
