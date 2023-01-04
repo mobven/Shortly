@@ -1,6 +1,7 @@
 package com.mobven.shortly.ui.main
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
@@ -94,7 +95,20 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
                 }
             }
         }
+        handleIntent(intent)
+    }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent : Intent?){
+        if (intent?.action == Intent.ACTION_SEND && intent.type == "text/plain"){
+            intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
+                mainBinding.shortenLinkEdt.setText(it)
+            }
+        }
     }
 
     private fun callShortLink(editLink: String) {
