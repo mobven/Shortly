@@ -88,8 +88,6 @@ dependencies {
     androidTestImplementation AndroidX.test.ext.junit
     androidTestImplementation AndroidX.test.espresso.core
 
-    implementation Square.picasso
-
     implementation AndroidX.room.paging
     implementation AndroidX.paging.runtimeKtx
 }
