@@ -7,7 +7,8 @@ import app.cash.turbine.test
 import com.mobven.shortly.domain.usecase.*
 import com.mobven.shortly.ui.main.MainViewModel
 import com.mobven.shortly.ui.main.ShortlyUiState
-import io.mockk.*
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

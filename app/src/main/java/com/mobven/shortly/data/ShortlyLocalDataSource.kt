@@ -2,7 +2,6 @@ package com.mobven.shortly.data
 
 import com.mobven.shortly.ShortenData
 import com.mobven.shortly.data.room.LinkDao
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 interface ShortlyLocalDataSource {

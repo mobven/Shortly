@@ -2,7 +2,6 @@ package com.mobven.shortly.domain.usecase
 
 import androidx.paging.PagingData
 import com.mobven.shortly.ShortenData
-import com.mobven.shortly.data.repository.MainRepository
 import com.mobven.shortly.domain.ShortLinkPagingRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

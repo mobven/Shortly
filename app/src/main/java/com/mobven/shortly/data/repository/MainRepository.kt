@@ -1,12 +1,10 @@
 package com.mobven.shortly.data.repository
 
-import androidx.paging.PagingData
 import com.mobven.shortly.BaseResponse
 import com.mobven.shortly.Response
 import com.mobven.shortly.ShortenData
 import com.mobven.shortly.data.ShortlyLocalDataSource
 import com.mobven.shortly.data.ShortlyRemoteDataSource
-import com.mobven.shortly.domain.ShortLinkPagingRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
