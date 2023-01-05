@@ -7,19 +7,25 @@
         android:name="com.mobven.shortly.MyApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
-        android:usesCleartextTraffic="true"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SampleRunProject">
+        android:theme="@style/Theme.SampleRunProject"
+        android:usesCleartextTraffic="true">
         <activity
             android:name="com.mobven.shortly.ui.main.MainActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain"/>
             </intent-filter>
         </activity>
         <meta-data
