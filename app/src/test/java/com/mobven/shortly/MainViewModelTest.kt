@@ -1,13 +1,18 @@
 package com.mobven.shortly
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import app.cash.turbine.test
 import com.mobven.shortly.domain.usecase.*
 import com.mobven.shortly.ui.main.MainViewModel
 import com.mobven.shortly.ui.main.ShortlyUiState
-import io.mockk.*
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.*
 import org.junit.Assert.assertEquals
@@ -16,7 +21,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-
+@ExperimentalCoroutinesApi
 class MainViewModelTest {
 
 
@@ -24,7 +29,7 @@ class MainViewModelTest {
     val instantExecutorRule = InstantTaskExecutorRule()
 
     @MockK
-    lateinit var getLinksUseCase: GetLinksUseCase
+    lateinit var getLinksPagingDataFlowUseCase: GetLinksPagingDataFlowUseCase
 
     @MockK
     lateinit var shortenLinkUseCase: ShortenLinkUseCase
@@ -46,7 +51,7 @@ class MainViewModelTest {
 
     private lateinit var testDispatcher:TestDispatcher
 
-    private val givenData = listOf(
+    private val givenData = PagingData.from(listOf(
         ShortenData(
             "sdf",
             "sdf",
@@ -58,7 +63,7 @@ class MainViewModelTest {
             "gdfgdf",
             false
         )
-    )
+    ))
 
     init {
         MockKAnnotations.init(this)
@@ -70,26 +75,23 @@ class MainViewModelTest {
             testDispatcher = StandardTestDispatcher(testScheduler)
             Dispatchers.setMain(testDispatcher)
 
-            // coEvery { mainViewModel.viewModelScope } returns CoroutineScope(testDispatcher)
+            coEvery { mainViewModel.viewModelScope } returns CoroutineScope(testDispatcher)
 
             mainViewModel = MainViewModel(
                 shortenLinkUseCase,
-                getLinksUseCase,
+                getLinksPagingDataFlowUseCase,
                 insertLinkUseCase,
                 updateShortenDataUseCase,
                 getSelectedOldUseCase,
                 deleteLinkUseCase
             )
-            coEvery { getLinksUseCase.invoke() } returns flowOf(givenData)
+            coEvery { getLinksPagingDataFlowUseCase.invoke() } returns flowOf(givenData)
+            advanceUntilIdle()
+            assertEquals(mainViewModel.uiState.value, ShortlyUiState.Success(givenData))
+            assertEquals(givenData, mainViewModel.linkList.value)
         } finally {
             Dispatchers.resetMain()
         }
-    }
-
-    @Test
-    fun initTest() = runTest {
-        assertEquals(mainViewModel.uiState.value, ShortlyUiState.Success(givenData))
-        assertEquals(mainViewModel.linkList.value, givenData)
     }
 
     @Test

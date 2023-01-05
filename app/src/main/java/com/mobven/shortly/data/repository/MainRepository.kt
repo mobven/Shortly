@@ -1,5 +1,6 @@
 package com.mobven.shortly.data.repository
 
+import androidx.paging.PagingData
 import com.mobven.shortly.BaseResponse
 import com.mobven.shortly.Response
 import com.mobven.shortly.ShortenData
@@ -10,11 +11,12 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 interface MainRepository {
+    fun getLinksFlow(): Flow<List<ShortenData>>
+    fun getLinksPagingDataFlow(): Flow<PagingData<ShortenData>>
     fun shortenLink(editLink: String): Flow<BaseResponse<Response>>
-    fun getLinks(): Flow<List<ShortenData>>
     suspend fun insertLink(shortenData: ShortenData)
     suspend fun updateSelected(isSelected: Boolean, code: String)
-    suspend fun getOldSelected():String?
+    suspend fun getOldSelected(): String?
     suspend fun deleteLink(code: String): Int
 }
 
@@ -24,9 +26,10 @@ class MainRepositoryImpl @Inject constructor(
     private val localDataSource: ShortlyLocalDataSource
 ) : MainRepository {
     override fun shortenLink(editLink: String) = remoteDataSource.shortenLink(editLink)
-    override fun getLinks() = localDataSource.getLinks()
     override suspend fun insertLink(shortenData: ShortenData) = localDataSource.insertLink(shortenData)
     override suspend fun updateSelected(isSelected: Boolean, code: String) = localDataSource.updateSelected(isSelected, code)
     override suspend fun getOldSelected(): String? = localDataSource.getOldSelected()
     override suspend fun deleteLink(code: String): Int = localDataSource.deleteLink(code)
+    override fun getLinksFlow() = localDataSource.getLinksFlow()
+    override fun getLinksPagingDataFlow() = localDataSource.getLinksPagingDataFlow()
 }

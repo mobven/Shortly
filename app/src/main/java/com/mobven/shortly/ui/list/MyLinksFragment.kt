@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobven.shortly.R
-import com.mobven.shortly.adapter.ShortLinkAdapter
+import com.mobven.shortly.adapter.ShortLinkPagingAdapter
 import com.mobven.shortly.databinding.FragmentMylistBinding
 import com.mobven.shortly.utils.SpaceItemDecoration
 import com.mobven.shortly.utils.collectEvent
@@ -33,7 +33,8 @@ class MyLinksFragment : Fragment() {
     @Inject
     lateinit var clipBoardManager: ClipboardManager
 
-    private var shortLinkAdapter = ShortLinkAdapter(emptyList())
+    @Inject
+    lateinit var shortLinkPagingAdapter: ShortLinkPagingAdapter
 
     @Inject
     lateinit var linearLayoutManager: LinearLayoutManager
@@ -56,7 +57,7 @@ class MyLinksFragment : Fragment() {
 
     private fun initView() {
         binding.rvLinks.apply {
-            adapter = shortLinkAdapter
+            adapter = shortLinkPagingAdapter
             setHasFixedSize(true)
             addItemDecoration(
                 SpaceItemDecoration(
@@ -66,18 +67,18 @@ class MyLinksFragment : Fragment() {
             )
         }
 
-        shortLinkAdapter.itemClickListener = {
+        shortLinkPagingAdapter.itemClickListener = {
             viewModel.selectedShortenData(true, it.code)
-            shortLinkAdapter.copiedItem = it.code
+            shortLinkPagingAdapter.copiedItem = it.code
             val clip = ClipData.newPlainText("Copied", it.short_link)
             clipBoardManager.setPrimaryClip(clip)
         }
 
-        shortLinkAdapter.itemShareListener = {
+        shortLinkPagingAdapter.itemShareListener = {
             requireContext().share(it.short_link, "Share")
         }
 
-        shortLinkAdapter.itemRemoveListener = { code, shortLink ->
+        shortLinkPagingAdapter.itemRemoveListener = { code, shortLink ->
             if (clipBoardManager.primaryClip?.getItemAt(0)?.text?.toString()
                     .equals(shortLink) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
             ) {
@@ -86,14 +87,14 @@ class MyLinksFragment : Fragment() {
             viewModel.delete(code)
         }
 
-        shortLinkAdapter.openUrl = {
+        shortLinkPagingAdapter.openUrl = {
             val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
             startActivity(browserIntent)
         }
     }
 
     private fun renderView(uiState: MyLinksUiState) = with(binding) {
-        if (uiState.dataList.isNotEmpty()) shortLinkAdapter.setData(uiState.dataList)
+        shortLinkPagingAdapter.submitData(lifecycle, uiState.dataList)
     }
 
     private fun handleEvent(uiEvent: MyLinksUiEvent) = with(binding) {

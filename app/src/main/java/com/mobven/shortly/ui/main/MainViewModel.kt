@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mobven.shortly.BaseResponse
 import com.mobven.shortly.ShortenData
-import com.mobven.shortly.domain.usecase.GetLinksUseCase
+import com.mobven.shortly.domain.usecase.GetLinksFlowUseCase
+import com.mobven.shortly.domain.usecase.GetLinksPagingDataFlowUseCase
 import com.mobven.shortly.domain.usecase.InsertLinkUseCase
 import com.mobven.shortly.domain.usecase.ShortenLinkUseCase
 import com.mobven.shortly.ui.main.MainUiEvent.ShowError
@@ -16,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val shortenLinkUseCase: ShortenLinkUseCase,
-    private val getLinksUseCase: GetLinksUseCase,
+    private val getLinksFlowUseCase: GetLinksFlowUseCase,
     private val insertLinkUseCase: InsertLinkUseCase
 ) : ViewModel() {
 
@@ -31,7 +32,7 @@ class MainViewModel @Inject constructor(
     }
 
     private fun getLocalShortenLink() {
-        getLinksUseCase()
+        getLinksFlowUseCase()
             .distinctUntilChanged()
             .onStart { _uiState.update { state -> state.copy(isLoading = true) } }
             .onEach { _uiState.update { state -> state.copy(dataList = it, isLoading = false) } }

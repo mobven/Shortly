@@ -1,6 +1,5 @@
 package com.mobven.shortly
 
-import androidx.annotation.Nullable
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.IdlingResource.ResourceCallback
 import java.util.concurrent.atomic.AtomicBoolean

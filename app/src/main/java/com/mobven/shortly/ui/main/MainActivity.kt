@@ -1,6 +1,7 @@
 package com.mobven.shortly.ui.main
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
@@ -57,6 +58,8 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
 
         collectState(viewModel.uiState, ::renderView)
         collectEvent(viewModel.uiEvent, ::handleEvent)
+
+        handleIntent(intent)
     }
 
     private fun renderView(uiState: MainUiState) = with(mainBinding) {
@@ -80,6 +83,17 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
                 shortenLinkEdt.text?.clear()
                 progressBar.gone()
             }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent : Intent?){
+        if (intent?.action == Intent.ACTION_SEND && intent.type == "text/plain"){
+            mainBinding.shortenLinkEdt.setText(intent.getStringExtra(Intent.EXTRA_TEXT))
         }
     }
 
