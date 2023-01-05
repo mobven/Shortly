@@ -105,9 +105,7 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
 
     private fun handleIntent(intent : Intent?){
         if (intent?.action == Intent.ACTION_SEND && intent.type == "text/plain"){
-            intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
-                mainBinding.shortenLinkEdt.setText(it)
-            }
+            mainBinding.shortenLinkEdt.setText(intent.getStringExtra(Intent.EXTRA_TEXT))
         }
     }
 
