@@ -6,6 +6,7 @@ import com.mobven.shortly.domain.usecase.DeleteLinkUseCase
 import com.mobven.shortly.domain.usecase.GetLinksUseCase
 import com.mobven.shortly.domain.usecase.GetSelectedOldUseCase
 import com.mobven.shortly.domain.usecase.UpdateShortenDataUseCase
+import com.mobven.shortly.ui.list.MyLinksUiEvent.ShowError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -30,23 +31,16 @@ class MyLinksViewModel @Inject constructor(
     }
 
     private fun getLocalShortenLink() {
-        viewModelScope.launch {
-            getLinksUseCase().distinctUntilChanged()
-                .collect {
-                    if (it.isNotEmpty()) {
-                        _uiState.update { state -> state.copy(dataList = it) }
-                    } else
-                        _uiState.update { state -> state.copy(dataList = emptyList()) }
-                }
-        }
+        getLinksUseCase()
+            .distinctUntilChanged()
+            .onEach { _uiState.update { state -> state.copy(dataList = it) } }
+            .launchIn(viewModelScope)
     }
 
     fun delete(code: String) {
         viewModelScope.launch {
             val isSuccess = deleteLinkUseCase(code)
-            if (isSuccess.not()) {
-                _uiEvent.emit(MyLinksUiEvent.ShowError("Silerken Bir Hata Oluştu!"))
-            }
+            if (isSuccess.not()) _uiEvent.emit(ShowError("Silerken Bir Hata Oluştu!"))
 
             getLocalShortenLink()
         }
@@ -54,9 +48,7 @@ class MyLinksViewModel @Inject constructor(
 
     fun selectedShortenData(isSelected: Boolean, code: String) {
         viewModelScope.launch {
-            getSelectedOldUseCase()?.let {
-                updateShortenDataUseCase(false, it)
-            }
+            getSelectedOldUseCase()?.let { updateShortenDataUseCase(false, it) }
             updateShortenDataUseCase(isSelected, code)
             getLocalShortenLink()
         }

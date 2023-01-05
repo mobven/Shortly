@@ -7,6 +7,7 @@ import com.mobven.shortly.ShortenData
 import com.mobven.shortly.domain.usecase.GetLinksUseCase
 import com.mobven.shortly.domain.usecase.InsertLinkUseCase
 import com.mobven.shortly.domain.usecase.ShortenLinkUseCase
+import com.mobven.shortly.ui.main.MainUiEvent.ShowError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -30,34 +31,22 @@ class MainViewModel @Inject constructor(
     }
 
     private fun getLocalShortenLink() {
-        viewModelScope.launch {
-            _uiState.update { state -> state.copy(isLoading = true) }
-            getLinksUseCase().distinctUntilChanged()
-                .collect {
-                    if (it.isNotEmpty()) {
-                        _uiState.update { state -> state.copy(dataList = it) }
-                    } else
-                        _uiState.update { state -> state.copy(dataList = emptyList()) }
-                }.also {
-                    _uiState.update { state -> state.copy(isLoading = false) }
-                }
-        }
+        getLinksUseCase()
+            .distinctUntilChanged()
+            .onStart { _uiState.update { state -> state.copy(isLoading = true) } }
+            .onEach { _uiState.update { state -> state.copy(dataList = it, isLoading = false) } }
+            .launchIn(viewModelScope)
     }
 
     fun shortenLink(originalLink: String) {
-        viewModelScope.launch {
-            _uiState.update { state -> state.copy(isLoading = true) }
-            shortenLinkUseCase.invoke(originalLink).catch {
-                _uiEvent.emit(MainUiEvent.ShowError(it.message.orEmpty()))
-            }.collect {
-                if (it.data?.ok == true)
-                    BaseResponse.success(it.data).data?.let {
-                        _uiEvent.emit(MainUiEvent.LinkShorten(it.result))
-                    }
-            }.also {
-                _uiState.update { state -> state.copy(isLoading = false) }
-            }
-        }
+        shortenLinkUseCase(originalLink)
+            .onStart { _uiState.update { state -> state.copy(isLoading = true) } }
+            .filter { it.data?.ok == true }
+            .mapNotNull { BaseResponse.success(it.data).data }
+            .onEach { _uiEvent.emit(MainUiEvent.LinkShorten(it.result)) }
+            .onCompletion { _uiState.update { state -> state.copy(isLoading = false) } }
+            .catch { _uiEvent.emit(ShowError(it.message.orEmpty())) }
+            .launchIn(viewModelScope)
     }
 
     fun insertLink(shortenData: ShortenData) {

@@ -112,22 +112,22 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
 
         if (textIsBlank) {
             setHintTextColor(
-                androidx.core.content.ContextCompat.getColor(
+                ContextCompat.getColor(
                     this@MainActivity,
-                    com.mobven.shortly.R.color.red
+                    R.color.red
                 )
             )
-            hint = getString(com.mobven.shortly.R.string.error_link)
-            setBackgroundResource(com.mobven.shortly.R.drawable.bg_edittext_error)
+            hint = getString(R.string.error_link)
+            setBackgroundResource(R.drawable.bg_edittext_error)
         } else {
             setHintTextColor(
-                androidx.core.content.ContextCompat.getColor(
+                ContextCompat.getColor(
                     this@MainActivity,
-                    com.mobven.shortly.R.color.gray
+                    R.color.gray
                 )
             )
-            hint = getString(com.mobven.shortly.R.string.hint_link)
-            setBackgroundResource(com.mobven.shortly.R.drawable.bg_edittext)
+            hint = getString(R.string.hint_link)
+            setBackgroundResource(R.drawable.bg_edittext)
             mIdlingResource?.setIdleState(false)
             viewModel.shortenLink(text.toString())
         }

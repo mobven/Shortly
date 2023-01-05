@@ -93,7 +93,7 @@ class MyLinksFragment : Fragment() {
     }
 
     private fun renderView(uiState: MyLinksUiState) = with(binding) {
-        shortLinkAdapter.setData(uiState.dataList)
+        if (uiState.dataList.isNotEmpty()) shortLinkAdapter.setData(uiState.dataList)
     }
 
     private fun handleEvent(uiEvent: MyLinksUiEvent) = with(binding) {
