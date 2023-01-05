@@ -3,7 +3,6 @@ package com.mobven.shortly.di
 import android.content.ClipboardManager
 import android.content.Context
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mobven.shortly.adapter.ShortLinkAdapter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

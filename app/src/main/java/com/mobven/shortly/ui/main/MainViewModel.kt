@@ -4,11 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import com.mobven.shortly.BaseResponse
 import com.mobven.shortly.ShortenData
 import com.mobven.shortly.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,8 +29,8 @@ class MainViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<ShortlyUiState>(ShortlyUiState.Empty(Unit))
     val uiState: StateFlow<ShortlyUiState> = _uiState
 
-    private var _linkList = MutableLiveData<List<ShortenData>>()
-    val linkList: LiveData<List<ShortenData>> get() = _linkList
+    private var _linkList = MutableLiveData<PagingData<ShortenData>>()
+    val linkList: LiveData<PagingData<ShortenData>> get() = _linkList
 
     private var _deleteError = MutableLiveData<Boolean>()
     val deleteError: LiveData<Boolean> get() = _deleteError
@@ -40,15 +44,16 @@ class MainViewModel @Inject constructor(
 
     private fun getLocalShortenLink() {
         viewModelScope.launch {
-            getLinksUseCase.invoke().distinctUntilChanged()
-                .collect {
-                if (it.isNotEmpty()) {
+            getLinksUseCase.invoke()
+                .collectLatest  {
                     _uiState.value = ShortlyUiState.Success(it)
                     _linkList.value = it
-                } else
-                    _uiState.value = ShortlyUiState.Empty(Unit)
             }
         }
+    }
+
+    fun setEmptyState() {
+        _uiState.value = ShortlyUiState.Empty(Unit)
     }
 
     fun buttonClicked(isBlank: Boolean) {
@@ -98,7 +103,7 @@ class MainViewModel @Inject constructor(
 sealed class ShortlyUiState {
     data class Empty(val unit: Unit) : ShortlyUiState()
     data class Error(val message: String) : ShortlyUiState()
-    data class Success(val dataList: List<ShortenData>) : ShortlyUiState()
+    data class Success(val dataList: PagingData<ShortenData>) : ShortlyUiState()
     data class Loading(val unit: Unit) : ShortlyUiState()
     data class LinkShorten(val data: ShortenData) : ShortlyUiState()
 }

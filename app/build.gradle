@@ -68,7 +68,8 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.2'
     kapt "androidx.room:room-compiler:2.4.3"
-
+    implementation 'androidx.room:room-paging:2.4.3'
+    implementation "androidx.paging:paging-runtime-ktx:3.1.1"
     implementation 'com.google.dagger:hilt-android:2.43.2'
     implementation 'androidx.hilt:hilt-navigation-fragment:1.0.0'
     kapt 'com.google.dagger:hilt-compiler:2.43.2'
