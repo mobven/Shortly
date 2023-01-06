@@ -43,8 +43,6 @@ class MyLinksViewModel @Inject constructor(
         viewModelScope.launch {
             val isSuccess = deleteLinkUseCase(code)
             if (isSuccess.not()) _uiEvent.emit(ShowError("Silerken Bir Hata Oluştu!"))
-
-            getLocalShortenLink()
         }
     }
 
@@ -52,7 +50,6 @@ class MyLinksViewModel @Inject constructor(
         viewModelScope.launch {
             getSelectedOldUseCase()?.let { updateShortenDataUseCase(false, it) }
             updateShortenDataUseCase(isSelected, code)
-            getLocalShortenLink()
         }
     }
 }

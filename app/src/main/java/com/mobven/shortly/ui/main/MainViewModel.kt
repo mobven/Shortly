@@ -53,7 +53,6 @@ class MainViewModel @Inject constructor(
     fun insertLink(shortenData: ShortenData) {
         viewModelScope.launch {
             insertLinkUseCase(shortenData)
-            getLocalShortenLink()
         }
     }
 }
