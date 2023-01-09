@@ -41,7 +41,7 @@ class MainViewModel @Inject constructor(
 
     private fun getLocalShortenLink() {
         viewModelScope.launch {
-            getLinksUseCase.invoke().distinctUntilChanged()
+            getLinksUseCase().distinctUntilChanged()
                 .collect {
                 if (it.isNotEmpty()) {
                     _uiState.value = ShortlyUiState.Success(it)

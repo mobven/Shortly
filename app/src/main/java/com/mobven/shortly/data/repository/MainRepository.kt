@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 interface MainRepository {
-    fun shortenLink(editLink: String): Flow<BaseResponse<Response>>
+    fun shortenLink(editLink: String?): Flow<BaseResponse<Response>>
     fun getLinks(): Flow<List<ShortenData>>
     suspend fun insertLink(shortenData: ShortenData)
     suspend fun updateSelected(isSelected: Boolean, code: String)
@@ -24,7 +24,7 @@ class MainRepositoryImpl @Inject constructor(
     private val remoteDataSource: ShortlyRemoteDataSource,
     private val localDataSource: ShortlyLocalDataSource
 ) : MainRepository {
-    override fun shortenLink(editLink: String) = remoteDataSource.shortenLink(editLink)
+    override fun shortenLink(editLink: String?) = remoteDataSource.shortenLink(editLink)
     override fun getLinks() = localDataSource.getLinks()
     override suspend fun insertLink(shortenData: ShortenData) = localDataSource.insertLink(shortenData)
     override suspend fun updateSelected(isSelected: Boolean, code: String) = localDataSource.updateSelected(isSelected, code)
