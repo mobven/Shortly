@@ -16,6 +16,7 @@ class ShortLinkAdapter(var shortLinkList: List<ShortenData>) : RecyclerView.Adap
     var itemClickListener: (ShortenData) -> Unit = {}
     var itemShareListener: (ShortenData) -> Unit = {}
     var itemRemoveListener: ((String), (String)) -> Unit = { _, _ -> }
+    var itemFavoriteListener: ((Boolean), (String)) -> Unit = { _, _ -> }
     var openUrl: (String) -> Unit = {}
     var copiedItem: String? = null
 
@@ -62,6 +63,9 @@ class ShortLinkAdapter(var shortLinkList: List<ShortenData>) : RecyclerView.Adap
                 icTrash.setOnClickListener {
                     itemRemoveListener(item.code, item.short_link)
                 }
+                cbFavorite.setOnClickListener {
+                    itemFavoriteListener(cbFavorite.isChecked, item.code)
+                }
                 if (item.isSelected) {
                     btnCopy.alpha = 0.5f
                     btnCopy.text = root.context.getString(R.string.btn_copied)
@@ -69,6 +73,8 @@ class ShortLinkAdapter(var shortLinkList: List<ShortenData>) : RecyclerView.Adap
                     btnCopy.alpha = 1.0f
                     btnCopy.text = root.context.getString(R.string.btn_copy)
                 }
+
+                cbFavorite.isChecked = item.isFavorite
             }
         }
     }

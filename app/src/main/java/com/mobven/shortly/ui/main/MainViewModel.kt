@@ -19,7 +19,8 @@ class MainViewModel @Inject constructor(
     private val insertLinkUseCase: InsertLinkUseCase,
     private val updateShortenDataUseCase: UpdateShortenDataUseCase,
     private val getSelectedOldUseCase: GetSelectedOldUseCase,
-    private val deleteLinkUseCase: DeleteLinkUseCase
+    private val deleteLinkUseCase: DeleteLinkUseCase,
+    private val updateFavoriteUseCase : UpdateFavoriteUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<ShortlyUiState>(ShortlyUiState.Empty(Unit))
@@ -82,6 +83,12 @@ class MainViewModel @Inject constructor(
             }
             updateShortenDataUseCase.updateSelected(isSelected, code)
             getLocalShortenLink()
+        }
+    }
+
+    fun clickedFavorite(isFavorite : Boolean, code : String){
+        viewModelScope.launch {
+            updateFavoriteUseCase(isFavorite, code)
         }
     }
 

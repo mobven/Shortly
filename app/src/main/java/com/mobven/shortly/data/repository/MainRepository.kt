@@ -14,6 +14,7 @@ interface MainRepository {
     fun getLinks(): Flow<List<ShortenData>>
     suspend fun insertLink(shortenData: ShortenData)
     suspend fun updateSelected(isSelected: Boolean, code: String)
+    suspend fun updateFavorite(isFavorite: Boolean, code: String)
     suspend fun getOldSelected():String?
     suspend fun deleteLink(code: String): Int
 }
@@ -27,6 +28,7 @@ class MainRepositoryImpl @Inject constructor(
     override fun getLinks() = localDataSource.getLinks()
     override suspend fun insertLink(shortenData: ShortenData) = localDataSource.insertLink(shortenData)
     override suspend fun updateSelected(isSelected: Boolean, code: String) = localDataSource.updateSelected(isSelected, code)
+    override suspend fun updateFavorite(isFavorite: Boolean, code: String) = localDataSource.updateFavorite(isFavorite, code)
     override suspend fun getOldSelected(): String? = localDataSource.getOldSelected()
     override suspend fun deleteLink(code: String): Int = localDataSource.deleteLink(code)
 }

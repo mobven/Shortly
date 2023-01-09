@@ -2,11 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_item"
         android:layout_marginHorizontal="24dp"
+        android:background="@drawable/bg_item"
         android:shadowColor="#1A000000"
         android:shadowDx="0"
         android:shadowDy="4"
@@ -31,18 +32,28 @@
 
         <ImageView
             android:id="@+id/ic_trash"
+            style="@style/trans_bin_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_16sdp"
-            android:src="@drawable/ic_trash_bin"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="@dimen/_16sdp"
-            style="@style/trans_bin_style"
+            android:src="@drawable/ic_trash_bin"
+            app:layout_constraintEnd_toStartOf="@+id/cb_favorite"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ContentDescription" />
 
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cb_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/bg_favorite"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/ic_trash"
+            app:layout_constraintBottom_toBottomOf="@+id/ic_trash"/>
+
         <TextView
             android:id="@+id/tv_short_link"
+            style="@style/short_link_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_16sdp"
@@ -51,7 +62,6 @@
             android:fontFamily="@font/open_sans_bold"
             android:padding="@dimen/_16sdp"
             android:textAlignment="center"
-            style="@style/short_link_style"
             android:textSize="@dimen/_14ssp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -65,14 +75,14 @@
             android:layout_marginTop="@dimen/_8sdp"
             android:layout_marginEnd="@dimen/_4sdp"
             android:layout_marginBottom="@dimen/_12sdp"
+            android:backgroundTint="@color/violets_are_blue"
+            android:fontFamily="@font/open_sans_bold"
             android:insetLeft="0dp"
             android:insetTop="0dp"
             android:insetRight="0dp"
             android:insetBottom="0dp"
-            android:backgroundTint="@color/violets_are_blue"
-            android:fontFamily="@font/open_sans_bold"
-            android:textColor="@android:color/white"
             android:text="@string/btn_share"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/_14ssp"
             app:cornerRadius="@dimen/_6sdp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -93,8 +103,8 @@
             android:insetTop="0dp"
             android:insetRight="0dp"
             android:insetBottom="0dp"
-            android:textColor="@android:color/white"
             android:text="@string/btn_copy"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/_14ssp"
             app:cornerRadius="@dimen/_6sdp"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -83,6 +83,10 @@ class MyLinksFragment : Fragment() {
                 deleteLink(code)
             }
 
+            shortLinkAdapter.itemFavoriteListener = { isFavorite , code ->
+                viewModel.clickedFavorite(isFavorite, code)
+            }
+
             shortLinkAdapter.openUrl = {
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
                 startActivity(browserIntent)
