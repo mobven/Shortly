@@ -75,6 +75,14 @@ dependencies {
 
     implementation 'com.github.mobven:extensify:_'
 
+    implementation AndroidX.compose.material3
+    implementation AndroidX.activity.compose
+    implementation AndroidX.compose.ui
+    implementation AndroidX.compose.ui.toolingPreview
+    implementation AndroidX.compose.material
+    debugImplementation AndroidX.compose.ui.tooling
+    debugImplementation AndroidX.compose.ui.testManifest
+
     implementation AndroidX.test.espresso.idlingResource
     implementation 'androidx.room:room-paging:2.4.3'
     implementation "androidx.paging:paging-runtime-ktx:3.1.1"
