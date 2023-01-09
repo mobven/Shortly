@@ -73,6 +73,9 @@ dependencies {
     implementation AndroidX.hilt.navigationFragment
     kapt Google.dagger.hilt.compiler
 
+    //QR generator
+    implementation 'com.github.kenglxn.QRGen:android:3.0.1'
+
     implementation 'com.github.mobven:extensify:_'
 
     implementation AndroidX.test.espresso.idlingResource

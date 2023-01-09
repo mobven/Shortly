@@ -1,5 +1,6 @@
 package com.mobven.shortly
 
+import android.graphics.Bitmap
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -14,5 +15,6 @@ data class ShortenData(
     val share_link: String,
     val short_link: String,
     val short_link2: String,
-    val isSelected: Boolean = false
+    val isSelected: Boolean = false,
+    var qr_code: Bitmap
 )

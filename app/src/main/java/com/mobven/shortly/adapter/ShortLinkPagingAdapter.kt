@@ -43,6 +43,7 @@ class ShortLinkPagingAdapter @Inject constructor() :
             binding.apply {
                 tvLongLink.underLineText(shortenData.original_link)
                 tvShortLink.underLineText(shortenData.full_short_link)
+                imgQrCode.setImageBitmap(shortenData.qr_code)
 
                 tvLongLink.setOnClickListener {
                     openUrl(shortenData.original_link)

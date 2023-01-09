@@ -58,6 +58,17 @@
             app:layout_constraintTop_toBottomOf="@id/ic_trash"
             tools:text="adsfasdfasdfasdfasdf" />
 
+        <ImageView
+            android:id="@+id/img_qr_code"
+            app:layout_constraintBottom_toTopOf="@id/btn_share"
+            app:layout_constraintEnd_toEndOf="@id/tv_short_link"
+            app:layout_constraintStart_toStartOf="@id/tv_short_link"
+            app:layout_constraintTop_toBottomOf="@id/tv_short_link"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_4sdp"
+            android:layout_width="@dimen/_0sdp"
+            android:layout_height="@dimen/_200sdp"/>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_share"
             android:layout_width="0dp"
@@ -78,7 +89,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btn_copy"
             app:layout_constraintStart_toStartOf="@id/tv_short_link"
-            app:layout_constraintTop_toBottomOf="@id/tv_short_link" />
+            app:layout_constraintTop_toBottomOf="@id/img_qr_code" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_copy"
@@ -100,7 +111,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/tv_short_link"
             app:layout_constraintStart_toEndOf="@id/btn_share"
-            app:layout_constraintTop_toBottomOf="@id/tv_short_link" />
+            app:layout_constraintTop_toBottomOf="@id/img_qr_code" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

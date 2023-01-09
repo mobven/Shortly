@@ -61,6 +61,12 @@
             "columnName": "isSelected",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "qr_code",
+            "columnName": "qr_code",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
