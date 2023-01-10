@@ -1,11 +1,11 @@
 package com.mobven.shortly.data.room
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.mobven.shortly.ShortenData
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LinkDao {
@@ -14,7 +14,7 @@ interface LinkDao {
     suspend fun insertLink(vararg shortenData: ShortenData)
 
     @Query("Select * FROM links")
-    fun getLinkList(): Flow<List<ShortenData>>
+    fun getLinkList(): PagingSource<Int,ShortenData>
 
     @Query("DELETE FROM links WHERE code = :code")
     suspend fun deleteLink(code: String): Int

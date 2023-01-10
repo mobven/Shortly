@@ -1,7 +1,10 @@
 package com.mobven.shortly.ui.main
 
 import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -17,6 +20,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
 import androidx.test.espresso.IdlingResource
 import com.mobven.shortly.R
+import com.mobven.shortly.ShortenData
 import com.mobven.shortly.SimpleIdlingResource
 import com.mobven.shortly.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -94,7 +98,18 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
                 }
             }
         }
+        handleIntent(intent)
+    }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent : Intent?){
+        if (intent?.action == Intent.ACTION_SEND && intent.type == "text/plain"){
+            mainBinding.shortenLinkEdt.setText(intent.getStringExtra(Intent.EXTRA_TEXT))
+        }
     }
 
     private fun callShortLink(editLink: String) {
@@ -137,4 +152,5 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
         }
         return mIdlingResource as SimpleIdlingResource
     }
+
 }
