@@ -47,9 +47,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:button="@drawable/bg_favorite"
+            app:buttonTint="@color/han_purple"
+            app:layout_constraintBottom_toBottomOf="@+id/ic_trash"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/ic_trash"
-            app:layout_constraintBottom_toBottomOf="@+id/ic_trash"/>
+            app:layout_constraintTop_toTopOf="@id/ic_trash" />
 
         <TextView
             android:id="@+id/tv_short_link"
