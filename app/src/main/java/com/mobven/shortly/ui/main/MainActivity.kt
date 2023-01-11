@@ -2,6 +2,7 @@ package com.mobven.shortly.ui.main
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
@@ -19,9 +20,12 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.test.espresso.IdlingResource
 import com.mobven.shortly.R
 import com.mobven.shortly.SimpleIdlingResource
+import com.mobven.shortly.analytics.AnalyticsManagerImpl
 import com.mobven.shortly.databinding.ActivityMainBinding
+import com.mobven.shortly.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
@@ -31,20 +35,21 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
 
     private var mIdlingResource: SimpleIdlingResource? = null
 
+    @Inject
+    lateinit var analyticsManagerImpl: AnalyticsManagerImpl
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         mainBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_main)
         mainBinding.lifecycleOwner = this
-
         mainBinding.apply {
             shortenItButton.setOnClickListener {
                 viewModel.buttonClicked(mainBinding.shortenLinkEdt.text.toString().isBlank())
             }
             shortenLinkEdt.setOnEditorActionListener(this@MainActivity)
         }
-
+        checkTheme()
         val navController = (supportFragmentManager.findFragmentById(R.id.fragment_nav_host) as NavHostFragment).navController
         val graphInflater = navController.navInflater
         val navListGraph = graphInflater.inflate(R.navigation.nav_list)
@@ -58,6 +63,7 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
                             mainBinding.progressBar.visibility = View.VISIBLE
                         }
                         is ShortlyUiState.Empty -> {
+                            analyticsManagerImpl.getStartedScreenEvent()
                             navController.graph = navMainGraph
                         }
                         is ShortlyUiState.Success -> {
@@ -96,6 +102,13 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
             }
         }
         handleIntent(intent)
+    }
+
+    private fun checkTheme() {
+       val isDarkTheme = this.resources.configuration.uiMode and
+                Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+        analyticsManagerImpl
+            .themeTypeAppEvent(if (isDarkTheme) Constants.AnalyticsEvent.DARK_MODE else Constants.AnalyticsEvent.LIGHT_MODE)
     }
 
     override fun onNewIntent(intent: Intent) {

@@ -16,15 +16,15 @@ import javax.inject.Inject
 @FragmentScoped
 class ShortLinkPagingAdapter @Inject constructor() :
     PagingDataAdapter<ShortenData, ShortLinkPagingAdapter.ViewHolder>(ShortLinkDiffUtil) {
-    var itemClickListener: (ShortenData) -> Unit = {}
-    var itemShareListener: (ShortenData) -> Unit = {}
-    var itemRemoveListener: ((String), (String)) -> Unit = { _, _ -> }
+    var itemClickListener: ((ShortenData), (Int)) -> Unit = {_, _ ->}
+    var itemShareListener: ((ShortenData), (Int)) -> Unit = {_,_ -> }
+    var itemRemoveListener: ((String), (String), (Int)) -> Unit = { _, _, _ -> }
     var openUrl: (String) -> Unit = {}
     var copiedItem: String? = null
 
     override fun onBindViewHolder(holder: ShortLinkPagingAdapter.ViewHolder, position: Int) {
         getItem(position)?.let {
-            holder.bind(it)
+            holder.bind(it, position)
         }
     }
 
@@ -39,7 +39,7 @@ class ShortLinkPagingAdapter @Inject constructor() :
 
     inner class ViewHolder(private val binding: ItemShortLinkBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(shortenData: ShortenData) {
+        fun bind(shortenData: ShortenData, position: Int) {
             binding.apply {
                 tvLongLink.underLineText(shortenData.original_link)
                 tvShortLink.underLineText(shortenData.full_short_link)
@@ -53,15 +53,15 @@ class ShortLinkPagingAdapter @Inject constructor() :
                 }
 
                 btnCopy.setOnClickListener() {
-                    itemClickListener(shortenData)
+                    itemClickListener(shortenData, position)
                 }
 
                 btnShare.click {
-                    itemShareListener(shortenData)
+                    itemShareListener(shortenData, position)
                 }
 
                 icTrash.setOnClickListener {
-                    itemRemoveListener(shortenData.code, shortenData.short_link)
+                    itemRemoveListener(shortenData.code, shortenData.short_link, position)
                 }
                 if (shortenData.isSelected) {
                     btnCopy.alpha = 0.5f

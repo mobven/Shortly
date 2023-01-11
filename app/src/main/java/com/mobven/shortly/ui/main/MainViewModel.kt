@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.mobven.shortly.BaseResponse
 import com.mobven.shortly.ShortenData
+import com.mobven.shortly.analytics.AnalyticsManagerImpl
 import com.mobven.shortly.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +24,8 @@ class MainViewModel @Inject constructor(
     private val insertLinkUseCase: InsertLinkUseCase,
     private val updateShortenDataUseCase: UpdateShortenDataUseCase,
     private val getSelectedOldUseCase: GetSelectedOldUseCase,
-    private val deleteLinkUseCase: DeleteLinkUseCase
+    private val deleteLinkUseCase: DeleteLinkUseCase,
+    private val analyticsManagerImpl: AnalyticsManagerImpl
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<ShortlyUiState>(ShortlyUiState.Empty(Unit))
@@ -63,10 +65,12 @@ class MainViewModel @Inject constructor(
     fun shortenLink(originalLink: String) {
         viewModelScope.launch {
             shortenLinkUseCase.invoke(originalLink).catch {
+                analyticsManagerImpl.shortenClickEvent(false)
                 _uiState.value = ShortlyUiState.Error(it.message.orEmpty())
             }.collect {
                 if (it.data?.ok == true)
                     BaseResponse.success(it.data).data?.let {
+                        analyticsManagerImpl.shortenClickEvent(true)
                         _uiState.value = ShortlyUiState.LinkShorten(it.result)
                     }
             }
