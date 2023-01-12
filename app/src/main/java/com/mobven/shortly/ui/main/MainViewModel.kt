@@ -58,43 +58,12 @@ class MainViewModel @Inject constructor(
     fun insertLink(shortenData: ShortenData) {
         viewModelScope.launch {
             shortenData.qr_code = createQrCode(shortenData.original_link)
-            insertLinkUseCase.invokeInsert(shortenData)
-            getLocalShortenLink()
-        }
-    }
-
-    fun selectedShortenData(isSelected: Boolean, code: String) {
-        viewModelScope.launch {
-            getSelectedOldUseCase.getSelectedOld()?.let {
-                updateShortenDataUseCase.updateSelected(false, it)
-            }
-            updateShortenDataUseCase.updateSelected(isSelected, code)
-            getLocalShortenLink()
-        }
-    }
-
-    fun deleteLink(code: String) {
-        viewModelScope.launch {
-            val result = deleteLinkUseCase.deleteLink(code)
-            if (result == 0)
-                _deleteError.value = true
-            getLocalShortenLink()
+            insertLinkUseCase(shortenData)
         }
     }
 
     fun createQrCode(url: String): Bitmap {
         val qrCode = QRCode.from(url).bitmap()
         return qrCode
-    }
-}
-
-sealed class ShortlyUiState {
-    data class Empty(val unit: Unit) : ShortlyUiState()
-    data class Error(val message: String) : ShortlyUiState()
-    data class Success(val dataList: PagingData<ShortenData>) : ShortlyUiState()
-    data class Loading(val unit: Unit) : ShortlyUiState()
-    data class LinkShorten(val data: ShortenData) : ShortlyUiState()
-            insertLinkUseCase(shortenData)
-        }
     }
 }

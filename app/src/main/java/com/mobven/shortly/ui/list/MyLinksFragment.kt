@@ -94,6 +94,10 @@ class MyLinksFragment : Fragment() {
             val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
             startActivity(browserIntent)
         }
+
+        shortLinkPagingAdapter.itemQrCodeListener = {
+            qrDialog(it.qr_code)
+        }
     }
 
     private fun renderView(uiState: MyLinksUiState) = with(binding) {
