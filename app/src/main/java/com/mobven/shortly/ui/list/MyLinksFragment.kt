@@ -107,6 +107,7 @@ class MyLinksFragment : Fragment() {
         shortLinkPagingAdapter.submitData(lifecycle, uiState.dataList)
     }
 
+
     private fun handleEvent(uiEvent: MyLinksUiEvent) = with(binding) {
         when (uiEvent) {
             is MyLinksUiEvent.ShowError -> {

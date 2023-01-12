@@ -35,7 +35,6 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
 
     private var mIdlingResource: SimpleIdlingResource? = null
 
-
     @Inject
     lateinit var analyticsManagerImpl: AnalyticsManagerImpl
 
@@ -82,8 +81,6 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
             analyticsManagerImpl.getStartedScreenEvent()
             navController.graph = navMainGraph
         }
-
-
     }
 
     private fun handleEvent(uiEvent: MainUiEvent) = with(mainBinding) {
