@@ -24,9 +24,7 @@ class AnalyticsManagerImpl @Inject constructor(private val firebaseAnalytics: Fi
         val bundle = Bundle().apply {
             putBoolean(Constants.AnalyticsParam.SUCCESS,success)
         }
-        firebaseAnalytics.logEvent(Constants.AnalyticsEvent.SHORTEN) {
-            param(Constants.AnalyticsParam.POSITION,bundle)
-        }
+        firebaseAnalytics.logEvent(Constants.AnalyticsEvent.SHORTEN,bundle)
     }
 
     override fun shareClickEvent(position: Int) {

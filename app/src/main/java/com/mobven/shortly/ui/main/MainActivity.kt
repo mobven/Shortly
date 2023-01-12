@@ -5,27 +5,27 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.KeyEvent
-import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.test.espresso.IdlingResource
+import com.mobven.extension.gone
 import com.mobven.shortly.R
 import com.mobven.shortly.SimpleIdlingResource
 import com.mobven.shortly.analytics.AnalyticsManagerImpl
 import com.mobven.shortly.databinding.ActivityMainBinding
 import com.mobven.shortly.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.mobven.shortly.utils.collectEvent
+import com.mobven.shortly.utils.collectState
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
@@ -35,8 +35,19 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
 
     private var mIdlingResource: SimpleIdlingResource? = null
 
+
     @Inject
     lateinit var analyticsManagerImpl: AnalyticsManagerImpl
+
+    private lateinit var navController: NavController
+
+    private val navListGraph by lazy {
+        navController.navInflater.inflate(R.navigation.nav_list)
+    }
+    private val navMainGraph by lazy {
+        navController.navInflater.inflate(R.navigation.nav_main)
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,63 +55,15 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
             DataBindingUtil.setContentView(this, R.layout.activity_main)
         mainBinding.lifecycleOwner = this
         mainBinding.apply {
-            shortenItButton.setOnClickListener {
-                viewModel.buttonClicked(mainBinding.shortenLinkEdt.text.toString().isBlank())
-            }
+            shortenItButton.setOnClickListener { shortenButtonClick() }
             shortenLinkEdt.setOnEditorActionListener(this@MainActivity)
         }
         checkTheme()
-        val navController = (supportFragmentManager.findFragmentById(R.id.fragment_nav_host) as NavHostFragment).navController
-        val graphInflater = navController.navInflater
-        val navListGraph = graphInflater.inflate(R.navigation.nav_list)
-        val navMainGraph = graphInflater.inflate(R.navigation.nav_main)
+        navController =
+            (supportFragmentManager.findFragmentById(R.id.fragment_nav_host) as NavHostFragment).navController
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect {
-                    when(it) {
-                        is ShortlyUiState.Loading -> {
-                            mainBinding.progressBar.visibility = View.VISIBLE
-                        }
-                        is ShortlyUiState.Empty -> {
-                            analyticsManagerImpl.getStartedScreenEvent()
-                            navController.graph = navMainGraph
-                        }
-                        is ShortlyUiState.Success -> {
-                            navController.graph = navListGraph
-                            mainBinding.progressBar.visibility = View.GONE
-                        }
-                        is ShortlyUiState.Error -> {
-                            mainBinding.progressBar.visibility = View.GONE
-                            mIdlingResource?.setIdleState(true)
-                            showAlertDialog()
-                        }
-                        is ShortlyUiState.LinkShorten -> {
-                            viewModel.insertLink(it.data)
-                            mainBinding.shortenLinkEdt.text?.clear()
-                            mainBinding.progressBar.visibility = View.GONE
-                        }
-                    }
-                }
-            }
-        }
-        viewModel.isBlank.observe(this){
-            with(mainBinding.shortenLinkEdt) {
-                if (it) {
-                    setHintTextColor(ContextCompat.getColor(this@MainActivity, R.color.red))
-                    hint = getString(R.string.error_link)
-                    setBackgroundResource(R.drawable.bg_edittext_error)
-                } else {
-                    setHintTextColor(ContextCompat.getColor(this@MainActivity, R.color.gray))
-                    hint = getString(R.string.hint_link)
-                    setBackgroundResource(R.drawable.bg_edittext)
-                    mIdlingResource?.setIdleState(false)
-                    callShortLink(
-                        mainBinding.shortenLinkEdt.text.toString()
-                    )
-                }
-            }
-        }
+        collectState(viewModel.uiState, ::renderView)
+        collectEvent(viewModel.uiEvent, ::handleEvent)
         handleIntent(intent)
     }
 
@@ -109,6 +72,33 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
                 Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
         analyticsManagerImpl
             .themeTypeAppEvent(if (isDarkTheme) Constants.AnalyticsEvent.DARK_MODE else Constants.AnalyticsEvent.LIGHT_MODE)
+    }
+
+    private fun renderView(uiState: MainUiState) = with(mainBinding) {
+        progressBar.isVisible = uiState.isLoading
+        if (uiState.dataList.isNotEmpty())
+            navController.graph = navListGraph
+        else {
+            analyticsManagerImpl.getStartedScreenEvent()
+            navController.graph = navMainGraph
+        }
+
+
+    }
+
+    private fun handleEvent(uiEvent: MainUiEvent) = with(mainBinding) {
+        when (uiEvent) {
+            is MainUiEvent.ShowError -> {
+                progressBar.gone()
+                mIdlingResource?.setIdleState(true)
+                showAlertDialog()
+            }
+            is MainUiEvent.LinkShorten -> {
+                viewModel.insertLink(uiEvent.data)
+                shortenLinkEdt.text?.clear()
+                progressBar.gone()
+            }
+        }
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -122,20 +112,14 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
         }
     }
 
-    private fun callShortLink(editLink: String) {
-        mainBinding.progressBar.visibility = View.VISIBLE
-        viewModel.shortenLink(editLink)
-    }
-
-    private fun showAlertDialog(
-    ) {
+    private fun showAlertDialog() {
         val alertDialog = AlertDialog.Builder(this@MainActivity)
             .setTitle("ERROR")
             .setMessage("An error occurred")
             .setPositiveButton(
                 "Retry"
             ) { _, _ ->
-                callShortLink(mainBinding.shortenLinkEdt.text.toString())
+                viewModel.shortenLink(mainBinding.shortenLinkEdt.text.toString())
             }
             .setNegativeButton(
                 "Cancel"
@@ -147,9 +131,35 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
 
     override fun onEditorAction(p0: TextView?, imeType: Int, p2: KeyEvent?): Boolean {
         if (imeType == EditorInfo.IME_ACTION_DONE) {
-            viewModel.buttonClicked(mainBinding.shortenLinkEdt.text.toString().isBlank())
+            shortenButtonClick()
         }
         return false
+    }
+
+    private fun shortenButtonClick() = with(mainBinding.shortenLinkEdt) {
+        val textIsBlank = text.toString().isBlank()
+
+        if (textIsBlank) {
+            setHintTextColor(
+                ContextCompat.getColor(
+                    this@MainActivity,
+                    R.color.red
+                )
+            )
+            hint = getString(R.string.error_link)
+            setBackgroundResource(R.drawable.bg_edittext_error)
+        } else {
+            setHintTextColor(
+                ContextCompat.getColor(
+                    this@MainActivity,
+                    R.color.gray
+                )
+            )
+            hint = getString(R.string.hint_link)
+            setBackgroundResource(R.drawable.bg_edittext)
+            mIdlingResource?.setIdleState(false)
+            viewModel.shortenLink(text.toString())
+        }
     }
 
     /**

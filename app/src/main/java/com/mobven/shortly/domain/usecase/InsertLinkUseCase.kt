@@ -7,7 +7,7 @@ import javax.inject.Inject
 class InsertLinkUseCase @Inject constructor(
     private val mainRepository: MainRepository,
 ) {
-    suspend fun invokeInsert(shortenData: ShortenData){
+    suspend operator fun invoke(shortenData: ShortenData){
         mainRepository.insertLink(shortenData)
     }
 }

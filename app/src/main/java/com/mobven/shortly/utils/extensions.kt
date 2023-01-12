@@ -6,8 +6,11 @@ import android.content.Intent
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.widget.TextView
+import androidx.annotation.NavigationRes
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph
 
-fun TextView.underLineText(text: String?){
+fun TextView.underLineText(text: String?) {
     text?.let {
         val spannableString = SpannableString(text).apply {
             setSpan(UnderlineSpan(), 0, text.length, 0)
