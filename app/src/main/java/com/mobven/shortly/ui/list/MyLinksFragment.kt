@@ -1,14 +1,17 @@
 package com.mobven.shortly.ui.list
 
+import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -93,12 +96,27 @@ class MyLinksFragment : Fragment() {
                     setEmptyState()
             }
 
+            shortLinkPagingAdapter.itemQrCodeListener = {
+                qrDialog(it.qr_code)
+            }
+
             deleteError.observe(viewLifecycleOwner) {
                 toast?.cancel()
                 toast = Toast.makeText(context, "Silerken Bir Hata Oluştu!", Toast.LENGTH_SHORT)
                 toast?.show()
 
             }
+        }
+
+    }
+
+    fun qrDialog(bitmap: Bitmap) {
+        val dialogBuilder = Dialog(requireContext())
+        dialogBuilder.apply {
+            setContentView(R.layout.popup_dialog_qr)
+            var imgQrCode = findViewById<ImageView>(R.id.img_qr_code)
+            imgQrCode.setImageBitmap(bitmap)
+            show()
         }
     }
 

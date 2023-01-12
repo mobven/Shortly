@@ -19,6 +19,7 @@ class ShortLinkPagingAdapter @Inject constructor() :
     var itemClickListener: (ShortenData) -> Unit = {}
     var itemShareListener: (ShortenData) -> Unit = {}
     var itemRemoveListener: ((String), (String)) -> Unit = { _, _ -> }
+    var itemQrCodeListener: (ShortenData) -> Unit = {}
     var openUrl: (String) -> Unit = {}
     var copiedItem: String? = null
 
@@ -43,7 +44,6 @@ class ShortLinkPagingAdapter @Inject constructor() :
             binding.apply {
                 tvLongLink.underLineText(shortenData.original_link)
                 tvShortLink.underLineText(shortenData.full_short_link)
-                imgQrCode.setImageBitmap(shortenData.qr_code)
 
                 tvLongLink.setOnClickListener {
                     openUrl(shortenData.original_link)
@@ -63,6 +63,10 @@ class ShortLinkPagingAdapter @Inject constructor() :
 
                 icTrash.setOnClickListener {
                     itemRemoveListener(shortenData.code, shortenData.short_link)
+                }
+
+                icButtonQr.setOnClickListener {
+                    itemQrCodeListener(shortenData)
                 }
                 if (shortenData.isSelected) {
                     btnCopy.alpha = 0.5f
