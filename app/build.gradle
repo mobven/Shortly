@@ -29,10 +29,12 @@ android {
     buildTypes {
         debug {
             testCoverageEnabled true
+            manifestPlaceholders["crashlytics_enabled"] = "false"
         }
 
         release {
             minifyEnabled false
+            manifestPlaceholders["crashlytics_enabled"] = "true"
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -69,8 +71,9 @@ dependencies {
     implementation AndroidX.room.ktx
     implementation AndroidX.navigation.fragmentKtx
     implementation AndroidX.navigation.uiKtx
-    implementation 'com.google.firebase:firebase-crashlytics:18.3.2'
-    implementation 'com.google.firebase:firebase-analytics:21.2.0'
+
+    implementation 'com.google.firebase:firebase-crashlytics:_'
+    implementation 'com.google.firebase:firebase-analytics:_'
     kapt AndroidX.room.compiler
 
     implementation Google.dagger.hilt.android
