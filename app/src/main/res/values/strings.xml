@@ -16,4 +16,5 @@
     <string name="delete_error">Silerken Bir Hata Oluştu!</string>
     <string name="copied">Copied</string>
     <string name="share">Share</string>
+    <string name="in_app_review_success_message">Thank you for your review</string>
 </resources>

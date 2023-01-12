@@ -89,4 +89,7 @@ dependencies {
     androidTestImplementation AndroidX.test.rules
     androidTestImplementation AndroidX.test.ext.junit
     androidTestImplementation AndroidX.test.espresso.core
+
+    implementation 'com.google.android.play:review-ktx:2.0.1'
+
 }

@@ -13,6 +13,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.play.core.review.ReviewInfo
+import com.google.android.play.core.review.ReviewManager
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.mobven.shortly.R
 import com.mobven.shortly.adapter.ShortLinkPagingAdapter
 import com.mobven.shortly.databinding.FragmentMylistBinding
@@ -39,10 +42,13 @@ class MyLinksFragment : Fragment() {
     @Inject
     lateinit var linearLayoutManager: LinearLayoutManager
 
+    private lateinit var manager: ReviewManager
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        manager = ReviewManagerFactory.create(requireContext())
         binding = FragmentMylistBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -95,6 +101,9 @@ class MyLinksFragment : Fragment() {
 
     private fun renderView(uiState: MyLinksUiState) = with(binding) {
         shortLinkPagingAdapter.submitData(lifecycle, uiState.dataList)
+        if (shortLinkPagingAdapter.snapshot().items.size > REQUIRED_ITEM_COUNT_FOR_REVIEW){
+            requestReviewFlow()
+        }
     }
 
     private fun handleEvent(uiEvent: MyLinksUiEvent) = with(binding) {
@@ -108,4 +117,29 @@ class MyLinksFragment : Fragment() {
         }
     }
 
+    private fun requestReviewFlow() {
+        val request = manager.requestReviewFlow()
+        request.addOnCompleteListener {
+            if (it.isSuccessful) {
+                launchReviewFlow(it.result)
+            }
+        }
+    }
+
+    private fun launchReviewFlow(reviewInfo: ReviewInfo) {
+        val flow = manager.launchReviewFlow(requireActivity(), reviewInfo)
+        flow.addOnCompleteListener {
+            if (it.isSuccessful){
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.in_app_review_success_message),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    companion object{
+        private const val REQUIRED_ITEM_COUNT_FOR_REVIEW = 5
+    }
 }
