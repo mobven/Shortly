@@ -29,7 +29,7 @@ class MainViewModelTest {
     val instantExecutorRule = InstantTaskExecutorRule()
 
     @MockK
-    lateinit var getLinksUseCase: GetLinksUseCase
+    lateinit var getLinksPagingDataFlowUseCase: GetLinksPagingDataFlowUseCase
 
     @MockK
     lateinit var shortenLinkUseCase: ShortenLinkUseCase
@@ -79,13 +79,13 @@ class MainViewModelTest {
 
             mainViewModel = MainViewModel(
                 shortenLinkUseCase,
-                getLinksUseCase,
+                getLinksPagingDataFlowUseCase,
                 insertLinkUseCase,
                 updateShortenDataUseCase,
                 getSelectedOldUseCase,
                 deleteLinkUseCase
             )
-            coEvery { getLinksUseCase.invoke() } returns flowOf(givenData)
+            coEvery { getLinksPagingDataFlowUseCase.invoke() } returns flowOf(givenData)
             advanceUntilIdle()
             assertEquals(mainViewModel.uiState.value, ShortlyUiState.Success(givenData))
             assertEquals(givenData, mainViewModel.linkList.value)

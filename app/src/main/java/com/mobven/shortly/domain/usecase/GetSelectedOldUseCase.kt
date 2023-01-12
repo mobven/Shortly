@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetSelectedOldUseCase @Inject constructor(
     private val mainRepository: MainRepository,
 ) {
-    suspend fun getSelectedOld():String? =  mainRepository.getOldSelected()
+    suspend operator fun invoke():String? =  mainRepository.getOldSelected()
 }

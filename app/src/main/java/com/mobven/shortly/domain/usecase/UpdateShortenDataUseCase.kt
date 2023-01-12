@@ -6,7 +6,7 @@ import javax.inject.Inject
 class UpdateShortenDataUseCase @Inject constructor(
     private val mainRepository: MainRepository,
 ) {
-    suspend fun updateSelected(isSelected: Boolean, code: String) {
+    suspend operator fun invoke(isSelected: Boolean, code: String) {
         mainRepository.updateSelected(isSelected, code)
     }
 }
