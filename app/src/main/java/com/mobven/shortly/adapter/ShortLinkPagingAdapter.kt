@@ -41,6 +41,12 @@ class ShortLinkPagingAdapter @Inject constructor() :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(shortenData: ShortenData) {
             binding.apply {
+
+                //For accecability
+                root.contentDescription =
+                    "Shorten Link : ${shortenData.full_short_link}, " +
+                            "Orginal Link : ${shortenData.original_link}"
+
                 tvLongLink.underLineText(shortenData.original_link)
                 tvShortLink.underLineText(shortenData.full_short_link)
 
@@ -65,14 +71,19 @@ class ShortLinkPagingAdapter @Inject constructor() :
                 }
                 if (shortenData.isSelected) {
                     btnCopy.alpha = 0.5f
-                    btnCopy.text = root.context.getString(R.string.btn_copied)
+                    root.context.getString(R.string.btn_copied).apply {
+                        btnCopy.text = this
+                        btnCopy.contentDescription = this
+                    }
                 } else {
                     btnCopy.alpha = 1.0f
-                    btnCopy.text = root.context.getString(R.string.btn_copy)
+                    root.context.getString(R.string.btn_copy).apply {
+                        btnCopy.text = this
+                        btnCopy.contentDescription = this
+                    }
                 }
             }
         }
-
     }
 
     object ShortLinkDiffUtil : DiffUtil.ItemCallback<ShortenData>() {
