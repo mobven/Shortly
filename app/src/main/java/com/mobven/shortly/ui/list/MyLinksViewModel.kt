@@ -3,6 +3,7 @@ package com.mobven.shortly.ui.list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.mobven.shortly.R
 import com.mobven.shortly.domain.usecase.DeleteLinkUseCase
 import com.mobven.shortly.domain.usecase.GetLinksPagingDataFlowUseCase
 import com.mobven.shortly.domain.usecase.GetSelectedOldUseCase
@@ -42,7 +43,7 @@ class MyLinksViewModel @Inject constructor(
     fun delete(code: String) {
         viewModelScope.launch {
             val isSuccess = deleteLinkUseCase(code)
-            if (isSuccess.not()) _uiEvent.emit(ShowError("Silerken Bir Hata Oluştu!"))
+            if (isSuccess.not()) _uiEvent.emit(ShowError)
         }
     }
 

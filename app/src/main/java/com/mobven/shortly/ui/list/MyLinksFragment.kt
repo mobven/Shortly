@@ -70,12 +70,12 @@ class MyLinksFragment : Fragment() {
         shortLinkPagingAdapter.itemClickListener = {
             viewModel.selectedShortenData(true, it.code)
             shortLinkPagingAdapter.copiedItem = it.code
-            val clip = ClipData.newPlainText("Copied", it.short_link)
+            val clip = ClipData.newPlainText(getString(R.string.copied), it.short_link)
             clipBoardManager.setPrimaryClip(clip)
         }
 
         shortLinkPagingAdapter.itemShareListener = {
-            requireContext().share(it.short_link, "Share")
+            requireContext().share(it.short_link, getString(R.string.share))
         }
 
         shortLinkPagingAdapter.itemRemoveListener = { code, shortLink ->
@@ -101,7 +101,8 @@ class MyLinksFragment : Fragment() {
         when (uiEvent) {
             is MyLinksUiEvent.ShowError -> {
                 toast?.cancel()
-                toast = Toast.makeText(context, uiEvent.message, Toast.LENGTH_SHORT)
+                toast =
+                    Toast.makeText(context, getString(R.string.delete_error), Toast.LENGTH_SHORT)
                 toast?.show()
             }
         }
