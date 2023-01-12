@@ -15,7 +15,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val shortenLinkUseCase: ShortenLinkUseCase,
     private val getLinksFlowUseCase: GetLinksFlowUseCase,
-    private val insertLinkUseCase: InsertLinkUseCase,
+    private val insertLinkUseCase: InsertLinkUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainUiState())

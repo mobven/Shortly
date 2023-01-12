@@ -1,10 +1,8 @@
 package com.mobven.shortly.ui.main
 
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
@@ -19,7 +17,6 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.test.espresso.IdlingResource
 import com.mobven.extension.gone
 import com.mobven.shortly.R
-import com.mobven.shortly.ShortenData
 import com.mobven.shortly.SimpleIdlingResource
 import com.mobven.shortly.databinding.ActivityMainBinding
 import com.mobven.shortly.utils.collectEvent
