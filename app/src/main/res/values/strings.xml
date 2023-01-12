@@ -13,4 +13,7 @@
 
     <string name="short_link">Short a link</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="delete_error">Silerken Bir Hata Oluştu!</string>
+    <string name="copied">Copied</string>
+    <string name="share">Share</string>
 </resources>

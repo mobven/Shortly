@@ -11,13 +11,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobven.shortly.R
 import com.mobven.shortly.adapter.ShortLinkPagingAdapter
 import com.mobven.shortly.databinding.FragmentMylistBinding
-import com.mobven.shortly.ui.main.MainViewModel
 import com.mobven.shortly.utils.SpaceItemDecoration
+import com.mobven.shortly.utils.collectEvent
+import com.mobven.shortly.utils.collectState
 import com.mobven.shortly.utils.share
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -26,7 +27,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MyLinksFragment : Fragment() {
     private lateinit var binding: FragmentMylistBinding
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: MyLinksViewModel by viewModels()
     private var toast: Toast? = null
 
     @Inject
@@ -48,6 +49,13 @@ class MyLinksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initView()
+        collectState(viewModel.uiState, ::renderView)
+        collectEvent(viewModel.uiEvent, ::handleEvent)
+    }
+
+    private fun initView() {
         binding.rvLinks.apply {
             adapter = shortLinkPagingAdapter
             setHasFixedSize(true)
@@ -58,50 +66,48 @@ class MyLinksFragment : Fragment() {
                 )
             )
         }
-        viewModel.apply {
-            linkList.observe(viewLifecycleOwner) {
-                shortLinkPagingAdapter.submitData(lifecycle, it)
-            }
 
-            shortLinkPagingAdapter.itemClickListener = {
-                selectedShortenData(true, it.code)
-                shortLinkPagingAdapter.copiedItem = it.code
-                val clip = ClipData.newPlainText("Copied", it.short_link)
-                clipBoardManager.setPrimaryClip(clip)
-            }
+        shortLinkPagingAdapter.itemClickListener = {
+            viewModel.selectedShortenData(true, it.code)
+            shortLinkPagingAdapter.copiedItem = it.code
+            val clip = ClipData.newPlainText(getString(R.string.copied), it.short_link)
+            clipBoardManager.setPrimaryClip(clip)
+        }
 
-            shortLinkPagingAdapter.itemShareListener = {
-                requireContext().share(it.short_link, "Share")
-            }
+        shortLinkPagingAdapter.itemShareListener = {
+            requireContext().share(it.short_link, getString(R.string.share))
+        }
 
-            shortLinkPagingAdapter.itemRemoveListener = { code, shortLink ->
-                if (clipBoardManager.primaryClip?.getItemAt(0)?.text?.toString()
-                        .equals(shortLink) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-                ) {
-                    clipBoardManager.clearPrimaryClip()
-                }
-                deleteLink(code)
+        shortLinkPagingAdapter.itemRemoveListener = { code, shortLink ->
+            if (clipBoardManager.primaryClip?.getItemAt(0)?.text?.toString()
+                    .equals(shortLink) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            ) {
+                clipBoardManager.clearPrimaryClip()
             }
+            viewModel.delete(code)
+        }
 
-            shortLinkPagingAdapter.itemFavoriteListener = { isFavorite, code ->
-                viewModel.clickedFavorite(isFavorite, code)
-            }
+        shortLinkPagingAdapter.openUrl = {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
+            startActivity(browserIntent)
+        }
 
-            shortLinkPagingAdapter.openUrl = {
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
-                startActivity(browserIntent)
-            }
+        shortLinkPagingAdapter.itemFavoriteListener = { isFavorite, code ->
+            viewModel.clickedFavorite(isFavorite, code)
+        }
+    }
 
-            shortLinkPagingAdapter.addOnPagesUpdatedListener {
-                if (shortLinkPagingAdapter.snapshot().isEmpty())
-                    setEmptyState()
-            }
+    private fun renderView(uiState: MyLinksUiState) = with(binding) {
+        shortLinkPagingAdapter.submitData(lifecycle, uiState.dataList)
+    }
 
-            deleteError.observe(viewLifecycleOwner) {
+    private fun handleEvent(uiEvent: MyLinksUiEvent) = with(binding) {
+        when (uiEvent) {
+            is MyLinksUiEvent.ShowError -> {
                 toast?.cancel()
-                toast = Toast.makeText(context, "Silerken Bir Hata Oluştu!", Toast.LENGTH_SHORT)
+                toast =
+                    Toast.makeText(context, getString(R.string.delete_error), Toast.LENGTH_SHORT)
                 toast?.show()
-
             }
         }
     }

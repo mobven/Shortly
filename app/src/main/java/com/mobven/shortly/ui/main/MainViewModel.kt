@@ -1,116 +1,55 @@
 package com.mobven.shortly.ui.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
 import com.mobven.shortly.BaseResponse
 import com.mobven.shortly.ShortenData
 import com.mobven.shortly.domain.usecase.*
+import com.mobven.shortly.ui.main.MainUiEvent.ShowError
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val shortenLinkUseCase: ShortenLinkUseCase,
-    private val getLinksUseCase: GetLinksUseCase,
+    private val getLinksFlowUseCase: GetLinksFlowUseCase,
     private val insertLinkUseCase: InsertLinkUseCase,
-    private val updateShortenDataUseCase: UpdateShortenDataUseCase,
-    private val getSelectedOldUseCase: GetSelectedOldUseCase,
-    private val deleteLinkUseCase: DeleteLinkUseCase,
-    private val updateFavoriteUseCase : UpdateFavoriteUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<ShortlyUiState>(ShortlyUiState.Empty(Unit))
-    val uiState: StateFlow<ShortlyUiState> = _uiState
+    private val _uiState = MutableStateFlow(MainUiState())
+    val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 
-    private var _linkList = MutableLiveData<PagingData<ShortenData>>()
-    val linkList: LiveData<PagingData<ShortenData>> get() = _linkList
-
-    private var _deleteError = MutableLiveData<Boolean>()
-    val deleteError: LiveData<Boolean> get() = _deleteError
-
-    private var _isBlank = MutableLiveData<Boolean>()
-    val isBlank: LiveData<Boolean> get() = _isBlank
+    private val _uiEvent = MutableSharedFlow<MainUiEvent>()
+    val uiEvent: SharedFlow<MainUiEvent> = _uiEvent.asSharedFlow()
 
     init {
         getLocalShortenLink()
     }
 
     private fun getLocalShortenLink() {
-        viewModelScope.launch {
-            getLinksUseCase()
-                .collectLatest  {
-                    _uiState.value = ShortlyUiState.Success(it)
-                    _linkList.value = it
-            }
-        }
-    }
-
-    fun setEmptyState() {
-        _uiState.value = ShortlyUiState.Empty(Unit)
-    }
-
-    fun buttonClicked(isBlank: Boolean) {
-        _isBlank.value = isBlank
+        getLinksFlowUseCase()
+            .distinctUntilChanged()
+            .onStart { _uiState.update { state -> state.copy(isLoading = true) } }
+            .onEach { _uiState.update { state -> state.copy(dataList = it, isLoading = false) } }
+            .launchIn(viewModelScope)
     }
 
     fun shortenLink(originalLink: String) {
-        viewModelScope.launch {
-            shortenLinkUseCase.invoke(originalLink).catch {
-                _uiState.value = ShortlyUiState.Error(it.message.orEmpty())
-            }.collect {
-                if (it.data?.ok == true)
-                    BaseResponse.success(it.data).data?.let {
-                        _uiState.value = ShortlyUiState.LinkShorten(it.result)
-                    }
-            }
-        }
+        shortenLinkUseCase(originalLink)
+            .onStart { _uiState.update { state -> state.copy(isLoading = true) } }
+            .filter { it.data?.ok == true }
+            .mapNotNull { BaseResponse.success(it.data).data }
+            .onEach { _uiEvent.emit(MainUiEvent.LinkShorten(it.result)) }
+            .onCompletion { _uiState.update { state -> state.copy(isLoading = false) } }
+            .catch { _uiEvent.emit(ShowError(it.message.orEmpty())) }
+            .launchIn(viewModelScope)
     }
 
     fun insertLink(shortenData: ShortenData) {
         viewModelScope.launch {
-            insertLinkUseCase.invokeInsert(shortenData)
-            getLocalShortenLink()
+            insertLinkUseCase(shortenData)
         }
     }
-
-    fun selectedShortenData(isSelected: Boolean, code: String) {
-        viewModelScope.launch {
-            getSelectedOldUseCase.getSelectedOld()?.let {
-                updateShortenDataUseCase.updateSelected(false, it)
-            }
-            updateShortenDataUseCase.updateSelected(isSelected, code)
-            getLocalShortenLink()
-        }
-    }
-
-    fun clickedFavorite(isFavorite : Boolean, code : String){
-        viewModelScope.launch {
-            updateFavoriteUseCase(isFavorite, code)
-        }
-    }
-
-    fun deleteLink(code: String) {
-        viewModelScope.launch {
-            val result = deleteLinkUseCase.deleteLink(code)
-            if (result == 0)
-                _deleteError.value = true
-            getLocalShortenLink()
-        }
-    }
-}
-
-sealed class ShortlyUiState {
-    data class Empty(val unit: Unit) : ShortlyUiState()
-    data class Error(val message: String) : ShortlyUiState()
-    data class Success(val dataList: PagingData<ShortenData>) : ShortlyUiState()
-    data class Loading(val unit: Unit) : ShortlyUiState()
-    data class LinkShorten(val data: ShortenData) : ShortlyUiState()
 }
