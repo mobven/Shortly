@@ -63,7 +63,6 @@ class MainViewModel @Inject constructor(
     }
 
     fun createQrCode(url: String): Bitmap {
-        val qrCode = QRCode.from(url).bitmap()
-        return qrCode
+        return QRCode.from(url).bitmap()
     }
 }
