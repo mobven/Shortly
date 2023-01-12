@@ -4,6 +4,8 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'kotlin-parcelize'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 apply from: "../jacoco.gradle"
@@ -67,6 +69,8 @@ dependencies {
     implementation AndroidX.room.ktx
     implementation AndroidX.navigation.fragmentKtx
     implementation AndroidX.navigation.uiKtx
+    implementation 'com.google.firebase:firebase-crashlytics:18.3.2'
+    implementation 'com.google.firebase:firebase-analytics:21.2.0'
     kapt AndroidX.room.compiler
 
     implementation Google.dagger.hilt.android
