@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">Shortly</string>
     <string name="title_main">Давайте начнем!</string>
     <string name="text_description">Вставьте свою первую ссылку в поле, чтобы сократить ее.</string>
     <string name="text_history">Ваша история ссылок</string>
@@ -12,5 +11,4 @@
     <string name="title_error">Ошибка</string>
 
     <string name="short_link">Короткая ссылка</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

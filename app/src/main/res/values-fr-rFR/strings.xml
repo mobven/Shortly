@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">Shortly</string>
     <string name="title_main">Commençons!</string>
     <string name="text_description">Collez votre premier lien dans le champ pour le raccourcir</string>
     <string name="text_history">Votre historique de liens</string>
@@ -12,5 +11,4 @@
     <string name="title_error">Erreur</string>
 
     <string name="short_link">Raccourcir un lien</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

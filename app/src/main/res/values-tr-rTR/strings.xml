@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">Shortly</string>
     <string name="title_main">Başlayalım!</string>
     <string name="text_description">İlk bağlantınızı kısaltmak için alana yapıştırın</string>
     <string name="text_history">Bağlantı Geçmişiniz</string>
@@ -12,5 +11,4 @@
     <string name="title_error">Hata</string>
 
     <string name="short_link">Bağlantıyı kısalt</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
