@@ -44,6 +44,11 @@ android {
 
     buildFeatures {
         dataBinding true
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.0" // todo change this to use standard library
     }
     kapt {
         arguments {
@@ -75,17 +80,18 @@ dependencies {
 
     implementation 'com.github.mobven:extensify:_'
 
-    implementation AndroidX.compose.material3
-    implementation AndroidX.activity.compose
-    implementation AndroidX.compose.ui
-    implementation AndroidX.compose.ui.toolingPreview
-    implementation AndroidX.compose.material
-    debugImplementation AndroidX.compose.ui.tooling
-    debugImplementation AndroidX.compose.ui.testManifest
+    implementation(platform(AndroidX.compose.bom))
+    implementation AndroidX.compose.material3.withVersionPlaceholder()
+    implementation AndroidX.activity.compose.withVersionPlaceholder()
+    implementation AndroidX.compose.ui.withVersionPlaceholder()
+    implementation AndroidX.compose.ui.toolingPreview.withVersionPlaceholder()
+    implementation AndroidX.compose.material.withVersionPlaceholder()
+    debugImplementation AndroidX.compose.ui.tooling.withVersionPlaceholder()
+    debugImplementation AndroidX.compose.ui.testManifest.withVersionPlaceholder()
 
     implementation AndroidX.test.espresso.idlingResource
-    implementation 'androidx.room:room-paging:2.4.3'
-    implementation "androidx.paging:paging-runtime-ktx:3.1.1"
+    implementation AndroidX.room.paging
+    implementation AndroidX.paging.runtimeKtx
 
     testImplementation Testing.junit4
     testImplementation Testing.mockK
