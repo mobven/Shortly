@@ -30,12 +30,18 @@ android {
         debug {
             testCoverageEnabled true
             manifestPlaceholders["crashlytics_enabled"] = "false"
+            firebaseCrashlytics {
+                mappingFileUploadEnabled false
+            }
         }
 
         release {
             minifyEnabled false
             manifestPlaceholders["crashlytics_enabled"] = "true"
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            firebaseCrashlytics {
+                mappingFileUploadEnabled true
+            }
         }
     }
     compileOptions {
