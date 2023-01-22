@@ -1,11 +1,11 @@
 package com.mobven.shortly.di
 
-import android.content.Context
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -25,8 +25,8 @@ object ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseAnalytics(@ApplicationContext context: Context):FirebaseAnalytics {
-        return FirebaseAnalytics.getInstance(context)
+    fun provideFirebaseAnalytics():FirebaseAnalytics {
+        return Firebase.analytics
     }
 }
 

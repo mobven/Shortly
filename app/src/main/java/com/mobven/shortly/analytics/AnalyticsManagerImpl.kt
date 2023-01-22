@@ -28,12 +28,6 @@ class AnalyticsManagerImpl @Inject constructor(private val firebaseAnalytics: Fi
     }
 
     override fun shareClickEvent(position: Int) {
-        /**
-         * param direkt olarak Int kabul etmediği için toLong ile dönüşüm yaptım. Ama Bunlde ile
-         * int gönderilebilir
-         * long'da olur diye ben öyle yaptım ama aşağıdaki örnekteki gibi bundle'a
-         * dönüştürebilirim.
-         */
         firebaseAnalytics.logEvent(Constants.AnalyticsEvent.SHARE){
             param(Constants.AnalyticsParam.POSITION,position.toLong())
 

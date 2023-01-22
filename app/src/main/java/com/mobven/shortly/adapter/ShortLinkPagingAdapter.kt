@@ -16,7 +16,7 @@ import javax.inject.Inject
 @FragmentScoped
 class ShortLinkPagingAdapter @Inject constructor() :
     PagingDataAdapter<ShortenData, ShortLinkPagingAdapter.ViewHolder>(ShortLinkDiffUtil) {
-    var itemClickListener: ((ShortenData), (Int)) -> Unit = {_, _ ->}
+    var copyClickListener: ((ShortenData), (Int)) -> Unit = { _, _ ->}
     var itemShareListener: ((ShortenData), (Int)) -> Unit = {_,_ -> }
     var itemRemoveListener: ((String), (String), (Int)) -> Unit = { _, _, _ -> }
     var openUrl: (String) -> Unit = {}
@@ -53,7 +53,7 @@ class ShortLinkPagingAdapter @Inject constructor() :
                 }
 
                 btnCopy.setOnClickListener() {
-                    itemClickListener(shortenData, position)
+                    copyClickListener(shortenData, position)
                 }
 
                 btnShare.click {

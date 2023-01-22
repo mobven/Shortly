@@ -19,7 +19,7 @@ import androidx.test.espresso.IdlingResource
 import com.mobven.extension.gone
 import com.mobven.shortly.R
 import com.mobven.shortly.SimpleIdlingResource
-import com.mobven.shortly.analytics.AnalyticsManagerImpl
+import com.mobven.shortly.analytics.AnalyticsManager
 import com.mobven.shortly.databinding.ActivityMainBinding
 import com.mobven.shortly.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
     private var mIdlingResource: SimpleIdlingResource? = null
 
     @Inject
-    lateinit var analyticsManagerImpl: AnalyticsManagerImpl
+    lateinit var analyticsManager: AnalyticsManager
 
     private lateinit var navController: NavController
 
@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
     private fun checkTheme() {
        val isDarkTheme = this.resources.configuration.uiMode and
                 Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-        analyticsManagerImpl
+        analyticsManager
             .themeTypeAppEvent(if (isDarkTheme) Constants.AnalyticsEvent.DARK_MODE else Constants.AnalyticsEvent.LIGHT_MODE)
     }
 
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
         if (uiState.dataList.isNotEmpty())
             navController.graph = navListGraph
         else {
-            analyticsManagerImpl.getStartedScreenEvent()
+            analyticsManager.getStartedScreenEvent()
             navController.graph = navMainGraph
         }
     }
