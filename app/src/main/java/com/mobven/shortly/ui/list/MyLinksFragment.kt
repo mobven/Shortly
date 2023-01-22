@@ -71,38 +71,38 @@ class MyLinksFragment : Fragment() {
             )
         }
 
-            shortLinkPagingAdapter.copyClickListener = { shortenData, position ->
-                analyticsManager.copyClickEvent(position)
-                viewModel.selectedShortenData(true, shortenData.code)
-                shortLinkPagingAdapter.copiedItem = shortenData.code
-                val clip = ClipData.newPlainText(getString(R.string.copied), shortenData.short_link)
-                clipBoardManager.setPrimaryClip(clip)
+        shortLinkPagingAdapter.copyClickListener = { shortenData, position ->
+            analyticsManager.copyClickEvent(position)
+            viewModel.selectedShortenData(true, shortenData.code)
+            shortLinkPagingAdapter.copiedItem = shortenData.code
+            val clip = ClipData.newPlainText(getString(R.string.copied), shortenData.short_link)
+            clipBoardManager.setPrimaryClip(clip)
+        }
+
+        shortLinkPagingAdapter.itemShareListener = { item, position ->
+            analyticsManager.shareClickEvent(position)
+            requireContext().share(item.short_link, getString(R.string.share))
+        }
+
+        shortLinkPagingAdapter.itemRemoveListener = { code, shortLink, position ->
+            if (clipBoardManager.primaryClip?.getItemAt(0)?.text?.toString()
+                    .equals(shortLink) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            ) {
+                clipBoardManager.clearPrimaryClip()
             }
+            analyticsManager.deleteClickEvent(position)
+            viewModel.delete(code)
+        }
 
-            shortLinkPagingAdapter.itemShareListener = { item, position ->
-                analyticsManager.shareClickEvent(position)
-                requireContext().share(item.short_link, getString(R.string.share))
-            }
+        shortLinkPagingAdapter.openUrl = {
+            Intent(Intent.ACTION_VIEW, Uri.parse(it)).apply { startActivity(this) }
+        }
 
-            shortLinkPagingAdapter.itemRemoveListener = { code, shortLink, position ->
-                if (clipBoardManager.primaryClip?.getItemAt(0)?.text?.toString()
-                        .equals(shortLink) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-                ) {
-                    clipBoardManager.clearPrimaryClip()
-                }
-                analyticsManager.deleteClickEvent(position)
-                viewModel.delete(code)
-
-
-                shortLinkPagingAdapter.openUrl = {
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
-                startActivity(browserIntent)
-                }
-            }
         shortLinkPagingAdapter.addOnPagesUpdatedListener {
             analyticsManager.linkHistoryScreenEvent(shortLinkPagingAdapter.itemCount)
         }
     }
+
     private fun renderView(uiState: MyLinksUiState) = with(binding) {
         shortLinkPagingAdapter.submitData(lifecycle, uiState.dataList)
     }
