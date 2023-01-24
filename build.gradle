@@ -9,6 +9,8 @@ buildscript {
         classpath Google.dagger.hilt.android.gradlePlugin
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:_"
         classpath Google.playServicesGradlePlugin
+        classpath Android.tools.build.gradlePlugin
+        classpath Firebase.crashlyticsGradlePlugin
     }
 }
 

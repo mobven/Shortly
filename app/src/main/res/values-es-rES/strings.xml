@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_main">¡Empecemos!</string>
+    <string name="text_description">Pegue su primer enlace en el campo para acortarlo</string>
+    <string name="text_history">Tu historial de enlaces</string>
+    <string name="hint_link">Pega tu enlace aquí</string>
+    <string name="error_link">Por favor agregue un enlace aquí</string>
+    <string name="btn_shorten">¡Acortarlo!</string>
+    <string name="btn_copy">Copiar</string>
+    <string name="btn_share">Cuota</string>
+    <string name="btn_copied">¡Copiado!</string>
+    <string name="title_error">Error</string>
+
+    <string name="short_link">Cortar un enlace</string>
+</resources>
