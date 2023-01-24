@@ -1,0 +1,14 @@
+<resources>
+    <string name="title_main">Iniziamo!</string>
+    <string name="text_description">Incolla il tuo primo collegamento nel campo per accorciarlo</string>
+    <string name="text_history">La tua cronologia dei collegamenti</string>
+    <string name="hint_link">Incolla qui il tuo link</string>
+    <string name="error_link">Si prega di aggiungere un collegamento qui</string>
+    <string name="btn_shorten">Accorcialo!</string>
+    <string name="btn_copy">Copia</string>
+    <string name="btn_share">Condividere</string>
+    <string name="btn_copied">Copiato!</string>
+    <string name="title_error">Errore</string>
+
+    <string name="short_link">Breve un collegamento</string>
+</resources>
