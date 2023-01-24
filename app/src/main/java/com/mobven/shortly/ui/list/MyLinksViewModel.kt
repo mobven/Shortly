@@ -3,7 +3,6 @@ package com.mobven.shortly.ui.list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.mobven.shortly.R
 import com.mobven.shortly.domain.usecase.*
 import com.mobven.shortly.ui.list.MyLinksUiEvent.ShowError
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -52,7 +51,7 @@ class MyLinksViewModel @Inject constructor(
         }
     }
 
-    fun clickedFavorite(isFavorite : Boolean, code : String){
+    fun setFavorite(isFavorite : Boolean, code : String){
         viewModelScope.launch {
             updateFavoriteUseCase(isFavorite, code)
         }

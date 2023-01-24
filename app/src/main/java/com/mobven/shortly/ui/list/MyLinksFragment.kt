@@ -93,7 +93,7 @@ class MyLinksFragment : Fragment() {
         }
 
         shortLinkPagingAdapter.itemFavoriteListener = { isFavorite, code ->
-            viewModel.clickedFavorite(isFavorite, code)
+            viewModel.setFavorite(isFavorite, code)
         }
     }
 
