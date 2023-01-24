@@ -32,8 +32,8 @@ class MyLinksViewModel @Inject constructor(
         getLocalShortenLink()
     }
 
-    private fun getLocalShortenLink() {
-        getLinksPagingDataFlowUseCase()
+    fun getLocalShortenLink(search: String = "") {
+        getLinksPagingDataFlowUseCase(search)
             .cachedIn(viewModelScope)
             .distinctUntilChanged()
             .onEach { _uiState.update { state -> state.copy(dataList = it) } }

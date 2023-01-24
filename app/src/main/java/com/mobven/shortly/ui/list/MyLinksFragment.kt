@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -49,24 +50,27 @@ class MyLinksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initView()
         collectState(viewModel.uiState, ::renderView)
         collectEvent(viewModel.uiEvent, ::handleEvent)
     }
 
     private fun initView() {
-        binding.rvLinks.apply {
-            adapter = shortLinkPagingAdapter
-            setHasFixedSize(true)
-            addItemDecoration(
-                SpaceItemDecoration(
-                    resources.getDimensionPixelSize(R.dimen._12sdp),
-                    false
+        with(binding) {
+            rvLinks.apply {
+                adapter = shortLinkPagingAdapter
+                setHasFixedSize(true)
+                addItemDecoration(
+                    SpaceItemDecoration(
+                        resources.getDimensionPixelSize(R.dimen._12sdp),
+                        false
+                    )
                 )
-            )
+            }
+            etSearch.doAfterTextChanged {
+                viewModel.getLocalShortenLink(it.toString())
+            }
         }
-
         shortLinkPagingAdapter.itemClickListener = {
             viewModel.selectedShortenData(true, it.code)
             shortLinkPagingAdapter.copiedItem = it.code

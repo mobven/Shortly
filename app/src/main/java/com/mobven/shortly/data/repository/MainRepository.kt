@@ -12,7 +12,7 @@ import javax.inject.Singleton
 
 interface MainRepository {
     fun getLinksFlow(): Flow<List<ShortenData>>
-    fun getLinksPagingDataFlow(): Flow<PagingData<ShortenData>>
+    fun getLinksPagingDataFlow(search: String?): Flow<PagingData<ShortenData>>
     fun shortenLink(editLink: String): Flow<BaseResponse<Response>>
     suspend fun insertLink(shortenData: ShortenData)
     suspend fun updateSelected(isSelected: Boolean, code: String)
@@ -31,5 +31,5 @@ class MainRepositoryImpl @Inject constructor(
     override suspend fun getOldSelected(): String? = localDataSource.getOldSelected()
     override suspend fun deleteLink(code: String): Int = localDataSource.deleteLink(code)
     override fun getLinksFlow() = localDataSource.getLinksFlow()
-    override fun getLinksPagingDataFlow() = localDataSource.getLinksPagingDataFlow()
+    override fun getLinksPagingDataFlow(search: String?) = localDataSource.getLinksPagingDataFlow(search)
 }

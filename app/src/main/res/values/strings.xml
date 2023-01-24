@@ -10,6 +10,7 @@
     <string name="btn_share">Share</string>
     <string name="btn_copied">Copied!</string>
     <string name="title_error">Error</string>
+    <string name="search_link">Search shorten link</string>
 
     <string name="short_link">Short a link</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -9,6 +9,7 @@
     <string name="btn_share">Paylaş</string>
     <string name="btn_copied">Kopyalandı!</string>
     <string name="title_error">Hata</string>
+    <string name="search_link">Bağlantı Ara</string>
 
     <string name="short_link">Bağlantıyı kısalt</string>
 </resources>

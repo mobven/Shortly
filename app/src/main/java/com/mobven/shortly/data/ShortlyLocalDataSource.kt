@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 interface ShortlyLocalDataSource {
     fun getLinksFlow(): Flow<List<ShortenData>>
-    fun getLinksPagingDataFlow(): Flow<PagingData<ShortenData>>
+    fun getLinksPagingDataFlow(search: String?): Flow<PagingData<ShortenData>>
     suspend fun insertLink(shortenData: ShortenData)
     suspend fun updateSelected(isSelected: Boolean, code: String)
     suspend fun getOldSelected(): String?
@@ -26,9 +26,9 @@ class ShortlyLocalDataSourceImpl @Inject constructor(
     override suspend fun getOldSelected(): String? = linkDao.getOldSelected()
     override suspend fun deleteLink(code: String): Int = linkDao.deleteLink(code)
 
-    override fun getLinksPagingDataFlow() = Pager(
+    override fun getLinksPagingDataFlow(search: String?) = Pager(
         config = PagingConfig(pageSize = PAGE_SIZE),
-        pagingSourceFactory = { linkDao.getLinkListPagingSource() }
+        pagingSourceFactory = { linkDao.getLinkListPagingSource(search) }
     ).flow
 
     companion object {

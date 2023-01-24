@@ -85,7 +85,7 @@ class MainViewModelTest {
                 getSelectedOldUseCase,
                 deleteLinkUseCase
             )
-            coEvery { getLinksPagingDataFlowUseCase.invoke() } returns flowOf(givenData)
+            coEvery { getLinksPagingDataFlowUseCase.invoke("") } returns flowOf(givenData)
             advanceUntilIdle()
             assertEquals(mainViewModel.uiState.value, ShortlyUiState.Success(givenData))
             assertEquals(givenData, mainViewModel.linkList.value)
