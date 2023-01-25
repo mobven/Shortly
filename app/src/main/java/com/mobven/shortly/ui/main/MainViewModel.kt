@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.mobven.shortly.BaseResponse
 import com.mobven.shortly.ShortenData
 import com.mobven.shortly.domain.usecase.GetLinksFlowUseCase
-import com.mobven.shortly.domain.usecase.GetLinksPagingDataFlowUseCase
 import com.mobven.shortly.domain.usecase.InsertLinkUseCase
 import com.mobven.shortly.domain.usecase.ShortenLinkUseCase
 import com.mobven.shortly.ui.main.MainUiEvent.ShowError

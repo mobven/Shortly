@@ -9,5 +9,5 @@ import javax.inject.Inject
 class GetLinksPagingDataFlowUseCase @Inject constructor(
     private val mainRepository: MainRepository
 ) {
-    operator fun invoke(search: String?): Flow<PagingData<ShortenData>> = mainRepository.getLinksPagingDataFlow(search)
+    operator fun invoke(search: String): Flow<PagingData<ShortenData>> = mainRepository.getLinksPagingDataFlow(search)
 }
