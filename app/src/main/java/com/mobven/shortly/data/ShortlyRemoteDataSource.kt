@@ -10,13 +10,13 @@ import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 interface ShortlyRemoteDataSource {
-    fun shortenLink(originalLink: String): Flow<BaseResponse<Response>>
+    fun shortenLink(originalLink: String?): Flow<BaseResponse<Response>>
 }
 
 class ShortlyRemoteDataSourceImpl @Inject constructor(
     private val apiService: ApiService
 ) : ShortlyRemoteDataSource {
-    override fun shortenLink(originalLink: String): Flow<BaseResponse<Response>> = flow {
+    override fun shortenLink(originalLink: String?): Flow<BaseResponse<Response>> = flow {
         emit(BaseResponse.success(apiService.getLinks(originalLink)))
-    }.flowOn(Dispatchers.IO)
+    }
 }

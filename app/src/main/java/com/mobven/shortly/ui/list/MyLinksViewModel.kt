@@ -3,6 +3,7 @@ package com.mobven.shortly.ui.list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.mobven.shortly.domain.usecase.*
 import com.mobven.shortly.domain.usecase.DeleteLinkUseCase
 import com.mobven.shortly.domain.usecase.GetLinksPagingDataFlowUseCase
 import com.mobven.shortly.domain.usecase.GetSelectedOldUseCase
@@ -18,6 +19,7 @@ class MyLinksViewModel @Inject constructor(
     private val getLinksPagingDataFlowUseCase: GetLinksPagingDataFlowUseCase,
     private val updateShortenDataUseCase: UpdateShortenDataUseCase,
     private val getSelectedOldUseCase: GetSelectedOldUseCase,
+    private val updateFavoriteUseCase : UpdateFavoriteUseCase,
     private val deleteLinkUseCase: DeleteLinkUseCase
     ) : ViewModel() {
 
@@ -50,6 +52,12 @@ class MyLinksViewModel @Inject constructor(
         viewModelScope.launch {
             getSelectedOldUseCase()?.let { updateShortenDataUseCase(false, it) }
             updateShortenDataUseCase(isSelected, code)
+        }
+    }
+
+    fun setFavorite(isFavorite : Boolean, code : String){
+        viewModelScope.launch {
+            updateFavoriteUseCase(isFavorite, code)
         }
     }
 }

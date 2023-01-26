@@ -169,4 +169,5 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
         }
         return mIdlingResource as SimpleIdlingResource
     }
+
 }

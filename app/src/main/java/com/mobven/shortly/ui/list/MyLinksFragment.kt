@@ -101,6 +101,10 @@ class MyLinksFragment : Fragment() {
         shortLinkPagingAdapter.addOnPagesUpdatedListener {
             analyticsManager.linkHistoryScreenEvent(shortLinkPagingAdapter.itemCount)
         }
+
+        shortLinkPagingAdapter.itemFavoriteListener = { isFavorite, code ->
+            viewModel.setFavorite(isFavorite, code)
+        }
     }
 
     private fun renderView(uiState: MyLinksUiState) = with(binding) {

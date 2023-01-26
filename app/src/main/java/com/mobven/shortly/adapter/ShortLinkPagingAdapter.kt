@@ -19,6 +19,7 @@ class ShortLinkPagingAdapter @Inject constructor() :
     var copyClickListener: ((ShortenData), (Int)) -> Unit = { _, _ ->}
     var itemShareListener: ((ShortenData), (Int)) -> Unit = {_,_ -> }
     var itemRemoveListener: ((String), (String), (Int)) -> Unit = { _, _, _ -> }
+    var itemFavoriteListener: ((Boolean), (String)) -> Unit = { _, _ -> }
     var openUrl: (String) -> Unit = {}
     var copiedItem: String? = null
 
@@ -63,6 +64,9 @@ class ShortLinkPagingAdapter @Inject constructor() :
                 icTrash.setOnClickListener {
                     itemRemoveListener(shortenData.code, shortenData.short_link, position)
                 }
+                cbFavorite.setOnClickListener {
+                    itemFavoriteListener(cbFavorite.isChecked, shortenData.code)
+                }
                 if (shortenData.isSelected) {
                     btnCopy.alpha = 0.5f
                     btnCopy.text = root.context.getString(R.string.btn_copied)
@@ -70,6 +74,8 @@ class ShortLinkPagingAdapter @Inject constructor() :
                     btnCopy.alpha = 1.0f
                     btnCopy.text = root.context.getString(R.string.btn_copy)
                 }
+
+                cbFavorite.isChecked = shortenData.isFavorite
             }
         }
 
