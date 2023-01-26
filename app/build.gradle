@@ -4,6 +4,8 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'kotlin-parcelize'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 apply from: "../jacoco.gradle"
@@ -27,11 +29,19 @@ android {
     buildTypes {
         debug {
             testCoverageEnabled true
+            manifestPlaceholders["crashlytics_enabled"] = "false"
+            firebaseCrashlytics {
+                mappingFileUploadEnabled false
+            }
         }
 
         release {
             minifyEnabled false
+            manifestPlaceholders["crashlytics_enabled"] = "true"
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            firebaseCrashlytics {
+                mappingFileUploadEnabled true
+            }
         }
     }
     compileOptions {
@@ -67,6 +77,9 @@ dependencies {
     implementation AndroidX.room.ktx
     implementation AndroidX.navigation.fragmentKtx
     implementation AndroidX.navigation.uiKtx
+
+    implementation 'com.google.firebase:firebase-crashlytics:_'
+    implementation 'com.google.firebase:firebase-analytics:_'
     kapt AndroidX.room.compiler
 
     implementation Google.dagger.hilt.android

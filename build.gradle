@@ -4,6 +4,9 @@ buildscript {
         classpath "org.jacoco:org.jacoco.core:_"
         classpath Google.dagger.hilt.android.gradlePlugin
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:_"
+        classpath 'com.android.tools.build:gradle:_'
+        classpath 'com.google.gms:google-services:_'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:_'
     }
 }
 
