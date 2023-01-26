@@ -15,7 +15,6 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
-import com.google.android.play.core.review.ReviewManagerFactory
 import com.mobven.shortly.R
 import com.mobven.shortly.adapter.ShortLinkPagingAdapter
 import com.mobven.shortly.databinding.FragmentMylistBinding
@@ -42,13 +41,13 @@ class MyLinksFragment : Fragment() {
     @Inject
     lateinit var linearLayoutManager: LinearLayoutManager
 
-    private lateinit var manager: ReviewManager
+    @Inject
+    lateinit var reviewManager: ReviewManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        manager = ReviewManagerFactory.create(requireContext())
         binding = FragmentMylistBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -102,11 +101,11 @@ class MyLinksFragment : Fragment() {
     private fun renderView(uiState: MyLinksUiState) = with(binding) {
         shortLinkPagingAdapter.submitData(lifecycle, uiState.dataList)
         if (shortLinkPagingAdapter.snapshot().items.size > REQUIRED_ITEM_COUNT_FOR_REVIEW){
-            requestReviewFlow()
+            viewModel.requestReviewFlow()
         }
     }
 
-    private fun handleEvent(uiEvent: MyLinksUiEvent) = with(binding) {
+    private fun handleEvent(uiEvent: MyLinksUiEvent) {
         when (uiEvent) {
             is MyLinksUiEvent.ShowError -> {
                 toast?.cancel()
@@ -114,20 +113,14 @@ class MyLinksFragment : Fragment() {
                     Toast.makeText(context, getString(R.string.delete_error), Toast.LENGTH_SHORT)
                 toast?.show()
             }
-        }
-    }
-
-    private fun requestReviewFlow() {
-        val request = manager.requestReviewFlow()
-        request.addOnCompleteListener {
-            if (it.isSuccessful) {
-                launchReviewFlow(it.result)
+            is MyLinksUiEvent.LaunchReviewFlow -> {
+                launchReviewFlow(uiEvent.reviewInfo)
             }
         }
     }
 
     private fun launchReviewFlow(reviewInfo: ReviewInfo) {
-        val flow = manager.launchReviewFlow(requireActivity(), reviewInfo)
+        val flow = reviewManager.launchReviewFlow(requireActivity(), reviewInfo)
         flow.addOnCompleteListener {
             if (it.isSuccessful){
                 Toast.makeText(
