@@ -3,7 +3,6 @@ package com.mobven.shortly.ui.list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.mobven.shortly.R
 import com.mobven.shortly.domain.usecase.DeleteLinkUseCase
 import com.mobven.shortly.domain.usecase.GetLinksPagingDataFlowUseCase
 import com.mobven.shortly.domain.usecase.GetSelectedOldUseCase
@@ -20,7 +19,7 @@ class MyLinksViewModel @Inject constructor(
     private val updateShortenDataUseCase: UpdateShortenDataUseCase,
     private val getSelectedOldUseCase: GetSelectedOldUseCase,
     private val deleteLinkUseCase: DeleteLinkUseCase
-) : ViewModel() {
+    ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MyLinksUiState())
     val uiState: StateFlow<MyLinksUiState> = _uiState.asStateFlow()
@@ -36,7 +35,7 @@ class MyLinksViewModel @Inject constructor(
         getLinksPagingDataFlowUseCase()
             .cachedIn(viewModelScope)
             .distinctUntilChanged()
-            .onEach { _uiState.update { state -> state.copy(dataList = it) } }
+            .onEach {_uiState.update { state -> state.copy(dataList = it) } }
             .launchIn(viewModelScope)
     }
 
