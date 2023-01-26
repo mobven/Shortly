@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobven.shortly.R
 import com.mobven.shortly.adapter.ShortLinkPagingAdapter
+import com.mobven.shortly.analytics.AnalyticsManager
 import com.mobven.shortly.databinding.FragmentMylistBinding
 import com.mobven.shortly.utils.SpaceItemDecoration
 import com.mobven.shortly.utils.collectEvent
@@ -38,6 +39,9 @@ class MyLinksFragment : Fragment() {
 
     @Inject
     lateinit var linearLayoutManager: LinearLayoutManager
+
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,29 +71,35 @@ class MyLinksFragment : Fragment() {
             )
         }
 
-        shortLinkPagingAdapter.itemClickListener = {
-            viewModel.selectedShortenData(true, it.code)
-            shortLinkPagingAdapter.copiedItem = it.code
-            val clip = ClipData.newPlainText(getString(R.string.copied), it.short_link)
+        shortLinkPagingAdapter.copyClickListener = { shortenData, position ->
+            analyticsManager.copyClickEvent(position)
+            viewModel.selectedShortenData(true, shortenData.code)
+            shortLinkPagingAdapter.copiedItem = shortenData.code
+            val clip = ClipData.newPlainText(getString(R.string.copied), shortenData.short_link)
             clipBoardManager.setPrimaryClip(clip)
         }
 
-        shortLinkPagingAdapter.itemShareListener = {
-            requireContext().share(it.short_link, getString(R.string.share))
+        shortLinkPagingAdapter.itemShareListener = { item, position ->
+            analyticsManager.shareClickEvent(position)
+            requireContext().share(item.short_link, getString(R.string.share))
         }
 
-        shortLinkPagingAdapter.itemRemoveListener = { code, shortLink ->
+        shortLinkPagingAdapter.itemRemoveListener = { code, shortLink, position ->
             if (clipBoardManager.primaryClip?.getItemAt(0)?.text?.toString()
                     .equals(shortLink) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
             ) {
                 clipBoardManager.clearPrimaryClip()
             }
+            analyticsManager.deleteClickEvent(position)
             viewModel.delete(code)
         }
 
         shortLinkPagingAdapter.openUrl = {
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
-            startActivity(browserIntent)
+            Intent(Intent.ACTION_VIEW, Uri.parse(it)).apply { startActivity(this) }
+        }
+
+        shortLinkPagingAdapter.addOnPagesUpdatedListener {
+            analyticsManager.linkHistoryScreenEvent(shortLinkPagingAdapter.itemCount)
         }
 
         shortLinkPagingAdapter.itemFavoriteListener = { isFavorite, code ->
@@ -100,6 +110,7 @@ class MyLinksFragment : Fragment() {
     private fun renderView(uiState: MyLinksUiState) = with(binding) {
         shortLinkPagingAdapter.submitData(lifecycle, uiState.dataList)
     }
+
 
     private fun handleEvent(uiEvent: MyLinksUiEvent) = with(binding) {
         when (uiEvent) {

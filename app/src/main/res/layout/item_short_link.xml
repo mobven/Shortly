@@ -28,7 +28,7 @@
             app:layout_constraintEnd_toStartOf="@id/ic_trash"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/ic_trash"
-            tools:text="adsfasdfasdfasdfasdfsdafsdfsdfsdfasdfs" />
+            tools:text="exampleurl.com" />
 
         <ImageView
             android:id="@+id/ic_trash"
@@ -67,7 +67,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ic_trash"
-            tools:text="adsfasdfasdfasdfasdf" />
+            tools:text="exampleshortenurl.com" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_share"

@@ -4,6 +4,8 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'kotlin-parcelize'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 apply from: "../jacoco.gradle"
@@ -27,11 +29,19 @@ android {
     buildTypes {
         debug {
             testCoverageEnabled true
+            manifestPlaceholders["crashlytics_enabled"] = "false"
+            firebaseCrashlytics {
+                mappingFileUploadEnabled false
+            }
         }
 
         release {
             minifyEnabled false
+            manifestPlaceholders["crashlytics_enabled"] = "true"
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            firebaseCrashlytics {
+                mappingFileUploadEnabled true
+            }
         }
     }
     compileOptions {
@@ -76,8 +86,12 @@ dependencies {
     implementation 'com.github.mobven:extensify:_'
 
     implementation AndroidX.test.espresso.idlingResource
-    implementation 'androidx.room:room-paging:2.4.3'
-    implementation "androidx.paging:paging-runtime-ktx:3.1.1"
+    implementation AndroidX.room.paging
+    implementation AndroidX.paging.runtimeKtx
+
+    implementation platform(Firebase.bom)
+    implementation Firebase.analyticsKtx
+    implementation Firebase.crashlyticsKtx
 
     testImplementation Testing.junit4
     testImplementation Testing.mockK
