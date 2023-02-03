@@ -9,10 +9,15 @@
         android:id="@+id/homeFragment"
         android:name="com.mobven.shortly.ui.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_nav_list"
             app:destination="@id/nav_list" />
+        <action
+            android:id="@+id/action_fetch_link_from_camera"
+            app:destination="@id/fetchLinkFromCamera" />
     </fragment>
+
     <include app:graph="@navigation/nav_list" />
+    <include app:graph="@navigation/nav_fetch_link_from_camera" />
 </navigation>

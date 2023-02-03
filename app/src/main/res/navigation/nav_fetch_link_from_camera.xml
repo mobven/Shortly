@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_fetch_link_from_camera"
+    app:startDestination="@id/fetchLinkFromCamera">
+    <fragment
+        android:id="@+id/fetchLinkFromCamera"
+        android:name="com.mobven.shortly.ui.camera.FetchLinkFromCameraActivity"
+        android:label="fragment_fetch_link_from_camera"
+        tools:layout="@layout/fragment_fetch_link_from_camera" />
+</navigation>

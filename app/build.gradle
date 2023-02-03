@@ -77,6 +77,12 @@ dependencies {
     implementation AndroidX.room.ktx
     implementation AndroidX.navigation.fragmentKtx
     implementation AndroidX.navigation.uiKtx
+    implementation AndroidX.appCompat
+    implementation Google.android.material
+    implementation AndroidX.constraintLayout
+    implementation Google.mlKit.naturalLanguage.entityExtraction
+    implementation 'androidx.camera:camera-lifecycle:1.2.1'
+    implementation 'androidx.camera:camera-view:1.2.1'
     kapt AndroidX.room.compiler
 
     implementation Google.dagger.hilt.android
@@ -92,6 +98,9 @@ dependencies {
     implementation platform(Firebase.bom)
     implementation Firebase.analyticsKtx
     implementation Firebase.crashlyticsKtx
+
+    implementation Google.mlKit.vision.textRecognition
+    implementation AndroidX.camera.camera2
 
     testImplementation Testing.junit4
     testImplementation Testing.mockK

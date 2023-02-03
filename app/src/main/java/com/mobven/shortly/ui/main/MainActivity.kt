@@ -16,16 +16,17 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.test.espresso.IdlingResource
+import com.mobven.extension.click
 import com.mobven.extension.gone
 import com.mobven.shortly.R
 import com.mobven.shortly.SimpleIdlingResource
 import com.mobven.shortly.analytics.AnalyticsManager
 import com.mobven.shortly.databinding.ActivityMainBinding
 import com.mobven.shortly.utils.Constants
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import com.mobven.shortly.utils.collectEvent
 import com.mobven.shortly.utils.collectState
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
@@ -47,6 +48,9 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
         navController.navInflater.inflate(R.navigation.nav_main)
     }
 
+    private val navFetchLinkFromCameraGraph by lazy {
+        navController.navInflater.inflate(R.navigation.nav_fetch_link_from_camera)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,10 +68,14 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
         collectState(viewModel.uiState, ::renderView)
         collectEvent(viewModel.uiEvent, ::handleEvent)
         handleIntent(intent)
+
+        mainBinding.shortenWithCamera.click {
+            navController.graph = navFetchLinkFromCameraGraph
+        }
     }
 
     private fun checkTheme() {
-       val isDarkTheme = this.resources.configuration.uiMode and
+        val isDarkTheme = this.resources.configuration.uiMode and
                 Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
         analyticsManager
             .themeTypeAppEvent(if (isDarkTheme) Constants.AnalyticsEvent.DARK_MODE else Constants.AnalyticsEvent.LIGHT_MODE)
@@ -103,8 +111,8 @@ class MainActivity : AppCompatActivity(), TextView.OnEditorActionListener {
         handleIntent(intent)
     }
 
-    private fun handleIntent(intent : Intent?){
-        if (intent?.action == Intent.ACTION_SEND && intent.type == "text/plain"){
+    private fun handleIntent(intent: Intent?) {
+        if (intent?.action == Intent.ACTION_SEND && intent.type == "text/plain") {
             mainBinding.shortenLinkEdt.setText(intent.getStringExtra(Intent.EXTRA_TEXT))
         }
     }

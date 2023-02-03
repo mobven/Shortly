@@ -53,13 +53,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/shorten_link_edt"
             android:layout_width="0dp"
             android:layout_height="@dimen/_46sdp"
             android:layout_marginStart="@dimen/_40sdp"
-            android:layout_marginEnd="@dimen/_40sdp"
+            android:layout_marginEnd="@dimen/_8ssp"
             android:layout_marginBottom="@dimen/_4sdp"
             android:background="@drawable/bg_edittext"
             android:hint="@string/hint_link"
@@ -70,11 +69,31 @@
             android:inputType="text"
             android:textSize="@dimen/_12ssp"
             app:layout_constraintBottom_toTopOf="@+id/shorten_it_button"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@id/shorten_with_camera"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintTop_toTopOf="@+id/view_bottom"
             app:layout_constraintVertical_chainStyle="packed" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/shorten_with_camera"
+            android:layout_width="@dimen/_46sdp"
+            android:layout_height="@dimen/_46sdp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:backgroundTint="@color/pure_white"
+            android:layout_marginEnd="@dimen/_40sdp"
+            app:iconTint="@color/han_purple"
+            app:icon="@android:drawable/ic_menu_camera"
+            app:iconPadding="0dp"
+            app:iconGravity="textStart"
+            app:cornerRadius="@dimen/_6sdp"
+            app:iconSize="@dimen/_24ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/shorten_link_edt"
+            app:layout_constraintStart_toEndOf="@id/shorten_it_button"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintBottom_toBottomOf="@id/shorten_link_edt" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/shorten_it_button"

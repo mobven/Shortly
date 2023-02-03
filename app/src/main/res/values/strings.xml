@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Shortly</string>
+    <string name="app_name" translatable="false">Shortly</string>
     <string name="title_main">Let\'s get started!</string>
     <string name="text_description">Paste your first link into the field to\nshorten it</string>
     <string name="text_history">Your Link History</string>
@@ -12,8 +12,11 @@
     <string name="title_error">Error</string>
 
     <string name="short_link">Short a link</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="delete_error">Silerken Bir Hata Oluştu!</string>
     <string name="copied">Copied</string>
     <string name="share">Share</string>
+
+    <string name="take_photo" translatable="false">Take Photo</string>
+    <string name="start_capture" translatable="false">Start Capture</string>
+    <string name="stop_capture" translatable="false">Stop Capture</string>
 </resources>
