@@ -28,7 +28,7 @@
             app:layout_constraintEnd_toStartOf="@id/ic_trash"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/ic_trash"
-            tools:text="adsfasdfasdfasdfasdfsdafsdfsdfsdfasdfs" />
+            tools:text="exampleurl.com" />
 
         <ImageView
             android:id="@+id/ic_trash"
@@ -39,12 +39,22 @@
             android:layout_marginEnd="@dimen/_16sdp"
             android:contentDescription="@string/content_description_remove"
             android:src="@drawable/ic_trash_bin"
+            app:layout_constraintEnd_toStartOf="@+id/cb_favorite"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/cb_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/bg_favorite"
+            app:buttonTint="@color/han_purple"
+            app:layout_constraintBottom_toBottomOf="@+id/ic_trash"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/ic_trash" />
 
         <TextView
             android:id="@+id/tv_short_link"
-            style="@style/short_link_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_16sdp"
@@ -54,11 +64,12 @@
             android:fontFamily="@font/open_sans_bold"
             android:padding="@dimen/_16sdp"
             android:textAlignment="center"
+            style="@style/short_link_style"
             android:textSize="@dimen/_14ssp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ic_trash"
-            tools:text="adsfasdfasdfasdfasdf" />
+            tools:text="exampleshortenurl.com" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_share"
@@ -67,15 +78,14 @@
             android:layout_marginTop="@dimen/_8sdp"
             android:layout_marginEnd="@dimen/_4sdp"
             android:layout_marginBottom="@dimen/_12sdp"
-            android:backgroundTint="@color/violets_are_blue"
-            android:contentDescription="@string/content_description_share"
-            android:fontFamily="@font/open_sans_bold"
             android:insetLeft="0dp"
             android:insetTop="0dp"
             android:insetRight="0dp"
             android:insetBottom="0dp"
-            android:text="@string/btn_share"
+            android:backgroundTint="@color/violets_are_blue"
+            android:fontFamily="@font/open_sans_bold"
             android:textColor="@android:color/white"
+            android:text="@string/btn_share"
             android:textSize="@dimen/_14ssp"
             app:cornerRadius="@dimen/_6sdp"
             app:icon="@drawable/ic_baseline_share_24"
@@ -99,8 +109,8 @@
             android:insetTop="0dp"
             android:insetRight="0dp"
             android:insetBottom="0dp"
-            android:text="@string/btn_copy"
             android:textColor="@android:color/white"
+            android:text="@string/btn_copy"
             android:textSize="@dimen/_14ssp"
             app:cornerRadius="@dimen/_6sdp"
             app:icon="@drawable/ic_baseline_content_copy_24"
