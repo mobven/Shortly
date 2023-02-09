@@ -22,7 +22,7 @@
             android:ellipsize="end"
             android:fontFamily="@font/open_sans_semibold"
             android:maxLines="1"
-            android:textColor="@color/sonic_silver"
+            style="@style/original_link_style"
             android:textSize="@dimen/_12ssp"
             app:layout_constraintBottom_toBottomOf="@+id/ic_trash"
             app:layout_constraintEnd_toStartOf="@id/ic_trash"
