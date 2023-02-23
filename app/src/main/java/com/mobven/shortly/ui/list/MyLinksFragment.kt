@@ -13,6 +13,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.play.core.review.ReviewInfo
+import com.google.android.play.core.review.ReviewManager
 import com.mobven.shortly.R
 import com.mobven.shortly.adapter.ShortLinkPagingAdapter
 import com.mobven.shortly.analytics.AnalyticsManager
@@ -39,6 +41,9 @@ class MyLinksFragment : Fragment() {
 
     @Inject
     lateinit var linearLayoutManager: LinearLayoutManager
+
+    @Inject
+    lateinit var reviewManager: ReviewManager
 
     @Inject
     lateinit var analyticsManager: AnalyticsManager
@@ -109,10 +114,12 @@ class MyLinksFragment : Fragment() {
 
     private fun renderView(uiState: MyLinksUiState) = with(binding) {
         shortLinkPagingAdapter.submitData(lifecycle, uiState.dataList)
+        if (shortLinkPagingAdapter.snapshot().items.size > REQUIRED_ITEM_COUNT_FOR_REVIEW){
+            viewModel.requestReviewFlow()
+        }
     }
 
-
-    private fun handleEvent(uiEvent: MyLinksUiEvent) = with(binding) {
+    private fun handleEvent(uiEvent: MyLinksUiEvent) {
         when (uiEvent) {
             is MyLinksUiEvent.ShowError -> {
                 toast?.cancel()
@@ -120,7 +127,26 @@ class MyLinksFragment : Fragment() {
                     Toast.makeText(context, getString(R.string.delete_error), Toast.LENGTH_SHORT)
                 toast?.show()
             }
+            is MyLinksUiEvent.LaunchReviewFlow -> {
+                launchReviewFlow(uiEvent.reviewInfo)
+            }
         }
     }
 
+    private fun launchReviewFlow(reviewInfo: ReviewInfo) {
+        val flow = reviewManager.launchReviewFlow(requireActivity(), reviewInfo)
+        flow.addOnCompleteListener {
+            if (it.isSuccessful){
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.in_app_review_success_message),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    companion object{
+        private const val REQUIRED_ITEM_COUNT_FOR_REVIEW = 5
+    }
 }

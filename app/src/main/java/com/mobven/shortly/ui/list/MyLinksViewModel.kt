@@ -3,6 +3,8 @@ package com.mobven.shortly.ui.list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.google.android.play.core.ktx.requestReview
+import com.google.android.play.core.review.ReviewManager
 import com.mobven.shortly.domain.usecase.*
 import com.mobven.shortly.domain.usecase.DeleteLinkUseCase
 import com.mobven.shortly.domain.usecase.GetLinksPagingDataFlowUseCase
@@ -20,7 +22,8 @@ class MyLinksViewModel @Inject constructor(
     private val updateShortenDataUseCase: UpdateShortenDataUseCase,
     private val getSelectedOldUseCase: GetSelectedOldUseCase,
     private val updateFavoriteUseCase : UpdateFavoriteUseCase,
-    private val deleteLinkUseCase: DeleteLinkUseCase
+    private val deleteLinkUseCase: DeleteLinkUseCase,
+    private val reviewManager: ReviewManager
     ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MyLinksUiState())
@@ -58,6 +61,14 @@ class MyLinksViewModel @Inject constructor(
     fun setFavorite(isFavorite : Boolean, code : String){
         viewModelScope.launch {
             updateFavoriteUseCase(isFavorite, code)
+        }
+    }
+
+    fun requestReviewFlow() {
+        viewModelScope.launch {
+            reviewManager.requestReview().let {
+                _uiEvent.emit(MyLinksUiEvent.LaunchReviewFlow(it))
+            }
         }
     }
 }
