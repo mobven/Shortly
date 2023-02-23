@@ -14,8 +14,8 @@ interface LinkDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertLink(vararg shortenData: ShortenData)
 
-    @Query("Select * FROM links")
-    fun getLinkListPagingSource(): PagingSource<Int, ShortenData>
+    @Query("Select * FROM links WHERE original_link LIKE '%' || :search || '%'")
+    fun getLinkListPagingSource(search:String): PagingSource<Int, ShortenData>
 
     @Query("Select * FROM links")
     fun getLinkListFlow(): Flow<List<ShortenData>>
