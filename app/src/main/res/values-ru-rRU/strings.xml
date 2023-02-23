@@ -9,6 +9,6 @@
     <string name="btn_share">Делиться</string>
     <string name="btn_copied">Скопировано!</string>
     <string name="title_error">Ошибка</string>
-
+    <string name="search_link">Поиск соединения</string>
     <string name="short_link">Короткая ссылка</string>
 </resources>
