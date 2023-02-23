@@ -9,6 +9,6 @@
     <string name="btn_share">Shpërndaje</string>
     <string name="btn_copied">E kopjuar!</string>
     <string name="title_error">Gabim</string>
-
+    <string name="search_link">Kërko lidhjen</string>
     <string name="short_link">Shkurtoni një lidhje</string>
 </resources>

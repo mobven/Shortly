@@ -10,6 +10,6 @@
     <string name="btn_share">Cuota</string>
     <string name="btn_copied">¡Copiado!</string>
     <string name="title_error">Error</string>
-
+    <string name="search_link">Conexión de búsqueda</string>
     <string name="short_link">Cortar un enlace</string>
 </resources>

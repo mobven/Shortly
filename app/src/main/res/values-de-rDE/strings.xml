@@ -9,6 +9,6 @@
     <string name="btn_share">Teilen</string>
     <string name="btn_copied">Kopiert!</string>
     <string name="title_error">Fehler</string>
-
+    <string name="search_link">Verbindung suchen</string>
     <string name="short_link">Kurz einen Link</string>
 </resources>
