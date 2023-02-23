@@ -26,6 +26,9 @@ interface LinkDao {
     @Query("UPDATE links SET isSelected = :isSelected WHERE code = :code")
     suspend fun updateSelected(isSelected: Boolean, code: String)
 
+    @Query("UPDATE links SET isFavorite = :isFavorite WHERE code = :code")
+    suspend fun updateFavorite(isFavorite: Boolean, code: String)
+
     @Query("Select code FROM links WHERE isSelected = 1")
     suspend fun getOldSelected(): String?
 

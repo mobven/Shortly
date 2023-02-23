@@ -12,6 +12,7 @@
             android:id="@+id/iv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/content_description_app_logo"
             android:src="@drawable/shortly_logo"
             app:layout_constraintBottom_toTopOf="@+id/fragment_nav_host"
             app:layout_constraintEnd_toEndOf="parent"
@@ -19,6 +20,7 @@
             android:layout_marginTop="@dimen/_22sdp"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ContentDescription" />
+
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -62,12 +64,12 @@
             android:layout_marginEnd="@dimen/_40sdp"
             android:layout_marginBottom="@dimen/_4sdp"
             android:background="@drawable/bg_edittext"
-            android:hint="@string/hint_link"
             android:fontFamily="@font/open_sans_semibold"
+            android:hint="@string/hint_link"
+            android:inputType="text"
+            android:maxLines="1"
             android:paddingHorizontal="@dimen/_16sdp"
             android:textColorHint="@color/violets_are_blue_80"
-            android:maxLines="1"
-            android:inputType="text"
             android:textSize="@dimen/_12ssp"
             app:layout_constraintBottom_toTopOf="@+id/shorten_it_button"
             app:layout_constraintEnd_toEndOf="parent"
@@ -84,19 +86,22 @@
             android:layout_marginTop="@dimen/_4sdp"
             android:layout_marginEnd="@dimen/_40sdp"
             android:backgroundTint="@color/maximum_blue_green"
+            android:contentDescription="@string/content_description_shorten_it"
             android:fontFamily="@font/open_sans_bold"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/_14ssp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:text="@string/btn_shorten"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/_14ssp"
             app:cornerRadius="@dimen/_6sdp"
-            tools:fontFamily="@null"
+            app:icon="@drawable/ic_baseline_content_cut_24"
+            app:iconGravity="textStart"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/shorten_link_edt" />
+            app:layout_constraintTop_toBottomOf="@+id/shorten_link_edt"
+            tools:fontFamily="@null" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

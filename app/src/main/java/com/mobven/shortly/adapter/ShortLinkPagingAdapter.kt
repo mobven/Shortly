@@ -16,15 +16,16 @@ import javax.inject.Inject
 @FragmentScoped
 class ShortLinkPagingAdapter @Inject constructor() :
     PagingDataAdapter<ShortenData, ShortLinkPagingAdapter.ViewHolder>(ShortLinkDiffUtil) {
-    var itemClickListener: (ShortenData) -> Unit = {}
-    var itemShareListener: (ShortenData) -> Unit = {}
-    var itemRemoveListener: ((String), (String)) -> Unit = { _, _ -> }
+    var copyClickListener: ((ShortenData), (Int)) -> Unit = { _, _ ->}
+    var itemShareListener: ((ShortenData), (Int)) -> Unit = {_,_ -> }
+    var itemRemoveListener: ((String), (String), (Int)) -> Unit = { _, _, _ -> }
+    var itemFavoriteListener: ((Boolean), (String)) -> Unit = { _, _ -> }
     var openUrl: (String) -> Unit = {}
     var copiedItem: String? = null
 
     override fun onBindViewHolder(holder: ShortLinkPagingAdapter.ViewHolder, position: Int) {
         getItem(position)?.let {
-            holder.bind(it)
+            holder.bind(it, position)
         }
     }
 
@@ -39,8 +40,14 @@ class ShortLinkPagingAdapter @Inject constructor() :
 
     inner class ViewHolder(private val binding: ItemShortLinkBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(shortenData: ShortenData) {
+        fun bind(shortenData: ShortenData, position: Int) {
             binding.apply {
+
+                //For accecability
+                root.contentDescription =
+                    "Shorten Link : ${shortenData.full_short_link}, " +
+                            "Orginal Link : ${shortenData.original_link}"
+
                 tvLongLink.underLineText(shortenData.original_link)
                 tvShortLink.underLineText(shortenData.full_short_link)
 
@@ -53,26 +60,36 @@ class ShortLinkPagingAdapter @Inject constructor() :
                 }
 
                 btnCopy.setOnClickListener() {
-                    itemClickListener(shortenData)
+                    copyClickListener(shortenData, position)
                 }
 
                 btnShare.click {
-                    itemShareListener(shortenData)
+                    itemShareListener(shortenData, position)
                 }
 
                 icTrash.setOnClickListener {
-                    itemRemoveListener(shortenData.code, shortenData.short_link)
+                    itemRemoveListener(shortenData.code, shortenData.short_link, position)
+                }
+                cbFavorite.setOnClickListener {
+                    itemFavoriteListener(cbFavorite.isChecked, shortenData.code)
                 }
                 if (shortenData.isSelected) {
                     btnCopy.alpha = 0.5f
-                    btnCopy.text = root.context.getString(R.string.btn_copied)
+                    root.context.getString(R.string.btn_copied).apply {
+                        btnCopy.text = this
+                        btnCopy.contentDescription = this
+                    }
                 } else {
                     btnCopy.alpha = 1.0f
-                    btnCopy.text = root.context.getString(R.string.btn_copy)
+                    root.context.getString(R.string.btn_copy).apply {
+                        btnCopy.text = this
+                        btnCopy.contentDescription = this
+                    }
                 }
+
+                cbFavorite.isChecked = shortenData.isFavorite
             }
         }
-
     }
 
     object ShortLinkDiffUtil : DiffUtil.ItemCallback<ShortenData>() {

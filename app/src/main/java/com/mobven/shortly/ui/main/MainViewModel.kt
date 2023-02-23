@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mobven.shortly.BaseResponse
 import com.mobven.shortly.ShortenData
+import com.mobven.shortly.analytics.AnalyticsManager
 import com.mobven.shortly.domain.usecase.GetLinksFlowUseCase
 import com.mobven.shortly.domain.usecase.InsertLinkUseCase
 import com.mobven.shortly.domain.usecase.ShortenLinkUseCase
@@ -17,7 +18,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val shortenLinkUseCase: ShortenLinkUseCase,
     private val getLinksFlowUseCase: GetLinksFlowUseCase,
-    private val insertLinkUseCase: InsertLinkUseCase
+    private val insertLinkUseCase: InsertLinkUseCase,
+    private val analyticsManager: AnalyticsManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainUiState())
@@ -43,9 +45,13 @@ class MainViewModel @Inject constructor(
             .onStart { _uiState.update { state -> state.copy(isLoading = true) } }
             .filter { it.data?.ok == true }
             .mapNotNull { BaseResponse.success(it.data).data }
-            .onEach { _uiEvent.emit(MainUiEvent.LinkShorten(it.result)) }
+            .onEach {
+                analyticsManager.shortenClickEvent(true)
+                _uiEvent.emit(MainUiEvent.LinkShorten(it.result)) }
             .onCompletion { _uiState.update { state -> state.copy(isLoading = false) } }
-            .catch { _uiEvent.emit(ShowError(it.message.orEmpty())) }
+            .catch {
+                analyticsManager.shortenClickEvent(false)
+                _uiEvent.emit(ShowError(it.message.orEmpty())) }
             .launchIn(viewModelScope)
     }
 

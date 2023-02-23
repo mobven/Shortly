@@ -3,6 +3,7 @@ package com.mobven.shortly.di
 import android.app.Application
 import androidx.room.Room
 import com.mobven.shortly.data.room.LinkDao
+import com.mobven.shortly.data.room.MIGRATION_1_2
 import com.mobven.shortly.data.room.ShortlyDatabase
 import dagger.Module
 import dagger.Provides
@@ -20,6 +21,7 @@ object DatabaseModule {
         return Room.databaseBuilder(application, ShortlyDatabase::class.java, "shortly_database")
             .fallbackToDestructiveMigration()
             .addCallback(callback)
+            .addMigrations(MIGRATION_1_2)
             .build()
     }
 

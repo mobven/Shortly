@@ -77,9 +77,6 @@ dependencies {
     implementation AndroidX.room.ktx
     implementation AndroidX.navigation.fragmentKtx
     implementation AndroidX.navigation.uiKtx
-
-    implementation 'com.google.firebase:firebase-crashlytics:_'
-    implementation 'com.google.firebase:firebase-analytics:_'
     kapt AndroidX.room.compiler
 
     implementation Google.dagger.hilt.android
@@ -89,8 +86,12 @@ dependencies {
     implementation 'com.github.mobven:extensify:_'
 
     implementation AndroidX.test.espresso.idlingResource
-    implementation 'androidx.room:room-paging:2.4.3'
-    implementation "androidx.paging:paging-runtime-ktx:3.1.1"
+    implementation AndroidX.room.paging
+    implementation AndroidX.paging.runtimeKtx
+
+    implementation platform(Firebase.bom)
+    implementation Firebase.analyticsKtx
+    implementation Firebase.crashlyticsKtx
 
     testImplementation Testing.junit4
     testImplementation Testing.mockK
