@@ -8,7 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
 import javax.inject.Provider
 
-@Database(entities = [ShortenData::class], version = 1)
+@Database(entities = [ShortenData::class], version = 2)
 abstract class ShortlyDatabase : RoomDatabase() {
 
     abstract fun getLinkDao(): LinkDao

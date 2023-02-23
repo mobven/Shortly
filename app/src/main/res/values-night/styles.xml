@@ -14,4 +14,8 @@
         <item name="android:textColor">@color/maximum_blue_green</item>
     </style>
 
+    <style name="original_link_style">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
 </resources>

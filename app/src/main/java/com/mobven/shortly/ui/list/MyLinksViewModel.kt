@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.google.android.play.core.ktx.requestReview
 import com.google.android.play.core.review.ReviewManager
+import com.mobven.shortly.domain.usecase.*
 import com.mobven.shortly.domain.usecase.DeleteLinkUseCase
 import com.mobven.shortly.domain.usecase.GetLinksPagingDataFlowUseCase
 import com.mobven.shortly.domain.usecase.GetSelectedOldUseCase
@@ -20,9 +21,10 @@ class MyLinksViewModel @Inject constructor(
     private val getLinksPagingDataFlowUseCase: GetLinksPagingDataFlowUseCase,
     private val updateShortenDataUseCase: UpdateShortenDataUseCase,
     private val getSelectedOldUseCase: GetSelectedOldUseCase,
+    private val updateFavoriteUseCase : UpdateFavoriteUseCase,
     private val deleteLinkUseCase: DeleteLinkUseCase,
     private val reviewManager: ReviewManager
-) : ViewModel() {
+    ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MyLinksUiState())
     val uiState: StateFlow<MyLinksUiState> = _uiState.asStateFlow()
@@ -38,7 +40,7 @@ class MyLinksViewModel @Inject constructor(
         getLinksPagingDataFlowUseCase()
             .cachedIn(viewModelScope)
             .distinctUntilChanged()
-            .onEach { _uiState.update { state -> state.copy(dataList = it) } }
+            .onEach {_uiState.update { state -> state.copy(dataList = it) } }
             .launchIn(viewModelScope)
     }
 
@@ -53,6 +55,12 @@ class MyLinksViewModel @Inject constructor(
         viewModelScope.launch {
             getSelectedOldUseCase()?.let { updateShortenDataUseCase(false, it) }
             updateShortenDataUseCase(isSelected, code)
+        }
+    }
+
+    fun setFavorite(isFavorite : Boolean, code : String){
+        viewModelScope.launch {
+            updateFavoriteUseCase(isFavorite, code)
         }
     }
 

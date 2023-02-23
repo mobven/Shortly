@@ -17,4 +17,15 @@
     <string name="copied">Copied</string>
     <string name="share">Share</string>
     <string name="in_app_review_success_message">Thank you for your review</string>
+
+    <!--  Accessibility -->
+    <string name="content_description_app_logo">Shortly app logo</string>
+    <string name="content_description_shorten_it">Short the original link</string>
+    <string name="content_description_home_shape">Shortly app shape vector</string>
+    <string name="content_description_home_banner">Shortly app banner</string>
+    <string name="content_description_long_link">Long link</string>
+    <string name="content_description_remove">Remove shorten link</string>
+    <string name="content_description_short_link">Short link</string>
+    <string name="content_description_share">Share shorten link</string>
+    <string name="content_description_copy">Copy shorten link</string>
 </resources>

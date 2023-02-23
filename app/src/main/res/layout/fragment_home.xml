@@ -18,7 +18,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/tv_main_title"
             android:src="@drawable/shapes"
-            tools:ignore="ContentDescription" />
+            android:contentDescription="@string/content_description_home_shape" />
 
         <ImageView
             android:id="@+id/iv_main"
@@ -30,7 +30,7 @@
             app:layout_constraintBottom_toBottomOf="@id/iv_shapes"
             app:layout_constraintStart_toStartOf="@id/iv_shapes"
             app:layout_constraintEnd_toEndOf="@id/iv_shapes"
-            tools:ignore="ContentDescription" />
+            android:contentDescription="@string/content_description_home_banner"/>
 
         <TextView
             android:id="@+id/tv_main_title"
