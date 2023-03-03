@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c5704f0bf96597eee8c57cf9abb2c5cf",
+    "identityHash": "63b1506892e45e5edd7167640fe7116b",
     "entities": [
       {
         "tableName": "links",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`code` TEXT NOT NULL, `full_share_link` TEXT NOT NULL, `full_short_link` TEXT NOT NULL, `full_short_link2` TEXT NOT NULL, `original_link` TEXT NOT NULL, `share_link` TEXT NOT NULL, `short_link` TEXT NOT NULL, `short_link2` TEXT NOT NULL, `isSelected` INTEGER NOT NULL, PRIMARY KEY(`code`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`code` TEXT NOT NULL, `full_share_link` TEXT NOT NULL, `full_short_link` TEXT NOT NULL, `full_short_link2` TEXT NOT NULL, `original_link` TEXT NOT NULL, `share_link` TEXT NOT NULL, `short_link` TEXT NOT NULL, `short_link2` TEXT NOT NULL, `isSelected` INTEGER NOT NULL, `isFavorite` INTEGER NOT NULL, PRIMARY KEY(`code`))",
         "fields": [
           {
             "fieldPath": "code",
@@ -66,14 +66,19 @@
             "fieldPath": "qr_code",
             "columnName": "qr_code",
             "affinity": "TEXT",
+          },
+          {
+            "fieldPath": "isFavorite",
+            "columnName": "isFavorite",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
         "primaryKey": {
+          "autoGenerate": false,
           "columnNames": [
             "code"
-          ],
-          "autoGenerate": false
+          ]
         },
         "indices": [],
         "foreignKeys": []
@@ -82,7 +87,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c5704f0bf96597eee8c57cf9abb2c5cf')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '63b1506892e45e5edd7167640fe7116b')"
     ]
   }
 }

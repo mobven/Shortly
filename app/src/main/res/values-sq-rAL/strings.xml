@@ -1,0 +1,14 @@
+<resources>
+    <string name="title_main">Le të fillojmë!</string>
+    <string name="text_description">Ngjitni lidhjen tuaj të parë në fushë për ta shkurtuar atë</string>
+    <string name="text_history">Historia juaj e lidhjeve</string>
+    <string name="hint_link">Ngjitni lidhjen tuaj këtu</string>
+    <string name="error_link">Ju lutemi shtoni një lidhje këtu</string>
+    <string name="btn_shorten">Shkurtojeni!</string>
+    <string name="btn_copy">Kopjo</string>
+    <string name="btn_share">Shpërndaje</string>
+    <string name="btn_copied">E kopjuar!</string>
+    <string name="title_error">Gabim</string>
+    <string name="search_link">Kërko lidhjen</string>
+    <string name="short_link">Shkurtoni një lidhje</string>
+</resources>

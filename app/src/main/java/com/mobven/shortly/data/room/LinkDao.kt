@@ -14,8 +14,8 @@ interface LinkDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertLink(vararg shortenData: ShortenData)
 
-    @Query("Select * FROM links")
-    fun getLinkListPagingSource(): PagingSource<Int, ShortenData>
+    @Query("Select * FROM links WHERE original_link LIKE '%' || :search || '%'")
+    fun getLinkListPagingSource(search:String): PagingSource<Int, ShortenData>
 
     @Query("Select * FROM links")
     fun getLinkListFlow(): Flow<List<ShortenData>>
@@ -25,6 +25,9 @@ interface LinkDao {
 
     @Query("UPDATE links SET isSelected = :isSelected WHERE code = :code")
     suspend fun updateSelected(isSelected: Boolean, code: String)
+
+    @Query("UPDATE links SET isFavorite = :isFavorite WHERE code = :code")
+    suspend fun updateFavorite(isFavorite: Boolean, code: String)
 
     @Query("Select code FROM links WHERE isSelected = 1")
     suspend fun getOldSelected(): String?

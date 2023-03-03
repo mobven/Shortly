@@ -1,0 +1,14 @@
+<resources>
+    <string name="title_main">Commençons!</string>
+    <string name="text_description">Collez votre premier lien dans le champ pour le raccourcir</string>
+    <string name="text_history">Votre historique de liens</string>
+    <string name="hint_link">Collez votre lien ici</string>
+    <string name="error_link">Veuillez ajouter un lien ici</string>
+    <string name="btn_shorten">Raccourcissez-le!</string>
+    <string name="btn_copy">Copie</string>
+    <string name="btn_share">Partager</string>
+    <string name="btn_copied">Copié!</string>
+    <string name="title_error">Erreur</string>
+    <string name="search_link">Connexion de recherche</string>
+    <string name="short_link">Raccourcir un lien</string>
+</resources>

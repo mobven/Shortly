@@ -1,0 +1,15 @@
+<resources>
+    <string name="title_main">Başlayalım!</string>
+    <string name="text_description">İlk bağlantınızı kısaltmak için alana yapıştırın</string>
+    <string name="text_history">Bağlantı Geçmişiniz</string>
+    <string name="hint_link">Bağlantınızı buraya yapıştırın</string>
+    <string name="error_link">Lütfen buraya bir bağlantı ekleyin</string>
+    <string name="btn_shorten">Kısaltın!</string>
+    <string name="btn_copy">Kopyala</string>
+    <string name="btn_share">Paylaş</string>
+    <string name="btn_copied">Kopyalandı!</string>
+    <string name="title_error">Hata</string>
+    <string name="search_link">Bağlantı Ara</string>
+
+    <string name="short_link">Bağlantıyı kısalt</string>
+</resources>

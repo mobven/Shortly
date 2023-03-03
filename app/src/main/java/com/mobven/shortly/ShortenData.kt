@@ -16,5 +16,6 @@ data class ShortenData(
     val short_link: String,
     val short_link2: String,
     val isSelected: Boolean = false,
-    var qr_code: Bitmap
+    var qr_code: Bitmap,
+    val isFavorite: Boolean = false
 )

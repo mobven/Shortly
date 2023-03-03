@@ -1,0 +1,14 @@
+<resources>
+    <string name="title_main">Lass uns anfangen!</string>
+    <string name="text_description">Fügen Sie Ihren ersten Link in das Feld ein, um ihn zu verkürzen</string>
+    <string name="text_history">Ihr Linkverlauf</string>
+    <string name="hint_link">Fügen Sie Ihren Link hier ein</string>
+    <string name="error_link">Bitte fügen Sie hier einen Link hinzu</string>
+    <string name="btn_shorten">Kürzen!</string>
+    <string name="btn_copy">Kopieren</string>
+    <string name="btn_share">Teilen</string>
+    <string name="btn_copied">Kopiert!</string>
+    <string name="title_error">Fehler</string>
+    <string name="search_link">Verbindung suchen</string>
+    <string name="short_link">Kurz einen Link</string>
+</resources>

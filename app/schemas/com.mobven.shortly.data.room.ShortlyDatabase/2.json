@@ -6,7 +6,7 @@
     "entities": [
       {
         "tableName": "links",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`code` TEXT NOT NULL, `full_share_link` TEXT NOT NULL, `full_short_link` TEXT NOT NULL, `full_short_link2` TEXT NOT NULL, `original_link` TEXT NOT NULL, `share_link` TEXT NOT NULL, `short_link` TEXT NOT NULL, `short_link2` TEXT NOT NULL, `isSelected` INTEGER NOT NULL, `qr_code` BLOB NOT NULL, PRIMARY KEY(`code`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`code` TEXT NOT NULL, `full_share_link` TEXT NOT NULL, `full_short_link` TEXT NOT NULL, `full_short_link2` TEXT NOT NULL, `original_link` TEXT NOT NULL, `share_link` TEXT NOT NULL, `short_link` TEXT NOT NULL, `short_link2` TEXT NOT NULL, `isSelected` INTEGER NOT NULL, `qr_code` BLOB NOT NULL,`isFavorite` INTEGER NOT NULL, PRIMARY KEY(`code`))",
         "fields": [
           {
             "fieldPath": "code",
@@ -65,7 +65,12 @@
           {
             "fieldPath": "qr_code",
             "columnName": "qr_code",
-            "affinity": "BLOB",
+            "affinity": "BLOB"
+          },
+          {
+            "fieldPath": "isFavorite",
+            "columnName": "isFavorite",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],

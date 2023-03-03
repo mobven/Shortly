@@ -1,0 +1,14 @@
+<resources>
+    <string name="title_main">Давайте начнем!</string>
+    <string name="text_description">Вставьте свою первую ссылку в поле, чтобы сократить ее.</string>
+    <string name="text_history">Ваша история ссылок</string>
+    <string name="hint_link">Вставьте сюда свою ссылку</string>
+    <string name="error_link">Пожалуйста, добавьте ссылку сюда</string>
+    <string name="btn_shorten">Сократите это!</string>
+    <string name="btn_copy">Копировать</string>
+    <string name="btn_share">Делиться</string>
+    <string name="btn_copied">Скопировано!</string>
+    <string name="title_error">Ошибка</string>
+    <string name="search_link">Поиск соединения</string>
+    <string name="short_link">Короткая ссылка</string>
+</resources>
