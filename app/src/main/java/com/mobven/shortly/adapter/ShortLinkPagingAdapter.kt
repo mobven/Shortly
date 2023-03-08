@@ -16,6 +16,8 @@ import javax.inject.Inject
 @FragmentScoped
 class ShortLinkPagingAdapter @Inject constructor() :
     PagingDataAdapter<ShortenData, ShortLinkPagingAdapter.ViewHolder>(ShortLinkDiffUtil) {
+    var itemClickListener: (ShortenData) -> Unit = {}
+    var itemQrCodeListener: (ShortenData) -> Unit = {}
     var copyClickListener: ((ShortenData), (Int)) -> Unit = { _, _ ->}
     var itemShareListener: ((ShortenData), (Int)) -> Unit = {_,_ -> }
     var itemRemoveListener: ((String), (String), (Int)) -> Unit = { _, _, _ -> }
@@ -72,6 +74,10 @@ class ShortLinkPagingAdapter @Inject constructor() :
                 }
                 cbFavorite.setOnClickListener {
                     itemFavoriteListener(cbFavorite.isChecked, shortenData.code)
+                }
+
+                icButtonQr.setOnClickListener {
+                    itemQrCodeListener(shortenData)
                 }
                 if (shortenData.isSelected) {
                     btnCopy.alpha = 0.5f

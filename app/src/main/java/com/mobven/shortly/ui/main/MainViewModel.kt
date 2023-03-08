@@ -1,5 +1,8 @@
 package com.mobven.shortly.ui.main
 
+import android.graphics.Bitmap
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mobven.shortly.BaseResponse
@@ -12,6 +15,7 @@ import com.mobven.shortly.ui.main.MainUiEvent.ShowError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import net.glxn.qrgen.android.QRCode
 import javax.inject.Inject
 
 @HiltViewModel
@@ -55,9 +59,15 @@ class MainViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
+
     fun insertLink(shortenData: ShortenData) {
         viewModelScope.launch {
+            shortenData.qr_code = createQrCode(shortenData.original_link)
             insertLinkUseCase(shortenData)
         }
+    }
+
+    fun createQrCode(url: String): Bitmap {
+        return QRCode.from(url).bitmap()
     }
 }

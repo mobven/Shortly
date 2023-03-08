@@ -1,8 +1,10 @@
 package com.mobven.shortly.ui.list
 
+import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -18,6 +20,7 @@ import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.mobven.shortly.R
 import com.mobven.shortly.adapter.ShortLinkPagingAdapter
+import com.mobven.shortly.databinding.DialogPopupQrBinding
 import com.mobven.shortly.analytics.AnalyticsManager
 import com.mobven.shortly.databinding.FragmentMylistBinding
 import com.mobven.shortly.utils.SpaceItemDecoration
@@ -115,6 +118,10 @@ class MyLinksFragment : Fragment() {
         shortLinkPagingAdapter.itemFavoriteListener = { isFavorite, code ->
             viewModel.setFavorite(isFavorite, code)
         }
+
+        shortLinkPagingAdapter.itemQrCodeListener = {
+            qrDialog(it.qr_code)
+        }
     }
 
     private fun renderView(uiState: MyLinksUiState) = with(binding) {
@@ -135,6 +142,17 @@ class MyLinksFragment : Fragment() {
             is MyLinksUiEvent.LaunchReviewFlow -> {
                 launchReviewFlow(uiEvent.reviewInfo)
             }
+        }
+
+    }
+
+    fun qrDialog(bitmap: Bitmap) {
+        val dialogBuilder = Dialog(requireContext())
+        val bind = DialogPopupQrBinding.inflate(layoutInflater)
+        dialogBuilder.apply {
+            setContentView(bind.root)
+            bind.imgQrCode.setImageBitmap(bitmap)
+            show()
         }
     }
 
